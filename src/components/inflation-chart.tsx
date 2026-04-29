@@ -18,8 +18,8 @@ import {
 } from "@/components/ui/chart"
 
 const chartData = [
-  { date: "2024-01-01", ipc: 118, ipim: 190 },
-  { date: "2025-01-01", ipc: 31, ipim: 54 },
+  { date: "2025-01-01", ipc: 118, ipim: 190 },
+  { date: "2026-01-01", ipc: 31, ipim: 54 },
   { date: "2026-03-01", ipc: 32, ipim: 40 },
 ]
 
