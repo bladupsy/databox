@@ -81,6 +81,18 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
+function getValueLabel(key: string, value: number): string {
+  if (key === "tc" || key === "tasa") return "Neutral"
+  return value >= 0 ? "Positivo" : "Negativo"
+}
+
+function getRadialColor(key: string, value: number): string {
+  if (key === "tc" || key === "tasa") {
+    return "#f97316"
+  }
+  return value >= 0 ? "#22c55e" : "#ef4444"
+}
+
 function RadialCard({
   key,
   config,
@@ -88,8 +100,7 @@ function RadialCard({
   key: string
   config: (typeof chartConfigs)[keyof typeof chartConfigs]
 }) {
-  const isPositive = config.value >= 0
-  const color = isPositive ? "#22c55e" : "#ef4444"
+  const color = getRadialColor(key, config.value)
   const chartData = [
     {
       visitors: Math.abs(config.value),
@@ -146,7 +157,7 @@ function RadialCard({
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          {config.value >= 0 ? "Positivo" : "Negativo"}
+                          {getValueLabel(key, config.value)}
                         </tspan>
                       </text>
                     )
