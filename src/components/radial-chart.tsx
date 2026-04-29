@@ -36,7 +36,7 @@ const chartConfigs = {
   tc: {
     label: "Tipo de Cambio",
     value: 1350,
-    description: "ARS/USD - 2026",
+    description: "USD - 2026",
   },
   tasa: {
     label: "Tasa de Interés",
@@ -146,7 +146,7 @@ function RadialCard({
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          {isPositive ? "Positivo" : "Negativo"}
+                          {config.value >= 0 ? "Positivo" : "Negativo"}
                         </tspan>
                       </text>
                     )
@@ -159,8 +159,8 @@ function RadialCard({
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 leading-none font-medium">
-          {isPositive ? "Tendencia positiva" : "Tendencia negativa"}
-          {isPositive ? (
+          {config.value >= 0 ? "Tendencia positiva" : "Tendencia negativa"}
+          {config.value >= 0 ? (
             <TrendingUp className="h-4 w-4" />
           ) : (
             <TrendingDown className="h-4 w-4" />

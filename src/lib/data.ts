@@ -33,7 +33,7 @@ export const indicadoresData = [
       { year: "2025", value: 2, periodo: "Anual", tipo: "Interanual" },
       { year: "2026", value: -8.7, periodo: "Febrero", tipo: "Interanual" },
     ],
-    color: "#22c55e",
+    color: "#f97316",
   },
   {
     indicador: "Empleo industrial",
@@ -42,7 +42,7 @@ export const indicadoresData = [
       { year: "2025", value: 0, periodo: "Anual", tipo: "Interanual" },
       { year: "2026", value: -2, periodo: "Actual", tipo: "Interanual" },
     ],
-    color: "#14b8a6",
+    color: "#ef4444",
   },
   {
     indicador: "Importaciones totales",
@@ -78,6 +78,6 @@ export const indicadoresData = [
       { year: "2025", value: 3, periodo: "Anual", tipo: "Interanual" },
       { year: "2026", value: -5, periodo: "Actual", tipo: "Interanual" },
     ],
-    color: "#ec4899",
+    color: "#eab308",
   },
 ];
