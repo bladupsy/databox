@@ -89,10 +89,11 @@ function RadialCard({
   config: (typeof chartConfigs)[keyof typeof chartConfigs]
 }) {
   const isPositive = config.value >= 0
+  const color = isPositive ? "#22c55e" : "#ef4444"
   const chartData = [
     {
       visitors: Math.abs(config.value),
-      fill: isPositive ? "#22c55e" : "#ef4444",
+      fill: color,
     },
   ]
 
@@ -136,7 +137,7 @@ function RadialCard({
                           x={viewBox.cx}
                           y={viewBox.cy}
                           className="fill-foreground text-4xl font-bold"
-                          fill={isPositive ? "#22c55e" : "#ef4444"}
+                          fill={color}
                         >
                           {config.value}%
                         </tspan>

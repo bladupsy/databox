@@ -8,16 +8,16 @@ const data = [
   { id: 4, cat: "macro", ind: "Inflación IPIM (Mayorista)", año: "2024", tipo: "Interanual", val: "190%", src: "INDEC", obs: "Impacto directo en insumos industriales." },
   { id: 5, cat: "macro", ind: "Inflación IPIM (Mayorista)", año: "2025", tipo: "Interanual", val: "54%", src: "INDEC", obs: "Desaceleración de costos de fábrica." },
   { id: 6, cat: "macro", ind: "Inflación IPIM (Mayorista)", año: "2026", tipo: "Actual", val: "40%", src: "INDEC", obs: "Presión residual en la cadena de valor." },
-  { id: 7, cat: "finance", ind: "Tipo de Cambio (Oficial)", año: "2024", tipo: "ARS/USD", val: "900", src: "BCRA", obs: "Devaluación competitiva inicial." },
-  { id: 8, cat: "finance", ind: "Tipo de Cambio (Oficial)", año: "2025", tipo: "ARS/USD", val: "1200", src: "BCRA", obs: "Ajuste del 2% mensual." },
-  { id: 9, cat: "finance", ind: "Tipo de Cambio (Oficial)", año: "2026", tipo: "ARS/USD", val: "1350", src: "BCRA", obs: "Atraso relativo frente a inflación." },
+  { id: 7, cat: "finance", ind: "Tipo de Cambio (Oficial)", año: "2024", tipo: "USD", val: "900", src: "BCRA", obs: "Devaluación competitiva inicial." },
+  { id: 8, cat: "finance", ind: "Tipo de Cambio (Oficial)", año: "2025", tipo: "USD", val: "1200", src: "BCRA", obs: "Ajuste del 2% mensual." },
+  { id: 9, cat: "finance", ind: "Tipo de Cambio (Oficial)", año: "2026", tipo: "USD", val: "1350", src: "BCRA", obs: "Atraso relativo frente a inflación." },
   { id: 10, cat: "finance", ind: "Tasa de Interés (TNA)", año: "2024", tipo: "Nominal %", val: "110%", src: "BCRA", obs: "Política monetaria contractiva." },
   { id: 11, cat: "finance", ind: "Tasa de Interés (TNA)", año: "2025", tipo: "Nominal %", val: "40%", src: "BCRA", obs: "Normalización financiera." },
   { id: 12, cat: "finance", ind: "Tasa de Interés (TNA)", año: "2026", tipo: "Nominal %", val: "25%", src: "BCRA", obs: "Fomento al crédito productivo." },
   { id: 13, cat: "sector", ind: "Producción Manufacturera", año: "2024", tipo: "Variación", val: "-12%", src: "INDEC", obs: "Recesión por ajuste de demanda." },
   { id: 14, cat: "sector", ind: "Producción Manufacturera", año: "2025", tipo: "Variación", val: "+2%", src: "INDEC", obs: "Rebote estadístico insuficiente." },
   { id: 15, cat: "sector", ind: "Producción Manufacturera", año: "2026", tipo: "Variación", val: "-8.7%", src: "INDEC", obs: "Contracción por caída de consumo." },
-  { id: 16, cat: "social", ind: "Empleo Industrial", año: "2024", tipo: "Variación", val: "Caída", src: "INDEC", obs: "Pérdida de puestos en el sector." },
+  { id: 16, cat: "social", ind: "Empleo Industrial", año: "2024", tipo: "Variación", val: "-5%", src: "INDEC", obs: "Pérdida de puestos en el sector." },
   { id: 17, cat: "social", ind: "Empleo Industrial", año: "2025", tipo: "Variación", val: "0%", src: "INDEC", obs: "Fin del ajuste laboral masivo." },
   { id: 18, cat: "social", ind: "Empleo Industrial", año: "2026", tipo: "Variación", val: "-2%", src: "INDEC", obs: "Nuevos despidos por baja actividad." },
   { id: 19, cat: "social", ind: "Consumo de Supermercados", año: "2024", tipo: "Var Real %", val: "-15%", src: "INDEC", obs: "Fuerte caída en canasta básica." },
@@ -55,9 +55,9 @@ export default function TablePage() {
   return (
     <div className="container mx-auto py-10">
       <Card>
-        <CardHeader className="bg-slate-100">
-          <CardTitle className="text-green-700">TecnoSur_Indicadores_V3.xlsx</CardTitle>
-          <CardDescription>Índice de Indicadores Macroeconómicos - Eco-Data 360</CardDescription>
+        <CardHeader className="bg-slate-50 border-b">
+          <CardTitle>Tabla de Indicadores</CardTitle>
+          <CardDescription>Índice de Indicadores Macroeconómicos</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">

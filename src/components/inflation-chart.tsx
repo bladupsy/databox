@@ -23,17 +23,33 @@ const chartData = [
   { date: "2026-03-01", ipc: 32, ipim: 40 },
 ]
 
+function getLineColor(value: number, isNegative: boolean): string {
+  if (isNegative) {
+    if (value <= -20) return "#dc2626"
+    if (value <= -10) return "#ef4444"
+    if (value <= -5) return "#f97316"
+    return "#eab308"
+  }
+  if (value >= 0) {
+    if (value <= 10) return "#22c55e"
+    if (value <= 25) return "#06b6d4"
+    if (value <= 50) return "#14b8a6"
+    return "#64748b"
+  }
+  return "#64748b"
+}
+
 const chartConfig = {
   views: {
     label: "Inflación",
   },
   ipc: {
     label: "IPC",
-    color: "var(--chart-1)",
+    color: "#06b6d4",
   },
   ipim: {
     label: "IPIM",
-    color: "var(--chart-2)",
+    color: "#f97316",
   },
 } satisfies ChartConfig
 
@@ -134,9 +150,9 @@ export function InflationChart() {
             <Line
               dataKey={activeChart}
               type="monotone"
-              stroke={`var(--color-${activeChart})`}
+              stroke={activeChart === "ipc" ? "#06b6d4" : "#f97316"}
               strokeWidth={2}
-              dot={{ fill: `var(--color-${activeChart})`, r: 4 }}
+              dot={{ fill: activeChart === "ipc" ? "#06b6d4" : "#f97316", r: 4 }}
             />
           </LineChart>
         </ChartContainer>
