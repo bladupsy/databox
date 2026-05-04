@@ -19,40 +19,40 @@ import {
 } from "@/components/ui/chart"
 
 const chartData = [
-  { date: "2024", ipc: 118, ipim: 190, tasa: 110 },
-  { date: "2025", ipc: 31, ipim: 54, tasa: 40 },
-  { date: "2026", ipc: 32, ipim: 40, tasa: 23 },
+  { year: "2024", produccion: -12, empleo: -5, consumo: -12 },
+  { year: "2025", produccion: 2, empleo: 0, consumo: 3 },
+  { year: "2026", produccion: -8.7, empleo: -2, consumo: -5 },
 ]
 
 const chartConfig = {
-  ipc: {
-    label: "IPC (Inflación)",
-    color: "#06b6d4",
-  },
-  ipim: {
-    label: "IPIM (Inflación)",
+  produccion: {
+    label: "Producción Industrial",
     color: "#f97316",
   },
-  tasa: {
-    label: "Tasa de interés",
+  empleo: {
+    label: "Empleo Industrial",
+    color: "#ef4444",
+  },
+  consumo: {
+    label: "Consumo Supermercados",
     color: "#eab308",
   },
 } satisfies ChartConfig
 
-export function InflationChart() {
+export function ActivityChart() {
   const latestValue = chartData[chartData.length - 1]
 
   return (
     <Card className="py-4 sm:py-0">
       <CardHeader className="flex flex-col items-stretch border-b p-0! sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
-          <CardTitle>Inflación y Tasa de Interés</CardTitle>
+          <CardTitle>Actividad Económica</CardTitle>
           <CardDescription>
-            Variación interanual (%) - Tasas nominales anuales
+            Variación interanual (%)
           </CardDescription>
         </div>
         <div className="flex">
-          {(["ipc", "ipim", "tasa"] as const).map((key) => (
+          {(["produccion", "empleo", "consumo"] as const).map((key) => (
             <div
               key={key}
               className="flex flex-1 flex-col justify-center gap-1 border-t px-4 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-6 sm:py-6"
@@ -82,11 +82,10 @@ export function InflationChart() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="date"
+              dataKey="year"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              minTickGap={32}
             />
             <YAxis
               tickLine={false}
@@ -105,25 +104,25 @@ export function InflationChart() {
             />
             <ChartLegend />
             <Line
-              dataKey="ipc"
+              dataKey="produccion"
               type="monotone"
-              stroke={chartConfig.ipc.color}
+              stroke={chartConfig.produccion.color}
               strokeWidth={2}
-              dot={{ fill: chartConfig.ipc.color, r: 4 }}
+              dot={{ fill: chartConfig.produccion.color, r: 4 }}
             />
             <Line
-              dataKey="ipim"
+              dataKey="empleo"
               type="monotone"
-              stroke={chartConfig.ipim.color}
+              stroke={chartConfig.empleo.color}
               strokeWidth={2}
-              dot={{ fill: chartConfig.ipim.color, r: 4 }}
+              dot={{ fill: chartConfig.empleo.color, r: 4 }}
             />
             <Line
-              dataKey="tasa"
+              dataKey="consumo"
               type="monotone"
-              stroke={chartConfig.tasa.color}
+              stroke={chartConfig.consumo.color}
               strokeWidth={2}
-              dot={{ fill: chartConfig.tasa.color, r: 4 }}
+              dot={{ fill: chartConfig.consumo.color, r: 4 }}
             />
           </LineChart>
         </ChartContainer>

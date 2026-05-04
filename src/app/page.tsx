@@ -1,5 +1,6 @@
 import { InflationChart } from "@/components/inflation-chart"
-import { DataBox } from "@/components/databox"
+import { ImportsChart } from "@/components/imports-chart"
+import { ActivityChart } from "@/components/activity-chart"
 
 export default function Home() {
   return (
@@ -7,7 +8,10 @@ export default function Home() {
       <h1 className="text-3xl font-bold mb-6">Consultora Eco-Data 360</h1>
       <div className="grid gap-6">
         <InflationChart />
-        <DataBox />
+        <div className="grid md:grid-cols-2 gap-6">
+          <ImportsChart />
+          <ActivityChart />
+        </div>
       </div>
     </div>
   )
