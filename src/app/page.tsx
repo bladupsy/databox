@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
-import { SectionCards } from "@/components/section-cards"
+import { KpiSparklineCards } from "@/components/section-cards"
 import { ChartAreaInteractive } from "@/components/chart-area-interactive"
 import { DataTable } from "@/components/data-table"
 import { columns } from "@/components/columns"
@@ -18,7 +18,7 @@ export default function Home() {
         <SiteHeader />
         <div className="flex flex-1 flex-col gap-4 p-6">
           <div className="flex flex-col gap-4 md:gap-6">
-            <SectionCards />
+            <KpiSparklineCards />
             
             <div className="grid gap-6">
               <div className="px-0">
