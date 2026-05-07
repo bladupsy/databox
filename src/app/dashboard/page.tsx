@@ -45,7 +45,6 @@ export default function DashboardPage() {
                 <SectorSemaforoTable />
               </div>
               <div>
-                <h3 className="text-md font-semibold text-slate-700 mb-2">Importaciones Sectoriales</h3>
                 <SectorBarChart />
               </div>
             </div>
@@ -61,6 +60,9 @@ export default function DashboardPage() {
 
           
         </div>
+        <footer className="mt-8 border-t bg-white p-4 text-center text-sm text-slate-500">
+          <p>Fuentes: INDEC · BCRA · Ministerio de Trabajo · UTDT — Datos actualizados a 2026</p>
+        </footer>
       </div>
     </div>
   )

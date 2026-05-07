@@ -34,7 +34,7 @@ const chartConfig = {
 export function SectorBarChart() {
   return (
     <Card>
-      <CardHeader className="sr-only">
+      <CardHeader>
         <CardTitle>Importaciones Sectoriales</CardTitle>
       </CardHeader>
       <CardContent>
