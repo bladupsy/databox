@@ -351,7 +351,7 @@ export default function SemaforoDesempeno() {
                       </TableCell>
                       <TableCell>
                         <Tooltip>
-                          <TooltipTrigger asChild>
+                          <TooltipTrigger>
                             <button className="text-slate-300 hover:text-slate-500 transition-colors">
                               <Info className="h-4 w-4" />
                             </button>

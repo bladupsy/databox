@@ -56,7 +56,6 @@ export function SectorBarChart() {
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel hideIndicator />}
-              formatter={(value: number) => [`${value}%`, "Variación"]}
             />
             <Bar dataKey="value" radius={4}>
               <LabelList

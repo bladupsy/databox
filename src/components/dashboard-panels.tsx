@@ -3,26 +3,35 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, TrendingDown, Minus } from "lucide-react"
 
-const indicadoresPorPanel = {
+type TrendType = "up" | "down" | "neutral"
+
+interface IndicadorPanel {
+  title: string
+  value: string
+  description: string
+  trend: TrendType
+}
+
+const indicadoresPorPanel: Record<string, IndicadorPanel[]> = {
   macroeconomia: [
-    { title: "PIB / EMAE", value: "-2,1%", description: "Feb 2026 - Interanual", trend: "down" as const },
-    { title: "Inflación IPC", value: "10,4%", description: "Ene-Mar 2026 - Acumulado", trend: "down" as const },
-    { title: "Desempleo", value: "7-8%", description: "Estimado 2026", trend: "up" as const },
-    { title: "Tipo de Cambio", value: "$1.250-$1.400", description: "2026 - Actual", trend: "neutral" as const },
-    { title: "Tasa BCRA", value: "30-35%", description: "2026 - Actual", trend: "neutral" as const },
+    { title: "PIB / EMAE", value: "-2,1%", description: "Feb 2026 - Interanual", trend: "down" },
+    { title: "Inflación IPC", value: "10,4%", description: "Ene-Mar 2026 - Acumulado", trend: "down" },
+    { title: "Desempleo", value: "7-8%", description: "Estimado 2026", trend: "up" },
+    { title: "Tipo de Cambio", value: "$1.250-$1.400", description: "2026 - Actual", trend: "neutral" },
+    { title: "Tasa BCRA", value: "30-35%", description: "2026 - Actual", trend: "neutral" },
   ],
   manufacturero: [
-    { title: "PIB Industrial", value: "-8%", description: "2026 - Estimado", trend: "down" as const },
-    { title: "Producción Manufacturera", value: "-8,7%", description: "Feb 2026 - Interanual", trend: "down" as const },
-    { title: "Import. Insumos", value: "-3% a -5%", description: "Ene-Feb 2026", trend: "down" as const },
-    { title: "Import. Bienes Capital", value: "-8% a -12%", description: "Ene-Feb 2026", trend: "down" as const },
-    { title: "Empleo Industrial", value: "-1,5% a -2%", description: "2026 - Acumulado", trend: "down" as const },
+    { title: "PIB Industrial", value: "-8%", description: "2026 - Estimado", trend: "down" },
+    { title: "Producción Manufacturera", value: "-8,7%", description: "Feb 2026 - Interanual", trend: "down" },
+    { title: "Import. Insumos", value: "-3% a -5%", description: "Ene-Feb 2026", trend: "down" },
+    { title: "Import. Bienes Capital", value: "-8% a -12%", description: "Ene-Feb 2026", trend: "down" },
+    { title: "Empleo Industrial", value: "-1,5% a -2%", description: "2026 - Acumulado", trend: "down" },
   ],
   social: [
-    { title: "Tasa de Empleo", value: "45-47%", description: "2026 - Estimado", trend: "neutral" as const },
-    { title: "Empleo Informal", value: "35-38%", description: "2026 - Estimado", trend: "neutral" as const },
-    { title: "Pobreza", value: "35-40%", description: "2026 - Estimado", trend: "neutral" as const },
-    { title: "Salario Real", value: "-5% a -8%", description: "2026 - Estimado", trend: "down" as const },
+    { title: "Tasa de Empleo", value: "45-47%", description: "2026 - Estimado", trend: "neutral" },
+    { title: "Empleo Informal", value: "35-38%", description: "2026 - Estimado", trend: "neutral" },
+    { title: "Pobreza", value: "35-40%", description: "2026 - Estimado", trend: "neutral" },
+    { title: "Salario Real", value: "-5% a -8%", description: "2026 - Estimado", trend: "down" },
   ],
 }
 

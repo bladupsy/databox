@@ -189,7 +189,7 @@ export default function IndicadoresTable() {
               <TableCell className="h-16 px-4">
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger asChild>
+                    <TooltipTrigger>
                       <span className="cursor-pointer p-2 hover:bg-slate-100 rounded">
                         <InfoIcon className="size-4 text-slate-500" />
                       </span>

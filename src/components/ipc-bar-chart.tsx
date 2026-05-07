@@ -78,7 +78,6 @@ export function IpcBarChartHorizontal() {
                 offset={8}
                 className="fill-foreground font-semibold"
                 fontSize={12}
-                formatter={(value: number) => `${value}%`}
               />
             </Bar>
           </BarChart>
