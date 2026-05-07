@@ -3,7 +3,6 @@
 import { useState } from "react"
 
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
@@ -191,9 +190,9 @@ export default function IndicadoresTable() {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <InfoIcon className="size-4" />
-                      </Button>
+                      <span className="cursor-pointer p-2 hover:bg-slate-100 rounded">
+                        <InfoIcon className="size-4 text-slate-500" />
+                      </span>
                     </TooltipTrigger>
                     <TooltipContent className="max-w-xs">{ind.obs}</TooltipContent>
                   </Tooltip>
