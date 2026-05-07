@@ -18,29 +18,36 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 
-const chartData = [
+type ChartDataType = {
+  year: string
+  bienesIntermedios: number
+  bienesCapital: number
+  empleo: number
+}
+
+const chartData: ChartDataType[] = [
   { year: "2024", bienesIntermedios: -12.5, bienesCapital: -22.5, empleo: -4.5 },
   { year: "2025", bienesIntermedios: 6.5, bienesCapital: 12.5, empleo: -2.5 },
   { year: "2026", bienesIntermedios: -4, bienesCapital: -10, empleo: -1.75 },
 ]
 
 const chartConfig = {
-  produccion: {
-    label: "Producción Industrial",
+  bienesIntermedios: {
+    label: "Bienes Intermedios",
     color: "#f97316",
+  },
+  bienesCapital: {
+    label: "Bienes de Capital",
+    color: "#ef4444",
   },
   empleo: {
     label: "Empleo Industrial",
-    color: "#ef4444",
-  },
-  consumo: {
-    label: "Consumo Supermercados",
     color: "#eab308",
   },
 } satisfies ChartConfig
 
 export function ActivityChart() {
-  const latestValue = chartData[chartData.length - 1]
+  const latestValue = chartData[chartData.length - 1] as ChartDataType
 
   return (
     <Card className="py-4 sm:py-0">
@@ -52,7 +59,7 @@ export function ActivityChart() {
           </CardDescription>
         </div>
         <div className="flex">
-          {(["produccion", "empleo", "consumo"] as const).map((key) => (
+          {(["bienesIntermedios", "bienesCapital", "empleo"] as const).map((key) => (
             <div
               key={key}
               className="flex flex-1 flex-col justify-center gap-1 border-t px-4 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-6 sm:py-6"
@@ -98,11 +105,18 @@ export function ActivityChart() {
             />
             <ChartLegend />
             <Line
-              dataKey="produccion"
+              dataKey="bienesIntermedios"
               type="monotone"
-              stroke={chartConfig.produccion.color}
+              stroke={chartConfig.bienesIntermedios.color}
               strokeWidth={2}
-              dot={{ fill: chartConfig.produccion.color, r: 4 }}
+              dot={{ fill: chartConfig.bienesIntermedios.color, r: 4 }}
+            />
+            <Line
+              dataKey="bienesCapital"
+              type="monotone"
+              stroke={chartConfig.bienesCapital.color}
+              strokeWidth={2}
+              dot={{ fill: chartConfig.bienesCapital.color, r: 4 }}
             />
             <Line
               dataKey="empleo"
@@ -110,13 +124,6 @@ export function ActivityChart() {
               stroke={chartConfig.empleo.color}
               strokeWidth={2}
               dot={{ fill: chartConfig.empleo.color, r: 4 }}
-            />
-            <Line
-              dataKey="consumo"
-              type="monotone"
-              stroke={chartConfig.consumo.color}
-              strokeWidth={2}
-              dot={{ fill: chartConfig.consumo.color, r: 4 }}
             />
           </LineChart>
         </ChartContainer>
