@@ -1,0 +1,208 @@
+"use client"
+
+import { useState } from "react"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import { InfoIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
+
+interface Indicador {
+  id: number
+  cat: string
+  per: string
+  ind: string
+  año: string
+  tipo: string
+  val: string
+  src: string
+  obs: string
+}
+
+const indicadores: Indicador[] = [
+  { id: 1, cat: "actividad", per: "Acumulado", ind: "EMAE", año: "2024", tipo: "Variación acumulada", val: "-2,7% a -4,5%", src: "INDEC", obs: "Caída anual" },
+  { id: 2, cat: "actividad", per: "Dic", ind: "EMAE", año: "2025", tipo: "Interanual", val: "3,5%", src: "INDEC", obs: "Mejora" },
+  { id: 3, cat: "actividad", per: "Oct", ind: "EMAE", año: "2025", tipo: "Interanual", val: "3,2%", src: "INDEC", obs: "Mejora" },
+  { id: 4, cat: "actividad", per: "Acum. estimado", ind: "EMAE/PBI", año: "2025", tipo: "Estimación", val: "+2% a +4%", src: "INDEC", obs: "Recuperación" },
+  { id: 5, cat: "actividad", per: "Feb", ind: "EMAE", año: "2026", tipo: "Interanual", val: "-2,1%", src: "INDEC", obs: "Caída" },
+  { id: 6, cat: "actividad", per: "Feb", ind: "EMAE", año: "2026", tipo: "Mensual", val: "-2,6%", src: "INDEC", obs: "Caída mensual" },
+  { id: 7, cat: "industria", per: "—", ind: "Bienes intermedios", año: "2024", tipo: "Variación", val: "-10% a -15%", src: "INDEC", obs: "Fuerte caída" },
+  { id: 8, cat: "industria", per: "—", ind: "Bienes de capital", año: "2024", tipo: "Variación", val: "-20% a -25%", src: "INDEC", obs: "Caída fuerte" },
+  { id: 9, cat: "industria", per: "—", ind: "Bienes intermedios", año: "2025", tipo: "Variación", val: "+5% a +8%", src: "INDEC", obs: "Recuperación" },
+  { id: 10, cat: "industria", per: "—", ind: "Bienes de capital", año: "2025", tipo: "Variación", val: "+10% a +15%", src: "INDEC", obs: "Recuperación" },
+  { id: 11, cat: "industria", per: "Ene–Feb", ind: "Bienes intermedios", año: "2026", tipo: "Variación", val: "-3% a -5%", src: "INDEC", obs: "Nueva caída" },
+  { id: 12, cat: "industria", per: "Ene–Feb", ind: "Bienes de capital", año: "2026", tipo: "Variación", val: "-8% a -12%", src: "INDEC", obs: "Caída marcada" },
+  { id: 13, cat: "empleo", per: "Base", ind: "Empleo industrial", año: "2023", tipo: "Nivel", val: "1.225.000", src: "Ministerio Trabajo", obs: "Base" },
+  { id: 14, cat: "empleo", per: "—", ind: "Empleo industrial", año: "2024", tipo: "Variación", val: "-4,5%", src: "Ministerio Trabajo", obs: "Ajuste fuerte" },
+  { id: 15, cat: "empleo", per: "—", ind: "Empleo industrial", año: "2025", tipo: "Variación", val: "-2,5%", src: "Ministerio Trabajo", obs: "Caída moderada" },
+  { id: 16, cat: "empleo", per: "Acum.", ind: "Empleo industrial", año: "2026", tipo: "Variación", val: "-1,5% a -2%", src: "Ministerio Trabajo", obs: "Sigue deterioro" },
+  { id: 17, cat: "importaciones", per: "—", ind: "Totales", año: "2024", tipo: "Variación", val: "-18% a -25%", src: "INDEC", obs: "Fuerte caída" },
+  { id: 18, cat: "importaciones", per: "—", ind: "Bienes intermedios", año: "2024", tipo: "Variación", val: "-10% a -15%", src: "INDEC", obs: "Caída" },
+  { id: 19, cat: "importaciones", per: "—", ind: "Bienes de capital", año: "2024", tipo: "Variación", val: "-20% a -25%", src: "INDEC", obs: "Caída" },
+  { id: 20, cat: "importaciones", per: "—", ind: "Totales", año: "2025", tipo: "Variación", val: "+8% a +15%", src: "INDEC", obs: "Recuperación" },
+  { id: 21, cat: "importaciones", per: "—", ind: "Bienes intermedios", año: "2025", tipo: "Variación", val: "+5% a +8%", src: "INDEC", obs: "Mejora" },
+  { id: 22, cat: "importaciones", per: "—", ind: "Bienes de capital", año: "2025", tipo: "Variación", val: "+10% a +15%", src: "INDEC", obs: "Mejora" },
+  { id: 23, cat: "importaciones", per: "Ene–Feb", ind: "Totales", año: "2026", tipo: "Variación", val: "-5% a -10%", src: "INDEC", obs: "Nueva caída" },
+  { id: 24, cat: "importaciones", per: "Ene–Feb", ind: "Bienes intermedios", año: "2026", tipo: "Variación", val: "-3% a -5%", src: "INDEC", obs: "Caída" },
+  { id: 25, cat: "importaciones", per: "Ene–Feb", ind: "Bienes de capital", año: "2026", tipo: "Variación", val: "-8% a -12%", src: "INDEC", obs: "Caída" },
+  { id: 26, cat: "precios", per: "—", ind: "IPC", año: "2024", tipo: "Anual", val: "211%", src: "INDEC", obs: "Muy alta" },
+  { id: 27, cat: "precios", per: "—", ind: "IPIM", año: "2024", tipo: "Anual", val: "276%", src: "INDEC", obs: "Muy alta" },
+  { id: 28, cat: "precios", per: "—", ind: "Inflación esperada", año: "2024", tipo: "Expectativa", val: "200%–220%", src: "BCRA", obs: "Proyecciones" },
+  { id: 29, cat: "precios", per: "—", ind: "IPC", año: "2025", tipo: "Estimación", val: "120%–140%", src: "INDEC", obs: "Desaceleración" },
+  { id: 30, cat: "precios", per: "—", ind: "IPIM", año: "2025", tipo: "Estimación", val: "100%–130%", src: "INDEC", obs: "Desaceleración" },
+  { id: 31, cat: "precios", per: "—", ind: "Inflación esperada", año: "2025", tipo: "Expectativa", val: "130%–150%", src: "BCRA", obs: "Proyecciones" },
+  { id: 32, cat: "precios", per: "Ene–Mar", ind: "IPC acumulado", año: "2026", tipo: "Acumulado", val: "10,4%", src: "INDEC", obs: "Baja fuerte" },
+  { id: 33, cat: "precios", per: "Ene–Mar", ind: "IPIM acumulado", año: "2026", tipo: "Acumulado", val: "6,2%", src: "INDEC", obs: "Baja" },
+  { id: 34, cat: "precios", per: "—", ind: "Inflación esperada", año: "2026", tipo: "Proyección", val: "80%–120%", src: "BCRA", obs: "Desaceleración" },
+  { id: 35, cat: "tasas", per: "—", ind: "Tasa BCRA", año: "2024", tipo: "Observado", val: "100% → 40%", src: "BCRA", obs: "Fuerte baja" },
+  { id: 36, cat: "tasas", per: "—", ind: "Tasa BCRA", año: "2025", tipo: "Observado", val: "40% → 30%", src: "BCRA", obs: "Baja" },
+  { id: 37, cat: "tasas", per: "—", ind: "Tasa BCRA", año: "2026", tipo: "Actual", val: "30%–35%", src: "BCRA", obs: "Estabilidad" },
+  { id: 38, cat: "tasas", per: "—", ind: "Crédito PyME", año: "2024", tipo: "Observado", val: "80%–120%", src: "BCRA", obs: "Muy caro" },
+  { id: 39, cat: "tasas", per: "—", ind: "Crédito PyME", año: "2025", tipo: "Observado", val: "50%–80%", src: "BCRA", obs: "Baja parcial" },
+  { id: 40, cat: "tasas", per: "—", ind: "Crédito PyME", año: "2026", tipo: "Actual", val: "40%–70%", src: "BCRA", obs: "Mejora" },
+  { id: 41, cat: "tipo_cambio", per: "—", ind: "TC oficial", año: "2024", tipo: "Tipo de cambio", val: "$350 → $800", src: "BCRA", obs: "Salto" },
+  { id: 42, cat: "tipo_cambio", per: "—", ind: "TC oficial", año: "2024", tipo: "Tipo de cambio", val: "$800 → $1050", src: "BCRA", obs: "Corrección" },
+  { id: 43, cat: "tipo_cambio", per: "—", ind: "TC oficial", año: "2025", tipo: "Tipo de cambio", val: "$1050 → $1250", src: "BCRA", obs: "Estabilidad" },
+  { id: 44, cat: "tipo_cambio", per: "Actual", ind: "TC oficial", año: "2026", tipo: "Tipo de cambio", val: "$1250–$1400", src: "BCRA", obs: "Estable" },
+  { id: 45, cat: "confianza", per: "—", ind: "ICE", año: "2024", tipo: "Observado", val: "35–45", src: "UTDT", obs: "Baja" },
+  { id: 46, cat: "confianza", per: "—", ind: "ICE", año: "2025", tipo: "Observado", val: "45–55", src: "UTDT", obs: "Mejora" },
+  { id: 47, cat: "confianza", per: "Actual", ind: "ICE", año: "2026", tipo: "Último dato", val: "50–60", src: "UTDT", obs: "Estabilidad" }
+]
+
+function getCategoryBadge(cat: string) {
+  switch (cat) {
+    case "actividad":
+      return (
+        <Badge variant="outline" className="bg-blue-500/15 text-blue-700 border-0">
+          Actividad
+        </Badge>
+      )
+    case "industria":
+      return (
+        <Badge variant="outline" className="bg-cyan-500/15 text-cyan-700 border-0">
+          Industria
+        </Badge>
+      )
+    case "empleo":
+      return (
+        <Badge variant="outline" className="bg-purple-500/15 text-purple-700 border-0">
+          Empleo
+        </Badge>
+      )
+    case "importaciones":
+      return (
+        <Badge variant="outline" className="bg-amber-500/15 text-amber-700 border-0">
+          Importaciones
+        </Badge>
+      )
+    case "precios":
+      return (
+        <Badge variant="outline" className="bg-red-500/15 text-red-700 border-0">
+          Precios
+        </Badge>
+      )
+    case "tasas":
+      return (
+        <Badge variant="outline" className="bg-green-500/15 text-green-700 border-0">
+          Tasas
+        </Badge>
+      )
+    case "tipo_cambio":
+      return (
+        <Badge variant="outline" className="bg-orange-500/15 text-orange-700 border-0">
+          Tipo de cambio
+        </Badge>
+      )
+    case "confianza":
+      return (
+        <Badge variant="outline" className="bg-pink-500/15 text-pink-700 border-0">
+          Confianza
+        </Badge>
+      )
+    default:
+      return <Badge variant="secondary">{cat}</Badge>
+  }
+}
+
+function getValueColor(val: string) {
+  const cleanVal = val.replace(/[+%→$]/g, "").replace(/,/g, ".")
+  const num = parseFloat(cleanVal)
+  if (isNaN(num)) return "text-foreground"
+  if (num > 0) return "text-green-600 dark:text-green-400"
+  if (num < 0) return "text-red-600 dark:text-red-400"
+  return "text-foreground"
+}
+
+export default function IndicadoresTable() {
+  return (
+    <div className="rounded-lg border bg-card w-full">
+      <Table>
+        <TableHeader>
+          <TableRow className="hover:bg-transparent border-b">
+            <TableHead className="h-12 px-4 font-medium">Indicador</TableHead>
+            <TableHead className="h-12 px-4 font-medium">Categoría</TableHead>
+            <TableHead className="h-12 px-4 font-medium">Período</TableHead>
+            <TableHead className="h-12 px-4 font-medium">Año</TableHead>
+            <TableHead className="h-12 px-4 font-medium">Tipo</TableHead>
+            <TableHead className="h-12 px-4 font-medium">Valor</TableHead>
+            <TableHead className="h-12 px-4 font-medium">Fuente</TableHead>
+            <TableHead className="h-12 px-4 font-medium w-[60px]">Info</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {indicadores.map((ind) => (
+            <TableRow key={ind.id} className="hover:bg-muted/50">
+              <TableCell className="h-16 px-4 font-medium">
+                {ind.ind}
+              </TableCell>
+              <TableCell className="h-16 px-4">
+                {getCategoryBadge(ind.cat)}
+              </TableCell>
+              <TableCell className="h-16 px-4 text-sm text-muted-foreground">
+                {ind.per}
+              </TableCell>
+              <TableCell className="h-16 px-4 text-sm">
+                {ind.año}
+              </TableCell>
+              <TableCell className="h-16 px-4 text-sm text-muted-foreground">
+                {ind.tipo}
+              </TableCell>
+              <TableCell className={cn("h-16 px-4 font-semibold", getValueColor(ind.val))}>
+                {ind.val}
+              </TableCell>
+              <TableCell className="h-16 px-4 text-sm text-muted-foreground">
+                {ind.src}
+              </TableCell>
+              <TableCell className="h-16 px-4">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <InfoIcon className="size-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">{ind.obs}</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}

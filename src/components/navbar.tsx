@@ -12,30 +12,22 @@ import {
 } from "@/components/ui/navigation-menu"
 
 export function Navbar() {
-  const pathname = usePathname()
-
   return (
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <Link href="/" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Inflación
-            </NavigationMenuLink>
+          <Link href="/" className={navigationMenuTriggerStyle()}>
+            Inflación
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/radial" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Resumen Radial
-            </NavigationMenuLink>
+          <Link href="/radial" className={navigationMenuTriggerStyle()}>
+            Resumen Radial
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/tabla" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Tabla
-            </NavigationMenuLink>
+          <Link href="/tabla" className={navigationMenuTriggerStyle()}>
+            Tabla
           </Link>
         </NavigationMenuItem>
       </NavigationMenuList>

@@ -80,4 +80,13 @@ export const indicadoresData = [
     ],
     color: "#eab308",
   },
+  {
+    indicador: "Tipo de cambio Oficial A3500",
+    data: [
+      { year: "2024", value: 1050, periodo: "Anual", tipo: "Interanual" },
+      { year: "2025", value: 1250, periodo: "Anual", tipo: "Interanual" },
+      { year: "2026", value: 1400, periodo: "Actual", tipo: "Interanual" },
+    ],
+    color: "#eab308",
+  },
 ];

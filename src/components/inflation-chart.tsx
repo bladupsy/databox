@@ -19,9 +19,9 @@ import {
 } from "@/components/ui/chart"
 
 const chartData = [
-  { date: "2024", ipc: 118, ipim: 190, tasa: 110 },
-  { date: "2025", ipc: 31, ipim: 54, tasa: 40 },
-  { date: "2026", ipc: 32, ipim: 40, tasa: 23 },
+  { date: "2024", ipc: 211, ipim: 276, tasa: 70 },
+  { date: "2025", ipc: 130, ipim: 115, tasa: 35 },
+  { date: "2026", ipc: 10.4, ipim: 6.2, tasa: 32.5 },
 ]
 
 const chartConfig = {
@@ -60,7 +60,7 @@ export function InflationChart() {
               <span className="text-xs text-muted-foreground">
                 {chartConfig[key].label}
               </span>
-              <span className="text-lg leading-none font-bold sm:text-3xl">
+              <span className="text-lg leading-none font-medium sm:text-3xl">
                 {latestValue[key]}%
               </span>
             </div>
@@ -95,13 +95,7 @@ export function InflationChart() {
               tickFormatter={(value) => `${value}%`}
             />
             <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  className="w-[200px]"
-                  labelFormatter={(value) => `Año: ${value}`}
-                  formatter={(value) => `${value}%`}
-                />
-              }
+              content={<ChartTooltipContent />}
             />
             <ChartLegend />
             <Line

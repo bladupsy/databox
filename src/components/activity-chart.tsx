@@ -19,9 +19,9 @@ import {
 } from "@/components/ui/chart"
 
 const chartData = [
-  { year: "2024", produccion: -12, empleo: -5, consumo: -12 },
-  { year: "2025", produccion: 2, empleo: 0, consumo: 3 },
-  { year: "2026", produccion: -8.7, empleo: -2, consumo: -5 },
+  { year: "2024", bienesIntermedios: -12.5, bienesCapital: -22.5, empleo: -4.5 },
+  { year: "2025", bienesIntermedios: 6.5, bienesCapital: 12.5, empleo: -2.5 },
+  { year: "2026", bienesIntermedios: -4, bienesCapital: -10, empleo: -1.75 },
 ]
 
 const chartConfig = {
@@ -60,7 +60,7 @@ export function ActivityChart() {
               <span className="text-xs text-muted-foreground">
                 {chartConfig[key].label}
               </span>
-              <span className="text-lg leading-none font-bold sm:text-3xl">
+              <span className="text-lg leading-none font-medium sm:text-3xl">
                 {latestValue[key]}%
               </span>
             </div>
@@ -94,13 +94,7 @@ export function ActivityChart() {
               tickFormatter={(value) => `${value}%`}
             />
             <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  className="w-[200px]"
-                  labelFormatter={(value) => `Año: ${value}`}
-                  formatter={(value) => `${value}%`}
-                />
-              }
+              content={<ChartTooltipContent />}
             />
             <ChartLegend />
             <Line

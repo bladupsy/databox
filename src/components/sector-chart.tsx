@@ -19,52 +19,35 @@ import {
 } from "@/components/ui/chart"
 
 const chartData = [
-  { year: "2024", total: -21.5, capital: -22.5, insumos: -12.5 },
-  { year: "2025", total: 11.5, capital: 12.5, insumos: 6.5 },
-  { year: "2026", total: -7.5, capital: -10, insumos: -4 },
+  { date: "2024", bienesIntermedios: -12.5, bienesCapital: -22.5, empleo: -4.5 },
+  { date: "2025", bienesIntermedios: 6.5, bienesCapital: 12.5, empleo: -2.5 },
+  { date: "2026", bienesIntermedios: -4, bienesCapital: -10, empleo: -1.75 },
 ]
 
 const chartConfig = {
-  total: {
-    label: "Importaciones Totales",
+  bienesIntermedios: {
+    label: "Bienes Intermedios",
     color: "#06b6d4",
   },
-  capital: {
+  bienesCapital: {
     label: "Bienes de Capital",
-    color: "#3b82f6",
+    color: "#f97316",
   },
-  insumos: {
-    label: "Insumos",
+  empleo: {
+    label: "Empleo Industrial",
     color: "#8b5cf6",
   },
 } satisfies ChartConfig
 
-export function ImportsChart() {
-  const latestValue = chartData[chartData.length - 1]
-
+export function SectorChart() {
   return (
     <Card className="py-4 sm:py-0">
       <CardHeader className="flex flex-col items-stretch border-b p-0! sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
-          <CardTitle>Importaciones</CardTitle>
+          <CardTitle>Evolución Sectorial</CardTitle>
           <CardDescription>
-            Variación interanual (%)
+            Variación anual (%) - 2024/2025/2026
           </CardDescription>
-        </div>
-        <div className="flex">
-          {(["total", "capital", "insumos"] as const).map((key) => (
-            <div
-              key={key}
-              className="flex flex-1 flex-col justify-center gap-1 border-t px-4 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-6 sm:py-6"
-            >
-              <span className="text-xs text-muted-foreground">
-                {chartConfig[key].label}
-              </span>
-              <span className="text-lg leading-none font-medium sm:text-3xl">
-                {latestValue[key]}%
-              </span>
-            </div>
-          ))}
         </div>
       </CardHeader>
       <CardContent className="px-2 sm:p-6">
@@ -82,10 +65,11 @@ export function ImportsChart() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="year"
+              dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              minTickGap={32}
             />
             <YAxis
               tickLine={false}
@@ -98,25 +82,25 @@ export function ImportsChart() {
             />
             <ChartLegend />
             <Line
-              dataKey="total"
+              dataKey="bienesIntermedios"
               type="monotone"
-              stroke={chartConfig.total.color}
+              stroke={chartConfig.bienesIntermedios.color}
               strokeWidth={2}
-              dot={{ fill: chartConfig.total.color, r: 4 }}
+              dot={{ fill: chartConfig.bienesIntermedios.color, r: 4 }}
             />
             <Line
-              dataKey="capital"
+              dataKey="bienesCapital"
               type="monotone"
-              stroke={chartConfig.capital.color}
+              stroke={chartConfig.bienesCapital.color}
               strokeWidth={2}
-              dot={{ fill: chartConfig.capital.color, r: 4 }}
+              dot={{ fill: chartConfig.bienesCapital.color, r: 4 }}
             />
             <Line
-              dataKey="insumos"
+              dataKey="empleo"
               type="monotone"
-              stroke={chartConfig.insumos.color}
+              stroke={chartConfig.empleo.color}
               strokeWidth={2}
-              dot={{ fill: chartConfig.insumos.color, r: 4 }}
+              dot={{ fill: chartConfig.empleo.color, r: 4 }}
             />
           </LineChart>
         </ChartContainer>

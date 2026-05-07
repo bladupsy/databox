@@ -147,7 +147,7 @@ function RadialCard({
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-4xl font-bold"
+                          className="fill-foreground text-4xl font-medium"
                           fill={color}
                         >
                           {config.value}%
