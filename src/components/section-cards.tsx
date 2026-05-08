@@ -4,7 +4,6 @@ import { ArrowDown, ArrowUp } from "lucide-react"
 import { Area, AreaChart, ResponsiveContainer } from "recharts"
 
 import { Card } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 
 const CARDS = [
   {
@@ -79,12 +78,11 @@ export function KpiSparklineCards() {
               </p>
               <p className="text-muted-foreground text-xs">{card.subtext}</p>
             </div>
-            <Separator />
-            <div className="h-20 w-full">
+            <div className="h-20 w-full px-5 pb-4">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
                   data={card.sparkData.map((v, i) => ({ i, v }))}
-                  margin={{ top: 6, right: 0, left: 0, bottom: 0 }}
+                  margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
                 >
                   <defs>
                     <linearGradient
