@@ -26,23 +26,23 @@ type ChartDataType = {
 }
 
 const chartData: ChartDataType[] = [
-  { year: "2024", bienesIntermedios: -12.5, bienesCapital: -22.5, empleo: -4.5 },
-  { year: "2025", bienesIntermedios: 6.5, bienesCapital: 12.5, empleo: -2.5 },
-  { year: "2026", bienesIntermedios: -4, bienesCapital: -10, empleo: -1.75 },
+  { year: "2024", bienesIntermedios: -12.5, bienesCapital: -22.5, empleo: -4.90 },
+  { year: "2025", bienesIntermedios: 6.5, bienesCapital: 12.5, empleo: -3.00 },
+  { year: "2026", bienesIntermedios: -4, bienesCapital: -10, empleo: -3.60 },
 ]
 
 const chartConfig = {
   bienesIntermedios: {
     label: "Bienes Intermedios",
-    color: "#f97316",
+    color: "#dc2626",
   },
   bienesCapital: {
     label: "Bienes de Capital",
-    color: "#ef4444",
+    color: "#facc15",
   },
   empleo: {
     label: "Empleo Industrial",
-    color: "#eab308",
+    color: "#22c55e",
   },
 } satisfies ChartConfig
 

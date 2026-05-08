@@ -88,9 +88,9 @@ function getValueLabel(key: string, value: number): string {
 
 function getRadialColor(key: string, value: number): string {
   if (key === "tc" || key === "tasa") {
-    return "#f97316"
+    return "#facc15"
   }
-  return value >= 0 ? "#22c55e" : "#ef4444"
+  return value >= 0 ? "#22c55e" : "#dc2626"
 }
 
 function RadialCard({

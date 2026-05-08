@@ -17,15 +17,15 @@ import {
 } from "@/components/ui/chart"
 
 const chartData = [
-  { year: "2024", ipc: 211 },
-  { year: "2025", ipc: 130 },
-  { year: "2026", ipc: 10.4 },
+  { year: "2024", ipc: 117.8 },
+  { year: "2025", ipc: 31.5 },
+  { year: "2026", ipc: 9.4 },
 ]
 
 const chartConfig = {
   ipc: {
     label: "IPC",
-    color: "#f97316",
+    color: "#dc2626",
   },
   label: {
     color: "var(--background)",

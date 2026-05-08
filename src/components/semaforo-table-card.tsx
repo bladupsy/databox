@@ -40,28 +40,7 @@ const datos: IndicadorSemaforo[] = [
     tendencia: "🔻",
     lectura: "Mercado laboral frágil",
     semaforo: "estabilidad",
-  },
-  {
-    variable: "Pobreza",
-    situacion: "Alta",
-    tendencia: "⚠️",
-    lectura: "Debilidad social",
-    semaforo: "contraccion",
-  },
-  {
-    variable: "Tipo de cambio",
-    situacion: "Estable",
-    tendencia: "🟡",
-    lectura: "Mayor previsibilidad",
-    semaforo: "estabilidad",
-  },
-  {
-    variable: "Tasa de interés",
-    situacion: "Media-alta",
-    tendencia: "🔻",
-    lectura: "Crédito aún caro",
-    semaforo: "estabilidad",
-  },
+},
 ]
 
 const semaforoConfig = {

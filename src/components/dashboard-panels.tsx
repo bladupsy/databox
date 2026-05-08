@@ -14,38 +14,37 @@ interface IndicadorPanel {
 
 const indicadoresPorPanel: Record<string, IndicadorPanel[]> = {
   macroeconomia: [
-    { title: "PIB / EMAE", value: "-2,1%", description: "Feb 2026 - Interanual", trend: "down" },
-    { title: "Inflación IPC", value: "10,4%", description: "Ene-Mar 2026 - Acumulado", trend: "down" },
-    { title: "Desempleo", value: "7-8%", description: "Estimado 2026", trend: "up" },
-    { title: "Tipo de Cambio", value: "$1.250-$1.400", description: "2026 - Actual", trend: "neutral" },
-    { title: "Tasa BCRA", value: "30-35%", description: "2026 - Actual", trend: "neutral" },
+    { title: "EMAE", value: "-5,70%", description: "Feb 2026 (acum. ene-feb)", trend: "down" },
+    { title: "IPC 2024", value: "117%", description: "Inflación anual", trend: "down" },
+    { title: "IPC 2026", value: "10,4%", description: "Ene-Mar 2026 - Acumulado", trend: "down" },
+    { title: "Tipo de Cambio", value: "≈ $1.250–$1.400", description: "2026 - Actual", trend: "neutral" },
+    { title: "Tasa BCRA", value: "30%", description: "2026 - Actual", trend: "neutral" },
   ],
   manufacturero: [
-    { title: "PIB Industrial", value: "-8%", description: "2026 - Estimado", trend: "down" },
-    { title: "Producción Manufacturera", value: "-8,7%", description: "Feb 2026 - Interanual", trend: "down" },
-    { title: "Import. Insumos", value: "-3% a -5%", description: "Ene-Feb 2026", trend: "down" },
-    { title: "Import. Bienes Capital", value: "-8% a -12%", description: "Ene-Feb 2026", trend: "down" },
-    { title: "Empleo Industrial", value: "-1,5% a -2%", description: "2026 - Acumulado", trend: "down" },
+    { title: "Bienes Intermedios 2025", value: "-32%", description: "Variación interanual", trend: "down" },
+    { title: "Bienes de Capital 2026", value: "-20%", description: "Ene-Feb 2026", trend: "down" },
+    { title: "Import. Totales 2024", value: "-17%", description: "Variación anual", trend: "down" },
+    { title: "Import. B. Capital 2025", value: "+51,3%", description: "Recuperación", trend: "up" },
+    { title: "Empleo Industrial 2026", value: "-3,6%", description: "Acumulado", trend: "down" },
   ],
   social: [
     { title: "Tasa de Empleo", value: "45-47%", description: "2026 - Estimado", trend: "neutral" },
     { title: "Empleo Informal", value: "35-38%", description: "2026 - Estimado", trend: "neutral" },
-    { title: "Pobreza", value: "35-40%", description: "2026 - Estimado", trend: "neutral" },
     { title: "Salario Real", value: "-5% a -8%", description: "2026 - Estimado", trend: "down" },
   ],
 }
 
 const semaforo = {
-  expansion: "#639922",
-  estabilidad: "#EF9F27",
-  contraction: "#E24B4A",
+  expansion: "#22c55e",
+  estabilidad: "#facc15",
+  contraction: "#dc2626",
 }
 
 const recomendaciones = [
-  { label: "Invertir", bg: "#EAF3DE", color: "#27500A" },
-  { label: "Esperar", bg: "#FAEEDA", color: "#633806" },
-  { label: "Diversificar", bg: "#EDE8FE", color: "#3C3489" },
-  { label: "Retraer", bg: "#FCEBEB", color: "#791F1F" },
+  { label: "Invertir", bg: "#dcfce7", color: "#166534" },
+  { label: "Esperar", bg: "#fef9c3", color: "#854d0e" },
+  { label: "Diversificar", bg: "#e0e7ff", color: "#3730a3" },
+  { label: "Retraer", bg: "#fee2e2", color: "#991b1b" },
 ]
 
 function getTrendIcon(trend: "up" | "down" | "neutral") {

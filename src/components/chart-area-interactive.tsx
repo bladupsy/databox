@@ -35,15 +35,15 @@ const chartData = [
 const chartConfig = {
   ipc: {
     label: "IPC",
-    color: "hsl(187, 85%, 53%)",
+    color: "#dc2626",
   },
   ipim: {
     label: "IPIM",
-    color: "hsl(25, 95%, 53%)",
+    color: "#facc15",
   },
   tasa: {
     label: "Tasa BCRA",
-    color: "hsl(45, 93%, 47%)",
+    color: "#f97316",
   },
 } satisfies ChartConfig
 

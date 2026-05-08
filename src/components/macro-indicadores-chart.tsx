@@ -19,23 +19,23 @@ import {
 } from "@/components/ui/chart"
 
 const chartData = [
-  { date: "2024", ipc: 211, ipim: 276, tasa: 40 },
-  { date: "2025", ipc: 130, ipim: 115, tasa: 30 },
-  { date: "2026", ipc: 10.4, ipim: 6.2, tasa: 32.5 },
+  { date: "2024", ipc: 117.8, ipim: 117, tasa: 40 },
+  { date: "2025", ipc: 31.5, ipim: 31.5, tasa: 30 },
+  { date: "2026", ipc: 9.4, ipim: 6.1, tasa: 32.5 },
 ]
 
 const chartConfig = {
   ipc: {
     label: "IPC",
-    color: "#06b6d4",
+    color: "#dc2626",
   },
   ipim: {
     label: "IPIM",
-    color: "#f97316",
+    color: "#facc15",
   },
   tasa: {
     label: "Tasa BCRA",
-    color: "#22c55e",
+    color: "#f97316",
   },
 } satisfies ChartConfig
 

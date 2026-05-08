@@ -19,23 +19,23 @@ import {
 } from "@/components/ui/chart"
 
 const chartData = [
-  { date: "2024", bienesIntermedios: -12.5, bienesCapital: -22.5, empleo: -4.5 },
-  { date: "2025", bienesIntermedios: 6.5, bienesCapital: 12.5, empleo: -2.5 },
-  { date: "2026", bienesIntermedios: -4, bienesCapital: -10, empleo: -1.75 },
+  { date: "2024", bienesIntermedios: -12.5, bienesCapital: -22.5, empleo: -4.90 },
+  { date: "2025", bienesIntermedios: 6.5, bienesCapital: 12.5, empleo: -3.00 },
+  { date: "2026", bienesIntermedios: -4, bienesCapital: -10, empleo: -3.60 },
 ]
 
 const chartConfig = {
   bienesIntermedios: {
     label: "Bienes Intermedios",
-    color: "#06b6d4",
+    color: "#dc2626",
   },
   bienesCapital: {
     label: "Bienes de Capital",
-    color: "#f97316",
+    color: "#facc15",
   },
   empleo: {
     label: "Empleo Industrial",
-    color: "#8b5cf6",
+    color: "#22c55e",
   },
 } satisfies ChartConfig
 

@@ -21,7 +21,6 @@ import {
 const chartData = [
   { 
     date: "2024", 
-    ipc: 117.8, 
     tasaBCRA: 100, 
     creditoPyME: 160, 
     tasaBienesCapital: 43, 
@@ -29,7 +28,6 @@ const chartData = [
   },
   { 
     date: "2025", 
-    ipc: 31.5, 
     tasaBCRA: 32, 
     creditoPyME: 52.5, 
     tasaBienesCapital: 21.5, 
@@ -37,7 +35,6 @@ const chartData = [
   },
   { 
     date: "2026", 
-    ipc: 9.4, 
     tasaBCRA: 29, 
     creditoPyME: 44, 
     tasaBienesCapital: 15, 
@@ -46,25 +43,21 @@ const chartData = [
 ]
 
 const chartConfig = {
-  ipc: {
-    label: "IPC",
-    color: "#ef4444",
-  },
   tasaBCRA: {
     label: "Tasa BCRA",
-    color: "#22c55e",
+    color: "#dc2626",
   },
   creditoPyME: {
     label: "Crédito PyME",
-    color: "#8b5cf6",
+    color: "#facc15",
   },
   tasaBienesCapital: {
     label: "Tasa B. Capital",
-    color: "#06b6d4",
+    color: "#f97316",
   },
   tasaTecnologia: {
     label: "Tasa Tecnología",
-    color: "#f97316",
+    color: "#22c55e",
   },
 } satisfies ChartConfig
 
@@ -75,13 +68,13 @@ export function TasasChart() {
     <Card className="py-4 sm:py-0">
       <CardHeader className="flex flex-col items-stretch border-b p-0! sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
-          <CardTitle>Tasas e Inflación</CardTitle>
+          <CardTitle>Tasas de Interés</CardTitle>
           <CardDescription>
-            IPC, Tasas y Crédito (%) - 2024/2025/2026
+            Tasas y Crédito (%) - 2024/2025/2026
           </CardDescription>
         </div>
         <div className="flex flex-wrap">
-          {(["ipc", "tasaBCRA", "creditoPyME", "tasaBienesCapital", "tasaTecnologia"] as const).map((key, index) => (
+          {(["tasaBCRA", "creditoPyME", "tasaBienesCapital", "tasaTecnologia"] as const).map((key) => (
             <div
               key={key}
               className="flex flex-1 flex-col justify-center gap-1 border-t px-4 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-6 sm:py-6 min-w-[120px]"
@@ -90,7 +83,7 @@ export function TasasChart() {
                 {chartConfig[key].label}
               </span>
               <span className="text-lg leading-none font-medium sm:text-3xl">
-                {key === "ipc" ? latestValue[key] : `${latestValue[key]}%`}
+                {`${latestValue[key]}%`}
               </span>
             </div>
           ))}
@@ -127,13 +120,6 @@ export function TasasChart() {
               content={<ChartTooltipContent />}
             />
             <ChartLegend />
-            <Line
-              dataKey="ipc"
-              type="monotone"
-              stroke={chartConfig.ipc.color}
-              strokeWidth={2}
-              dot={{ fill: chartConfig.ipc.color, r: 4 }}
-            />
             <Line
               dataKey="tasaBCRA"
               type="monotone"

@@ -19,13 +19,6 @@ const SOCIAL_INDICADORES = [
     periodo: "2026 - Acumulado",
   },
   {
-    name: "Pobreza (est.)",
-    value: "35-40%",
-    change: "Estimación",
-    changeType: "neutral",
-    periodo: "2026 - Projection",
-  },
-  {
     name: "Puestos Perdidos",
     value: "-105.000",
     change: "-105.000",

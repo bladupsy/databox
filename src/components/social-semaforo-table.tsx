@@ -41,14 +41,7 @@ const datos: Indicador[] = [
     lectura: "Consumo débil",
     semaforo: "estabilidad",
   },
-  {
-    variable: "Desigualdad / pobreza",
-    situacion: "Elevada",
-    tendencia: "⚠️",
-    lectura: "Presión social",
-    semaforo: "contraccion",
-  },
-]
+  ]
 
 const semaforoConfig = {
   expansion: {

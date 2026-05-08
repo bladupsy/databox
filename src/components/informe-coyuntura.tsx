@@ -6,47 +6,45 @@ import { Badge } from "@/components/ui/badge"
 const TABLERO = {
   macro: {
     title: "Panel 1: Macroeconomía General",
-    color: "#378ADD",
+    color: "#dc2626",
     indicadores: [
-      { label: "EMAE / PIB", value: "-2,1%", tendencia: "baja", anio: "2026" },
-      { label: "IPC (Anual)", value: "10,4%", tendencia: "mejora", anio: "2026" },
-      { label: "IPIM (Anual)", value: "6,2%", tendencia: "mejora", anio: "2026" },
-      { label: "Tasa BCRA", value: "30-35%", tendencia: "baja", anio: "2026" },
-      { label: "Tipo de Cambio", value: "$1250-1400", tendencia: "estable", anio: "2026" },
-      { label: "Confianza (ICE)", value: "50-60", tendencia: "mejora", anio: "2026" },
+      { label: "EMAE 2026", value: "-5,70%", tendencia: "baja", anio: "Feb" },
+      { label: "IPC 2024", value: "117%", tendencia: "baja", anio: "2024" },
+      { label: "IPC 2026", value: "10,4%", tendencia: "mejora", anio: "Ene-Mar" },
+      { label: "Tasa BCRA", value: "30%", tendencia: "baja", anio: "2026" },
+      { label: "Tipo de Cambio", value: "$1.250-$1.400", tendencia: "estable", anio: "2026" },
     ]
   },
   sectorial: {
     title: "Panel 2: Sector Manufacturero",
-    color: "#1D9E75",
+    color: "#facc15",
     indicadores: [
-      { label: "Bienes Intermedios", value: "-3% a -5%", tendencia: "baja", anio: "2026" },
-      { label: "Bienes de Capital", value: "-8% a -12%", tendencia: "baja", anio: "2026" },
-      { label: "Import. Insumos", value: "-3% a -5%", tendencia: "baja", anio: "2026" },
-      { label: "Import. B. Capital", value: "-8% a -12%", tendencia: "baja", anio: "2026" },
-      { label: "Empleo Industrial", value: "-1,5% a -2%", tendencia: "baja", anio: "2026" },
+      { label: "Bienes Intermedios 2025", value: "-32%", tendencia: "baja", anio: "2025" },
+      { label: "Bienes de Capital 2026", value: "-20%", tendencia: "baja", anio: "Ene-Feb" },
+      { label: "Import. Totales 2024", value: "-17%", tendencia: "baja", anio: "2024" },
+      { label: "Import. B. Capital 2025", value: "+51,3%", tendencia: "mejora", anio: "2025" },
+      { label: "Empleo Industrial 2026", value: "-3,6%", tendencia: "baja", anio: "Acum." },
     ]
   },
   social: {
     title: "Panel 3: Social / Territorial",
-    color: "#7F77DD",
+    color: "#22c55e",
     indicadores: [
-      { label: "Empleo Industrial", value: "1.120.000", tendencia: "baja", anio: "2026" },
-      { label: "Variación Empleo", value: "-1,5% a -2%", tendencia: "baja", anio: "2026" },
-      { label: "Pobreza (est.)", value: "35-40%", tendencia: "estable", anio: "2026" },
+      { label: "Empleo Industrial 2026", value: "1.120.000", tendencia: "baja", anio: "Nivel" },
+      { label: "Variación 2026", value: "-3,6%", tendencia: "baja", anio: "Acum." },
       { label: "Puestos Perdidos", value: "-105.000", tendencia: "baja", anio: "2023-26" },
     ]
   },
   semaforo: {
     title: "Panel 4: Semáforo + Recomendación",
-    color: "#EF9F27",
+    color: "#f97316",
     indicadores: [
-      { label: "Actividad Macro", estado: "🟡", desc: "Recuperación incompleta" },
+      { label: "Actividad Macro", estado: "🟡", desc: "EMAE en caída" },
       { label: "Sector Industrial", estado: "🔴", desc: "Contracción severa" },
-      { label: "Precios", estado: "🟢", desc: "Desaceleración fuerte" },
-      { label: "Inversión", estado: "🔴", desc: "Caída de importaciones" },
+      { label: "Precios", estado: "🟢", desc: "Desaceleración" },
+      { label: "Inversión", estado: "🔴", desc: "Caída importaciones" },
       { label: "Empleo", estado: "🔴", desc: "Deterioro sostenido" },
-      { label: "Confianza", estado: "🟡", desc: "Estabilidad" },
+      { label: "Confianza", estado: "🟡", desc: "Negativa" },
     ]
   }
 }

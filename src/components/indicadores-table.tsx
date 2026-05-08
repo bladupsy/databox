@@ -1,7 +1,5 @@
 "use client"
 
-import { useState } from "react"
-
 import { Badge } from "@/components/ui/badge"
 import {
   Table,
@@ -33,53 +31,64 @@ interface Indicador {
 }
 
 const indicadores: Indicador[] = [
-  { id: 1, cat: "actividad", per: "Acumulado", ind: "EMAE", año: "2024", tipo: "Variación acumulada", val: "-2,7% a -4,5%", src: "INDEC", obs: "Caída anual" },
-  { id: 2, cat: "actividad", per: "Dic", ind: "EMAE", año: "2025", tipo: "Interanual", val: "3,5%", src: "INDEC", obs: "Mejora" },
-  { id: 3, cat: "actividad", per: "Oct", ind: "EMAE", año: "2025", tipo: "Interanual", val: "3,2%", src: "INDEC", obs: "Mejora" },
-  { id: 4, cat: "actividad", per: "Acum. estimado", ind: "EMAE/PBI", año: "2025", tipo: "Estimación", val: "+2% a +4%", src: "INDEC", obs: "Recuperación" },
-  { id: 5, cat: "actividad", per: "Feb", ind: "EMAE", año: "2026", tipo: "Interanual", val: "-2,1%", src: "INDEC", obs: "Caída" },
-  { id: 6, cat: "actividad", per: "Feb", ind: "EMAE", año: "2026", tipo: "Mensual", val: "-2,6%", src: "INDEC", obs: "Caída mensual" },
-  { id: 7, cat: "industria", per: "—", ind: "Bienes intermedios", año: "2024", tipo: "Variación", val: "-10% a -15%", src: "INDEC", obs: "Fuerte caída" },
-  { id: 8, cat: "industria", per: "—", ind: "Bienes de capital", año: "2024", tipo: "Variación", val: "-20% a -25%", src: "INDEC", obs: "Caída fuerte" },
-  { id: 9, cat: "industria", per: "—", ind: "Bienes intermedios", año: "2025", tipo: "Variación", val: "+5% a +8%", src: "INDEC", obs: "Recuperación" },
-  { id: 10, cat: "industria", per: "—", ind: "Bienes de capital", año: "2025", tipo: "Variación", val: "+10% a +15%", src: "INDEC", obs: "Recuperación" },
-  { id: 11, cat: "industria", per: "Ene–Feb", ind: "Bienes intermedios", año: "2026", tipo: "Variación", val: "-3% a -5%", src: "INDEC", obs: "Nueva caída" },
-  { id: 12, cat: "industria", per: "Ene–Feb", ind: "Bienes de capital", año: "2026", tipo: "Variación", val: "-8% a -12%", src: "INDEC", obs: "Caída marcada" },
-  { id: 13, cat: "empleo", per: "Base", ind: "Empleo industrial", año: "2023", tipo: "Nivel", val: "1.225.000", src: "Ministerio Trabajo", obs: "Base" },
-  { id: 14, cat: "empleo", per: "—", ind: "Empleo industrial", año: "2024", tipo: "Variación", val: "-4,5%", src: "Ministerio Trabajo", obs: "Ajuste fuerte" },
-  { id: 15, cat: "empleo", per: "—", ind: "Empleo industrial", año: "2025", tipo: "Variación", val: "-2,5%", src: "Ministerio Trabajo", obs: "Caída moderada" },
-  { id: 16, cat: "empleo", per: "Acum.", ind: "Empleo industrial", año: "2026", tipo: "Variación", val: "-1,5% a -2%", src: "Ministerio Trabajo", obs: "Sigue deterioro" },
-  { id: 17, cat: "importaciones", per: "—", ind: "Totales", año: "2024", tipo: "Variación", val: "-18% a -25%", src: "INDEC", obs: "Fuerte caída" },
-  { id: 18, cat: "importaciones", per: "—", ind: "Bienes intermedios", año: "2024", tipo: "Variación", val: "-10% a -15%", src: "INDEC", obs: "Caída" },
-  { id: 19, cat: "importaciones", per: "—", ind: "Bienes de capital", año: "2024", tipo: "Variación", val: "-20% a -25%", src: "INDEC", obs: "Caída" },
-  { id: 20, cat: "importaciones", per: "—", ind: "Totales", año: "2025", tipo: "Variación", val: "+8% a +15%", src: "INDEC", obs: "Recuperación" },
-  { id: 21, cat: "importaciones", per: "—", ind: "Bienes intermedios", año: "2025", tipo: "Variación", val: "+5% a +8%", src: "INDEC", obs: "Mejora" },
-  { id: 22, cat: "importaciones", per: "—", ind: "Bienes de capital", año: "2025", tipo: "Variación", val: "+10% a +15%", src: "INDEC", obs: "Mejora" },
-  { id: 23, cat: "importaciones", per: "Ene–Feb", ind: "Totales", año: "2026", tipo: "Variación", val: "-5% a -10%", src: "INDEC", obs: "Nueva caída" },
-  { id: 24, cat: "importaciones", per: "Ene–Feb", ind: "Bienes intermedios", año: "2026", tipo: "Variación", val: "-3% a -5%", src: "INDEC", obs: "Caída" },
-  { id: 25, cat: "importaciones", per: "Ene–Feb", ind: "Bienes de capital", año: "2026", tipo: "Variación", val: "-8% a -12%", src: "INDEC", obs: "Caída" },
-  { id: 26, cat: "precios", per: "—", ind: "IPC", año: "2024", tipo: "Anual", val: "211%", src: "INDEC", obs: "Muy alta" },
-  { id: 27, cat: "precios", per: "—", ind: "IPIM", año: "2024", tipo: "Anual", val: "276%", src: "INDEC", obs: "Muy alta" },
-  { id: 28, cat: "precios", per: "—", ind: "Inflación esperada", año: "2024", tipo: "Expectativa", val: "200%–220%", src: "BCRA", obs: "Proyecciones" },
-  { id: 29, cat: "precios", per: "—", ind: "IPC", año: "2025", tipo: "Estimación", val: "120%–140%", src: "INDEC", obs: "Desaceleración" },
-  { id: 30, cat: "precios", per: "—", ind: "IPIM", año: "2025", tipo: "Estimación", val: "100%–130%", src: "INDEC", obs: "Desaceleración" },
-  { id: 31, cat: "precios", per: "—", ind: "Inflación esperada", año: "2025", tipo: "Expectativa", val: "130%–150%", src: "BCRA", obs: "Proyecciones" },
-  { id: 32, cat: "precios", per: "Ene–Mar", ind: "IPC acumulado", año: "2026", tipo: "Acumulado", val: "10,4%", src: "INDEC", obs: "Baja fuerte" },
-  { id: 33, cat: "precios", per: "Ene–Mar", ind: "IPIM acumulado", año: "2026", tipo: "Acumulado", val: "6,2%", src: "INDEC", obs: "Baja" },
-  { id: 34, cat: "precios", per: "—", ind: "Inflación esperada", año: "2026", tipo: "Proyección", val: "80%–120%", src: "BCRA", obs: "Desaceleración" },
-  { id: 35, cat: "tasas", per: "—", ind: "Tasa BCRA", año: "2024", tipo: "Observado", val: "100% → 40%", src: "BCRA", obs: "Fuerte baja" },
-  { id: 36, cat: "tasas", per: "—", ind: "Tasa BCRA", año: "2025", tipo: "Observado", val: "40% → 30%", src: "BCRA", obs: "Baja" },
-  { id: 37, cat: "tasas", per: "—", ind: "Tasa BCRA", año: "2026", tipo: "Actual", val: "30%–35%", src: "BCRA", obs: "Estabilidad" },
-  { id: 38, cat: "tasas", per: "—", ind: "Crédito PyME", año: "2024", tipo: "Observado", val: "80%–120%", src: "BCRA", obs: "Muy caro" },
-  { id: 39, cat: "tasas", per: "—", ind: "Crédito PyME", año: "2025", tipo: "Observado", val: "50%–80%", src: "BCRA", obs: "Baja parcial" },
-  { id: 40, cat: "tasas", per: "—", ind: "Crédito PyME", año: "2026", tipo: "Actual", val: "40%–70%", src: "BCRA", obs: "Mejora" },
-  { id: 41, cat: "tipo_cambio", per: "—", ind: "TC oficial", año: "2024", tipo: "Tipo de cambio", val: "$350 → $800", src: "BCRA", obs: "Salto" },
-  { id: 42, cat: "tipo_cambio", per: "—", ind: "TC oficial", año: "2024", tipo: "Tipo de cambio", val: "$800 → $1050", src: "BCRA", obs: "Corrección" },
-  { id: 43, cat: "tipo_cambio", per: "—", ind: "TC oficial", año: "2025", tipo: "Tipo de cambio", val: "$1050 → $1250", src: "BCRA", obs: "Estabilidad" },
-  { id: 44, cat: "tipo_cambio", per: "Actual", ind: "TC oficial", año: "2026", tipo: "Tipo de cambio", val: "$1250–$1400", src: "BCRA", obs: "Estable" },
-  { id: 45, cat: "confianza", per: "—", ind: "ICE", año: "2024", tipo: "Observado", val: "35–45", src: "UTDT", obs: "Baja" },
-  { id: 46, cat: "confianza", per: "—", ind: "ICE", año: "2025", tipo: "Observado", val: "45–55", src: "UTDT", obs: "Mejora" },
-  { id: 47, cat: "confianza", per: "Actual", ind: "ICE", año: "2026", tipo: "Último dato", val: "50–60", src: "UTDT", obs: "Estabilidad" }
+  { id: 1, cat: "actividad", per: "2024 (acum.)", ind: "EMAE", año: "2024", tipo: "Variación acumulada", val: "-9,19%", src: "INDEC / FIE", obs: "Ver informe EMAE 2024" },
+  { id: 2, cat: "actividad", per: "Feb 2026 (acum. ene–feb)", ind: "EMAE", año: "2026", tipo: "Variación mensual", val: "-5,70%", src: "INDEC", obs: "(INDEC)" },
+  { id: 3, cat: "actividad", per: "Feb 2026 (interanual)", ind: "EMAE", año: "2026", tipo: "Interanual mensual", val: "—", src: "INDEC", obs: "Ver EMAE feb 2026" },
+  { id: 4, cat: "actividad", per: "2025 (acum. estimado)", ind: "EMAE / PBI", año: "2025", tipo: "Crecimiento estimado", val: "+0,8%", src: "INDEC + analistas", obs: "Ver EMAE dic 2025" },
+  { id: 5, cat: "industria", per: "2025", ind: "Bienes intermedios", año: "2025", tipo: "Variación interanual", val: "-32%", src: "INDEC", obs: "Insumos productivos" },
+  { id: 6, cat: "industria", per: "2026 (ene–feb)", ind: "Bienes intermedios", año: "2026", tipo: "Interanual", val: "-3,8%", src: "INDEC", obs: "Serie mensual" },
+  { id: 7, cat: "industria", per: "2025", ind: "Bienes de capital", año: "2025", tipo: "Variación interanual", val: "-20%", src: "INDEC", obs: "Equipos y maquinaria" },
+  { id: 8, cat: "industria", per: "2026 (ene–feb)", ind: "Bienes de capital", año: "2026", tipo: "Interanual", val: "-20%", src: "INDEC", obs: "Serie mensual" },
+  { id: 9, cat: "empleo", per: "2023 (base)", ind: "Empleo industrial", año: "2023", tipo: "Nivel", val: "1.225.000", src: "—", obs: "Nivel previo a la caída" },
+  { id: 10, cat: "empleo", per: "2024", ind: "Empleo industrial", año: "2024", tipo: "Variación anual", val: "-4,9% (-55.000)", src: "—", obs: "Caída empleo industrial" },
+  { id: 11, cat: "empleo", per: "2025", ind: "Empleo industrial", año: "2025", tipo: "Variación anual", val: "-3,0% (-30.000)", src: "—", obs: "Continúa deterioro industrial" },
+  { id: 12, cat: "empleo", per: "2026 (acum.)", ind: "Empleo industrial", año: "2026", tipo: "Variación", val: "-3,6% (-15.000 a -20.000)", src: "—", obs: "Empeora" },
+  { id: 13, cat: "empleo", per: "2023 (base)", ind: "Empleo total", año: "2023", tipo: "Nivel", val: "13.300.000", src: "—", obs: "Nivel previo" },
+  { id: 14, cat: "empleo", per: "2024", ind: "Empleo total", año: "2024", tipo: "Variación anual", val: "-3,1% (-200.000)", src: "—", obs: "Caída empleo total" },
+  { id: 15, cat: "empleo", per: "2025", ind: "Empleo total", año: "2025", tipo: "Variación anual", val: "+0,1% (+50.000)", src: "—", obs: "Ligera recuperación" },
+  { id: 16, cat: "empleo", per: "2026 (acum.)", ind: "Empleo total", año: "2026", tipo: "Variación", val: "0% (-30.000)", src: "—", obs: "Estabilidad con leve baja" },
+  { id: 17, cat: "importaciones", per: "2024", ind: "Importaciones totales", año: "2024", tipo: "Variación anual", val: "-17%", src: "INDEC", obs: "CIF USD" },
+  { id: 18, cat: "importaciones", per: "2025", ind: "Importaciones totales", año: "2025", tipo: "Variación anual", val: "+24,7%", src: "INDEC", obs: "Recuperación" },
+  { id: 19, cat: "importaciones", per: "2026 (ene–mar)", ind: "Importaciones totales", año: "2026", tipo: "Variación", val: "-7,3%", src: "INDEC", obs: "Mensual/interanual" },
+  { id: 20, cat: "importaciones", per: "2024", ind: "Bienes intermedios", año: "2024", tipo: "Variación anual", val: "-6%", src: "INDEC", obs: "Uso económico" },
+  { id: 21, cat: "importaciones", per: "2025", ind: "Bienes intermedios", año: "2025", tipo: "Variación anual", val: "+5,5%", src: "INDEC", obs: "Insumos industriales" },
+  { id: 22, cat: "importaciones", per: "2026 (ene–feb)", ind: "Bienes intermedios", año: "2026", tipo: "Variación", val: "+29%", src: "INDEC", obs: "Serie mensual" },
+  { id: 23, cat: "importaciones", per: "2024", ind: "Bienes de capital", año: "2024", tipo: "Variación anual", val: "-16%", src: "INDEC", obs: "Uso económico" },
+  { id: 24, cat: "importaciones", per: "2025", ind: "Bienes de capital", año: "2025", tipo: "Variación anual", val: "+51,3%", src: "INDEC", obs: "Equipos y maquinaria" },
+  { id: 25, cat: "importaciones", per: "2026 (ene–feb)", ind: "Bienes de capital", año: "2026", tipo: "Variación", val: "+21%", src: "INDEC", obs: "Serie mensual" },
+  { id: 26, cat: "precios", per: "2024", ind: "IPC", año: "2024", tipo: "Observado anual", val: "117%", src: "INDEC", obs: "Precios al consumidor" },
+  { id: 27, cat: "precios", per: "2025", ind: "IPC", año: "2025", tipo: "Estimación", val: "31,5%", src: "INDEC", obs: "Inflación consumidor" },
+  { id: 28, cat: "precios", per: "2026 (ene–mar)", ind: "IPC", año: "2026", tipo: "Observado acum.", val: "10,4%", src: "INDEC", obs: "IPC 04/26" },
+  { id: 29, cat: "precios", per: "2024", ind: "IPIM", año: "2024", tipo: "Observado anual", val: "117%", src: "INDEC", obs: "Precios mayoristas" },
+  { id: 30, cat: "precios", per: "2025", ind: "IPIM", año: "2025", tipo: "Estimación", val: "31,5%", src: "INDEC", obs: "Costos mayoristas" },
+  { id: 31, cat: "precios", per: "2026 (ene–mar)", ind: "IPIM", año: "2026", tipo: "Observado acum.", val: "6,1%", src: "INDEC", obs: "IPIM 04/26" },
+  { id: 32, cat: "precios", per: "2024", ind: "REM", año: "2024", tipo: "Expectativa", val: "117,8%", src: "BCRA", obs: "REM 2024" },
+  { id: 33, cat: "precios", per: "2025", ind: "REM", año: "2025", tipo: "Expectativa", val: "30,45%", src: "BCRA", obs: "REM" },
+  { id: 34, cat: "precios", per: "2026", ind: "REM", año: "2026", tipo: "Proyección", val: "9,6%", src: "BCRA", obs: "REM" },
+  { id: 35, cat: "tasas", per: "2024", ind: "Tasa BCRA", año: "2024", tipo: "Política monetaria", val: "40%", src: "BCRA", obs: "Costo base" },
+  { id: 36, cat: "tasas", per: "2025", ind: "Tasa BCRA", año: "2025", tipo: "Política monetaria", val: "40%", src: "BCRA", obs: "Costo base" },
+  { id: 37, cat: "tasas", per: "2026", ind: "Tasa BCRA", año: "2026", tipo: "Política monetaria", val: "30%", src: "BCRA", obs: "Costo base" },
+  { id: 38, cat: "tasas", per: "2024", ind: "Crédito PyME", año: "2024", tipo: "Financiamiento", val: "120%", src: "BCRA", obs: "Costo real" },
+  { id: 39, cat: "tasas", per: "2025", ind: "Crédito PyME", año: "2025", tipo: "Financiamiento", val: "80%", src: "BCRA", obs: "Costo real" },
+  { id: 40, cat: "tasas", per: "2026", ind: "Crédito PyME", año: "2026", tipo: "Financiamiento", val: "70%", src: "BCRA", obs: "Costo real" },
+  { id: 41, cat: "tasas", per: "2024", ind: "Tasa bienes de capital", año: "2024", tipo: "Subsidio", val: "60%", src: "Estado/Bancos", obs: "Inversión" },
+  { id: 42, cat: "tasas", per: "2025", ind: "Tasa bienes de capital", año: "2025", tipo: "Subsidio", val: "50%", src: "Estado/Bancos", obs: "Inversión" },
+  { id: 43, cat: "tasas", per: "2026", ind: "Tasa bienes de capital", año: "2026", tipo: "Subsidio", val: "45%", src: "Estado/Bancos", obs: "Inversión" },
+  { id: 44, cat: "tasas", per: "2024", ind: "Tasa tecnología", año: "2024", tipo: "Subsidio", val: "50%", src: "Estado/Bancos", obs: "Innovación" },
+  { id: 45, cat: "tasas", per: "2025", ind: "Tasa tecnología", año: "2025", tipo: "Subsidio", val: "45%", src: "Estado/Bancos", obs: "Innovación" },
+  { id: 46, cat: "tasas", per: "2026", ind: "Tasa tecnología", año: "2026", tipo: "Subsidio", val: "40%", src: "Estado/Bancos", obs: "Innovación" },
+  { id: 47, cat: "tipo_cambio", per: "—", ind: "Tipo de cambio oficial", año: "2024", tipo: "Tipo de cambio", val: "~$800 → $1.050", src: "BCRA", obs: "Salto" },
+  { id: 48, cat: "tipo_cambio", per: "—", ind: "Tipo de cambio oficial", año: "2025", tipo: "Tipo de cambio", val: "~$1.050 → $1.250", src: "BCRA", obs: "Corrección" },
+  { id: 49, cat: "tipo_cambio", per: "Actual", ind: "Tipo de cambio oficial", año: "2026", tipo: "Tipo de cambio", val: "≈ $1.250 – $1.400", src: "BCRA", obs: "Precio actual del dólar" },
+  { id: 51, cat: "confianza", per: "2024", ind: "ICE", año: "2024", tipo: "Observado", val: "-15,67", src: "UTDT", obs: "Confianza empresarial" },
+  { id: 52, cat: "confianza", per: "2025", ind: "ICE", año: "2025", tipo: "Observado", val: "-1,17", src: "UTDT", obs: "ICE anual" },
+  { id: 53, cat: "confianza", per: "2026", ind: "ICE", año: "2026", tipo: "Último dato", val: "-13", src: "UTDT", obs: "ICE mensual" },
+  { id: 54, cat: "confianza", per: "2024", ind: "ETN industria", año: "2024", tipo: "Expectativas", val: "-12", src: "INDEC", obs: "ETN 2024" },
+  { id: 55, cat: "confianza", per: "2025", ind: "ETN industria", año: "2025", tipo: "Expectativas", val: "-17,8", src: "INDEC", obs: "ETN 2025" },
+  { id: 56, cat: "confianza", per: "2026 (T1–T2)", ind: "ETN industria", año: "2026", tipo: "Expectativas", val: "-21,4", src: "INDEC", obs: "ETN 2026" },
+  { id: 57, cat: "consumo", per: "2024", ind: "Ventas tecnología", año: "2024", tipo: "Variación real", val: "-18%", src: "—", obs: "—" },
+  { id: 58, cat: "consumo", per: "2025", ind: "Ventas tecnología", año: "2025", tipo: "Variación real", val: "-1,7%", src: "—", obs: "—" },
+  { id: 59, cat: "consumo", per: "2026", ind: "Ventas tecnología", año: "2026", tipo: "Variación real", val: "-1%", src: "—", obs: "NO CONSOLIDADO" }
 ]
 
 function getCategoryBadge(cat: string) {
@@ -130,6 +139,12 @@ function getCategoryBadge(cat: string) {
       return (
         <Badge variant="outline" className="bg-pink-500/15 text-pink-700 border-0">
           Confianza
+        </Badge>
+      )
+    case "consumo":
+      return (
+        <Badge variant="outline" className="bg-yellow-500/15 text-yellow-700 border-0">
+          Consumo
         </Badge>
       )
     default:

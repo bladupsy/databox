@@ -27,15 +27,15 @@ const chartData = [
 const chartConfig = {
   total: {
     label: "Importaciones Totales",
-    color: "#06b6d4",
+    color: "#dc2626",
   },
   capital: {
     label: "Bienes de Capital",
-    color: "#3b82f6",
+    color: "#facc15",
   },
   insumos: {
     label: "Insumos",
-    color: "#8b5cf6",
+    color: "#f97316",
   },
 } satisfies ChartConfig
 

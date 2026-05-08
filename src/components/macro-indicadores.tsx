@@ -5,23 +5,23 @@ import { cn } from "@/lib/utils"
 
 const MACRO_INDICADORES = [
   {
-    name: "EMAE / PIB",
-    value: "-2,1%",
-    change: "-2,1%",
+    name: "EMAE / PIB (Expect.)",
+    value: "8,1%",
+    change: "-109,7%",
     changeType: "negative",
-    periodo: "Feb 2026 - Interanual",
+    periodo: "REM 2026 - Proyección",
   },
   {
-    name: "IPC (Anual)",
-    value: "10,4%",
-    change: "-200,6%",
+    name: "IPC (Acumulado)",
+    value: "9,4%",
+    change: "-108,4%",
     changeType: "positive",
     periodo: "Ene-Mar 2026 - Acumulado",
   },
   {
-    name: "IPIM (Anual)",
-    value: "6,2%",
-    change: "-269,8%",
+    name: "IPIM (Acumulado)",
+    value: "6,1%",
+    change: "-110,9%",
     changeType: "positive",
     periodo: "Ene-Mar 2026 - Acumulado",
   },
