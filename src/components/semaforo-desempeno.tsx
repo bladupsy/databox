@@ -17,8 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { TrendingDown, TrendingUp, Minus, Info } from "lucide-react"
+import { Info, TrendingDown, TrendingUp, Minus } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 type Estado = "expansion" | "estabilidad" | "contraccion"
@@ -31,163 +30,50 @@ interface Indicador {
   nota: string
 }
 
-type Periodo = "2024" | "2025" | "2026"
-
-const datos: Record<Periodo, Indicador[]> = {
-  "2024": [
-    {
-      dimension: "Actividad (EMAE)",
-      valor: "-3,5% anual",
-      estado: "contraccion",
-      fuente: "INDEC",
-      nota: "Piso del ciclo. Caída generalizada del consumo e inversión.",
-    },
-    {
-      dimension: "Inflación (IPC)",
-      valor: "211% anual",
-      estado: "contraccion",
-      fuente: "INDEC",
-      nota: "Máximo histórico reciente. Shock por devaluación y tarifas.",
-    },
-    {
-      dimension: "Tipo de cambio",
-      valor: "$800 → $1.050",
-      estado: "contraccion",
-      fuente: "BCRA",
-      nota: "Dos saltos abruptos. Alta volatilidad cambiaria.",
-    },
-    {
-      dimension: "Producción industrial (IPI)",
-      valor: "-12% bs. intermedios",
-      estado: "contraccion",
-      fuente: "INDEC",
-      nota: "Bs. de capital cayeron -22%. Freno total de inversión.",
-    },
-    {
-      dimension: "Empleo industrial",
-      valor: "1.170.000 (−4,5%)",
-      estado: "contraccion",
-      fuente: "Min. Trabajo",
-      nota: "Se perdieron ~55.000 puestos formales en el sector.",
-    },
-    {
-      dimension: "Financiamiento PyME",
-      valor: "80–120% TNA",
-      estado: "contraccion",
-      fuente: "BCRA",
-      nota: "Crédito inaccesible. Tasa real fuertemente positiva.",
-    },
-    {
-      dimension: "Confianza empresarial",
-      valor: "35–45 (ICE)",
-      estado: "contraccion",
-      fuente: "UTDT",
-      nota: "Mínimos del período. Generalizada expectativa negativa.",
-    },
-  ],
-  "2025": [
-    {
-      dimension: "Actividad (EMAE)",
-      valor: "+3,2% anual",
-      estado: "expansion",
-      fuente: "INDEC",
-      nota: "Rebote tras el piso de 2024. Recuperación incompleta.",
-    },
-    {
-      dimension: "Inflación (IPC)",
-      valor: "~130–140% anual",
-      estado: "estabilidad",
-      fuente: "INDEC",
-      nota: "Desinflación marcada pero inflación sigue siendo elevada.",
-    },
-    {
-      dimension: "Tipo de cambio",
-      valor: "$1.050 → $1.250 (+20%)",
-      estado: "estabilidad",
-      fuente: "BCRA",
-      nota: "Crawling peg estable. Atraso cambiario acumulándose.",
-    },
-    {
-      dimension: "Producción industrial (IPI)",
-      valor: "+6% bs. intermedios",
-      estado: "expansion",
-      fuente: "INDEC",
-      nota: "Bs. de capital +12%. Proyectos pospuestos se reactivaron.",
-    },
-    {
-      dimension: "Empleo industrial",
-      valor: "1.140.000 (−2,5%)",
-      estado: "estabilidad",
-      fuente: "Min. Trabajo",
-      nota: "Caída modera. Mercado laboral sin recuperación plena.",
-    },
-    {
-      dimension: "Financiamiento PyME",
-      valor: "50–80% TNA",
-      estado: "estabilidad",
-      fuente: "BCRA",
-      nota: "Baja parcial. Crédito más accesible pero aún costoso.",
-    },
-    {
-      dimension: "Confianza empresarial",
-      valor: "45–55 (ICE)",
-      estado: "estabilidad",
-      fuente: "UTDT",
-      nota: "Mejora gradual. Expectativas más positivas hacia fin de año.",
-    },
-  ],
-  "2026": [
-    {
-      dimension: "Actividad (EMAE)",
-      valor: "−2,1% (feb)",
-      estado: "contraccion",
-      fuente: "INDEC",
-      nota: "Nueva caída tras rebote de 2025. Señal de alerta.",
-    },
-    {
-      dimension: "Inflación (IPC)",
-      valor: "3,4% (mar) · 9,4% Q1",
-      estado: "expansion",
-      fuente: "INDEC",
-      nota: "Desinflación avanzada vs 2024. Marzo sorprendió al alza por educación y transporte.",
-    },
-    {
-      dimension: "Tipo de cambio",
-      valor: "$1.420 (abr) · $1.700 proy. dic.",
-      estado: "estabilidad",
-      fuente: "BCRA REM",
-      nota: "Depreciación proyectada 17% anual. Atraso cambiario persiste.",
-    },
-    {
-      dimension: "Producción industrial (IPI)",
-      valor: "−6,0% acum. bimestre",
-      estado: "contraccion",
-      fuente: "INDEC",
-      nota: "Ene: −3,2% · Feb: −8,7% interanual. Tendencia-ciclo +0,2%.",
-    },
-    {
-      dimension: "Empleo industrial",
-      valor: "~1.120.000 (−1,5%)",
-      estado: "contraccion",
-      fuente: "Min. Trabajo",
-      nota: "Deterioro persistente. Sin señales de recuperación.",
-    },
-    {
-      dimension: "Financiamiento PyME",
-      valor: "TAMAR 26,8% TNA",
-      estado: "estabilidad",
-      fuente: "BCRA REM",
-      nota: "Tasa real negativa en teoría. Spread bancario eleva costo real a 45–60%.",
-    },
-    {
-      dimension: "Confianza empresarial",
-      valor: "50–60 (ICE)",
-      estado: "estabilidad",
-      fuente: "UTDT",
-      nota: "Estabilidad relativa. Bs. de capital importados +22%.",
-    },
-  ],
-}
+const datos: Indicador[] = [
+  {
+    dimension: "Ventas tecnológicas",
+    valor: "−18% (2024) · −1,7% (2025)",
+    estado: "contraccion",
+    fuente: "—",
+    nota: "Sin recuperación confirmada",
+  },
+  {
+    dimension: "Producción manufacturera",
+    valor: "Bienes interm. −32% · Bienes de capital −20% (2025)",
+    estado: "contraccion",
+    fuente: "INDEC",
+    nota: "Caída intensa en ambos segmentos",
+  },
+  {
+    dimension: "Importaciones bienes de capital",
+    valor: "+51,3% (2025)",
+    estado: "expansion",
+    fuente: "INDEC",
+    nota: "Señal positiva de inversión",
+  },
+  {
+    dimension: "Confianza empresarial (ETN industria)",
+    valor: "−21,4 en 2026 T1–T2",
+    estado: "contraccion",
+    fuente: "INDEC",
+    nota: "Mayor pesimismo reciente",
+  },
+  {
+    dimension: "Importaciones bienes intermedios",
+    valor: "+29% (2026 ene–feb)",
+    estado: "estabilidad",
+    fuente: "INDEC",
+    nota: "Insumos en recuperación",
+  },
+  {
+    dimension: "Empleo industrial",
+    valor: "−3,6% acum. 2026",
+    estado: "contraccion",
+    fuente: "Ministerio Trabajo",
+    nota: "Pérdida sostenida de puestos",
+  },
+]
 
 const estadoConfig: Record<
   Estado,
@@ -203,17 +89,15 @@ const estadoConfig: Record<
   expansion: {
     label: "Expansión",
     emoji: "🟢",
-    badgeClass:
-      "bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-100",
+    badgeClass: "bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-100",
     rowClass: "bg-emerald-50/40 hover:bg-emerald-50/70",
     icon: TrendingUp,
     iconClass: "text-emerald-600",
   },
   estabilidad: {
-    label: "Estabilidad",
+    label: "Estabilización",
     emoji: "🟡",
-    badgeClass:
-      "bg-amber-100 text-amber-800 border-amber-200 hover:bg-amber-100",
+    badgeClass: "bg-amber-100 text-amber-800 border-amber-200 hover:bg-amber-100",
     rowClass: "bg-amber-50/40 hover:bg-amber-50/70",
     icon: Minus,
     iconClass: "text-amber-600",
@@ -229,8 +113,7 @@ const estadoConfig: Record<
 }
 
 export default function SemaforoDesempeno() {
-  const [periodo, setPeriodo] = useState<Periodo>("2026")
-  const indicadores = datos[periodo]
+  const indicadores = datos
 
   const conteo = {
     expansion: indicadores.filter((i) => i.estado === "expansion").length,
@@ -239,29 +122,21 @@ export default function SemaforoDesempeno() {
   }
 
   const recomendacion = (() => {
-    if (conteo.expansion >= 4) return { texto: "Invertir", color: "emerald" }
     if (conteo.contraccion >= 4) return { texto: "Retraer", color: "red" }
-    if (conteo.expansion >= 2 && conteo.contraccion <= 2)
-      return { texto: "Diversificar", color: "blue" }
+    if (conteo.expansion >= 2) return { texto: "Diversificar", color: "blue" }
     return { texto: "Esperar", color: "amber" }
   })()
 
   return (
     <TooltipProvider>
       <div className="space-y-6">
-        <Tabs value={periodo} onValueChange={(v) => setPeriodo(v as Periodo)}>
-          <TabsList className="bg-white border border-slate-200 shadow-sm">
-            <TabsTrigger value="2024" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white">
-              2024
-            </TabsTrigger>
-            <TabsTrigger value="2025" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white">
-              2025
-            </TabsTrigger>
-            <TabsTrigger value="2026" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white">
-              2026 (Q1)
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <Card className="border shadow-sm bg-slate-800 text-white">
+          <CardHeader className="py-3 px-5">
+            <CardTitle className="text-base font-semibold tracking-wide">
+              Semáforo de desempeño — Sector TecnoSur
+            </CardTitle>
+          </CardHeader>
+        </Card>
 
         <div className="grid grid-cols-3 gap-4">
           {(["expansion", "estabilidad", "contraccion"] as Estado[]).map((e) => {
@@ -293,7 +168,7 @@ export default function SemaforoDesempeno() {
         <Card className="border shadow-sm overflow-hidden">
           <CardHeader className="bg-slate-800 text-white py-3 px-5">
             <CardTitle className="text-sm font-semibold tracking-wide uppercase">
-              Tablero de indicadores — {periodo === "2026" ? "Primer cuatrimestre 2026" : `Año ${periodo}`}
+              Tablero de indicadores — Sector TecnoSur
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
@@ -399,15 +274,15 @@ export default function SemaforoDesempeno() {
               </p>
             </div>
             <div className="text-right space-y-1">
-              <p className="text-xs text-slate-500">Expansión: <strong>{conteo.expansion}</strong></p>
-              <p className="text-xs text-slate-500">Estabilidad: <strong>{conteo.estabilidad}</strong></p>
-              <p className="text-xs text-slate-500">Contracción: <strong>{conteo.contraccion}</strong></p>
+              <p className="text-xs text-slate-500">🟢 Expansión: <strong>{conteo.expansion}</strong></p>
+              <p className="text-xs text-slate-500">🟡 Estabilización: <strong>{conteo.estabilidad}</strong></p>
+              <p className="text-xs text-slate-500">🔴 Contracción: <strong>{conteo.contraccion}</strong></p>
             </div>
           </CardContent>
         </Card>
 
         <p className="text-xs text-slate-400 text-right">
-          Fuentes: INDEC · BCRA · Ministerio de Trabajo · UTDT — Datos al {periodo === "2026" ? "mayo 2026" : `diciembre ${periodo}`}
+          Fuentes: INDEC · Ministerio de Trabajo — Datos al mayo 2026
         </p>
       </div>
     </TooltipProvider>

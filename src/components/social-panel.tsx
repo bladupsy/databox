@@ -5,25 +5,25 @@ import { cn } from "@/lib/utils"
 
 const SOCIAL_INDICADORES = [
   {
-    name: "Empleo Industrial",
+    name: "Empleo Industrial 2023",
+    value: "1.225.000",
+    change: "Base",
+    changeType: "neutral",
+    periodo: "Puestos previos",
+  },
+  {
+    name: "Empleo Industrial 2026",
     value: "1.120.000",
     change: "Nivel",
-    changeType: "neutral",
-    periodo: "2026 - Puestos",
+    changeType: "negative",
+    periodo: "Puestos actuales",
   },
   {
-    name: "Variación Empleo",
-    value: "-1,5% a -2%",
-    change: "-1,5% a -2%",
+    name: "Variación 2026",
+    value: "-3,6%",
+    change: "-3,6%",
     changeType: "negative",
-    periodo: "2026 - Acumulado",
-  },
-  {
-    name: "Puestos Perdidos",
-    value: "-105.000",
-    change: "-105.000",
-    changeType: "negative",
-    periodo: "2024-2026",
+    periodo: "Acumulado",
   },
 ]
 

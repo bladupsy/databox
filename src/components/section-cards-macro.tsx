@@ -14,10 +14,10 @@ import {
 
 const CARDS = [
   {
-    label: "EMAE 2026",
-    value: "-5,70%",
-    change: -5.7,
-    subtext: "Feb 2026 (acum. ene-feb)",
+    label: "EMAE 2024",
+    value: "-9,19%",
+    change: -9.19,
+    subtext: "Variación acumulada",
     positiveIsGood: false,
     color: "#dc2626",
   },
@@ -30,19 +30,19 @@ const CARDS = [
     color: "#facc15",
   },
   {
-    label: "IPC 2026",
-    value: "10,4%",
-    change: -10.4,
-    subtext: "Acumulado ene-mar 2026",
+    label: "Bienes Intermedios 2025",
+    value: "-32%",
+    change: -32,
+    subtext: "Variación interanual",
     positiveIsGood: false,
     color: "#22c55e",
   },
   {
-    label: "Tasa BCRA",
-    value: "30%",
-    change: 30,
-    subtext: "Política monetaria actual",
-    positiveIsGood: true,
+    label: "Empleo Industrial 2026",
+    value: "-3,6%",
+    change: -3.6,
+    subtext: "Acumulado",
+    positiveIsGood: false,
     color: "#f97316",
   },
 ]

@@ -14,23 +14,23 @@ interface IndicadorPanel {
 
 const indicadoresPorPanel: Record<string, IndicadorPanel[]> = {
   macroeconomia: [
-    { title: "EMAE", value: "-5,70%", description: "Feb 2026 (acum. ene-feb)", trend: "down" },
+    { title: "EMAE 2024", value: "-9,19%", description: "Variación acumulada", trend: "down" },
     { title: "IPC 2024", value: "117%", description: "Inflación anual", trend: "down" },
-    { title: "IPC 2026", value: "10,4%", description: "Ene-Mar 2026 - Acumulado", trend: "down" },
-    { title: "Tipo de Cambio", value: "≈ $1.250–$1.400", description: "2026 - Actual", trend: "neutral" },
+    { title: "IPC 2026", value: "10,4%", description: "Ene-Mar - Acumulado", trend: "down" },
     { title: "Tasa BCRA", value: "30%", description: "2026 - Actual", trend: "neutral" },
+    { title: "Tipo de Cambio", value: "≈ $1.250–$1.400", description: "2026 - Actual", trend: "neutral" },
   ],
   manufacturero: [
     { title: "Bienes Intermedios 2025", value: "-32%", description: "Variación interanual", trend: "down" },
-    { title: "Bienes de Capital 2026", value: "-20%", description: "Ene-Feb 2026", trend: "down" },
-    { title: "Import. Totales 2024", value: "-17%", description: "Variación anual", trend: "down" },
+    { title: "Bienes de Capital 2025", value: "-20%", description: "Variación interanual", trend: "down" },
+    { title: "Import. Totales 2025", value: "+24,7%", description: "Variación anual", trend: "up" },
     { title: "Import. B. Capital 2025", value: "+51,3%", description: "Recuperación", trend: "up" },
     { title: "Empleo Industrial 2026", value: "-3,6%", description: "Acumulado", trend: "down" },
   ],
   social: [
-    { title: "Tasa de Empleo", value: "45-47%", description: "2026 - Estimado", trend: "neutral" },
-    { title: "Empleo Informal", value: "35-38%", description: "2026 - Estimado", trend: "neutral" },
-    { title: "Salario Real", value: "-5% a -8%", description: "2026 - Estimado", trend: "down" },
+    { title: "Empleo Industrial 2023", value: "1.225.000", description: "Base - Puestos", trend: "neutral" },
+    { title: "Empleo Industrial 2026", value: "1.120.000", description: "Nivel actual", trend: "down" },
+    { title: "Puestos Perdidos", value: "-105.000", description: "2023-2026", trend: "down" },
   ],
 }
 
