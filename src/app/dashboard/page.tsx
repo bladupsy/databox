@@ -10,6 +10,7 @@ import { SocialPanel } from "@/components/social-panel"
 import { SocialSemaforoTable } from "@/components/social-semaforo-table"
 import { IpcBarChartHorizontal } from "@/components/ipc-bar-chart"
 import { SemaforoTableCard } from "@/components/semaforo-table-card"
+import { DesempenoSemaforoTable } from "@/components/desempeno-semaforo-table"
 
 import data from "../data.json"
 
@@ -53,8 +54,9 @@ export default function DashboardPage() {
           <div>
             <h2 className="text-lg font-semibold text-slate-800 mb-4">Social / Territorial</h2>
             <SocialPanel />
-            <div className="mt-4">
+            <div className="grid md:grid-cols-[7fr_3fr] gap-4 mt-4">
               <SocialSemaforoTable />
+              <DesempenoSemaforoTable />
             </div>
           </div>
 
