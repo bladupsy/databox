@@ -30,39 +30,33 @@ const SOCIAL_INDICADORES = [
 export function SocialPanel() {
   return (
     <div className="flex items-center justify-center">
-      <div className="mx-auto grid grid-cols-1 gap-px rounded-xl bg-border sm:grid-cols-2 lg:grid-cols-4 w-full">
-        {SOCIAL_INDICADORES.map((stat, index) => (
+      <div className="mx-auto grid grid-cols-1 rounded-xl sm:grid-cols-2 lg:grid-cols-3 w-full gap-2">
+        {SOCIAL_INDICADORES.map((stat) => (
           <Card
             key={stat.name}
-            className={cn(
-              "rounded-none border-0 shadow-none py-0 bg-card",
-              index === 0 && "rounded-l-xl",
-              index === SOCIAL_INDICADORES.length - 1 && "rounded-r-xl"
-            )}
+            className="border shadow-sm py-4 px-5 bg-card"
           >
-            <CardContent className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-2 p-4 sm:p-4">
-              <div className="text-sm font-medium text-muted-foreground w-full">
-                {stat.name}
-              </div>
-              <div
-                className={cn(
-                  "tabular-nums text-xs font-semibold font-sans",
-                  stat.changeType === "positive"
-                    ? "text-green-600 dark:text-green-400"
-                    : stat.changeType === "negative"
-                      ? "text-red-600 dark:text-red-400"
-                      : "text-slate-500"
-                )}
-              >
-                {stat.changeType === "negative" ? "↓" : stat.changeType === "positive" ? "↑" : "→"}{" "}{stat.change}
-              </div>
-              <div className="tabular-nums w-full flex-none text-2xl font-medium tracking-tight text-foreground">
-                {stat.value}
-              </div>
-              <div className="text-xs text-muted-foreground w-full truncate">
-                {stat.periodo}
-              </div>
-            </CardContent>
+            <div className="text-sm font-medium text-muted-foreground mb-1">
+              {stat.name}
+            </div>
+            <div
+              className={cn(
+                "text-xs font-semibold mb-1",
+                stat.changeType === "positive"
+                  ? "text-green-600 dark:text-green-400"
+                  : stat.changeType === "negative"
+                    ? "text-red-600 dark:text-red-400"
+                    : "text-slate-500"
+              )}
+            >
+              {stat.changeType === "negative" ? "↓" : stat.changeType === "positive" ? "↑" : "→"}{" "}{stat.change}
+            </div>
+            <div className="tabular-nums text-2xl font-medium tracking-tight text-foreground">
+              {stat.value}
+            </div>
+            <div className="text-xs text-muted-foreground mt-1">
+              {stat.periodo}
+            </div>
           </Card>
         ))}
       </div>
