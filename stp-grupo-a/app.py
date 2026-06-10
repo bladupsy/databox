@@ -35,6 +35,29 @@ def format_period(period_str):
         return f"{month_name} {yr_short}"
     return period_str
 
+FALLBACK_SOURCES = {
+    "ipc": "Instituto Nacional de Estadística y Censos (INDEC)",
+    "rf_primario": "Secretaría de Hacienda, Ministerio de Economía",
+    "rf_global": "Secretaría de Hacienda, Ministerio de Economía",
+    "bienes_personales": "Administración Federal de Ingresos Públicos (AFIP) / INDEC",
+    "ingresos_tributarios_total": "Administración Federal de Ingresos Públicos (AFIP) / INDEC",
+    "iva": "Administración Federal de Ingresos Públicos (AFIP) / INDEC",
+    "ganancias": "Administración Federal de Ingresos Públicos (AFIP) / INDEC",
+    "presion_tributaria": "AFIP / INDEC / Ministerio de Economía",
+    "tc_nominal": "Banco Central de la República Argentina (BCRA) / INDEC",
+    "tc_real": "Banco Central de la República Argentina (BCRA)",
+    "badlar": "Banco Central de la República Argentina (BCRA)",
+    "tib": "Banco Central de la República Argentina (BCRA)",
+    "gini": "Instituto Nacional de Estadística y Censos (INDEC)",
+    "ingreso_laboral": "Instituto Nacional de Estadística y Censos (INDEC)",
+    "deuda_pib": "Secretaría de Finanzas, Ministerio de Economía"
+}
+
+def get_indicator_source(key, original_source=None):
+    if original_source and original_source != "—":
+        return original_source
+    return FALLBACK_SOURCES.get(key, "INDEC / BCRA / Ministerio de Economía")
+
 # Barra lateral de navegación
 st.sidebar.image("https://img.icons8.com/clouds/100/line-chart.png", width=80)
 st.sidebar.title("STP Grupo A")
@@ -66,7 +89,7 @@ if view == "📈 Gráficos":
         
         points = ind.get("points", [])
         meta = ind.get("meta", {})
-        source = meta.get("source", "—")
+        source = get_indicator_source(ind.get("key"), meta.get("source", "—"))
         
         if points:
             # Convertir a DataFrame para facilitar Plotly
@@ -151,7 +174,7 @@ else:  # view == "📋 Tabla de Datos"
         )
         
         st.dataframe(display_df, use_container_width=True, hide_index=True)
-        sources = sorted(list(set(ind.get("meta", {}).get("source", "—") for ind in indicators)))
+        sources = sorted(list(set(get_indicator_source(ind.get("key"), ind.get("meta", {}).get("source", "—")) for ind in indicators)))
         st.caption(f"**Fuentes:** {' · '.join(sources)}")
         
         # Botón para descargar CSV
@@ -195,7 +218,7 @@ else:  # view == "📋 Tabla de Datos"
             df_single_display["Período"] = df_single_display["Período"].apply(format_period)
             
             # Mostrar tabla individual y fuente
-            st.markdown(f"**Fuente de los datos:** {selected_ind.get('meta', {}).get('source', '—')}")
+            st.markdown(f"**Fuente de los datos:** {get_indicator_source(selected_ind.get('key'), selected_ind.get('meta', {}).get('source', '—'))}")
             st.dataframe(df_single_display, use_container_width=True, hide_index=True)
         else:
             st.warning("No hay datos disponibles para este indicador.")

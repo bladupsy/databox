@@ -223,6 +223,9 @@ export function CapacidadIndustriaChart() {
             ))}
           </LineChart>
         </ChartContainer>
+        <div className="mt-4 border-t pt-3 text-xs text-muted-foreground">
+          <strong>Fuente:</strong> INDEC
+        </div>
       </CardContent>
     </Card>
   )

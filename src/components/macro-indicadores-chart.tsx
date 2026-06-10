@@ -121,6 +121,9 @@ export function MacroIndicadoresChart() {
             />
           </LineChart>
         </ChartContainer>
+        <div className="mt-4 border-t pt-3 text-xs text-muted-foreground">
+          <strong>Fuente:</strong> INDEC y BCRA
+        </div>
       </CardContent>
     </Card>
   )

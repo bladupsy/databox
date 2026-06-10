@@ -150,6 +150,9 @@ export function TasasChart() {
             />
           </LineChart>
         </ChartContainer>
+        <div className="mt-4 border-t pt-3 text-xs text-muted-foreground">
+          <strong>Fuente:</strong> BCRA y Ministerio de Economía
+        </div>
       </CardContent>
     </Card>
   )

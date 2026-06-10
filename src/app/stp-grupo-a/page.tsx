@@ -79,6 +79,31 @@ function formatVal(v: number | null): string {
   return v.toLocaleString("es-AR", { maximumFractionDigits: 2 })
 }
 
+const FALLBACK_SOURCES: Record<string, string> = {
+  ipc: "Instituto Nacional de Estadística y Censos (INDEC)",
+  rf_primario: "Secretaría de Hacienda, Ministerio de Economía",
+  rf_global: "Secretaría de Hacienda, Ministerio de Economía",
+  bienes_personales: "Administración Federal de Ingresos Públicos (AFIP) / INDEC",
+  ingresos_tributarios_total: "Administración Federal de Ingresos Públicos (AFIP) / INDEC",
+  iva: "Administración Federal de Ingresos Públicos (AFIP) / INDEC",
+  ganancias: "Administración Federal de Ingresos Públicos (AFIP) / INDEC",
+  presion_tributaria: "AFIP / INDEC / Ministerio de Economía",
+  tc_nominal: "Banco Central de la República Argentina (BCRA) / INDEC",
+  tc_real: "Banco Central de la República Argentina (BCRA)",
+  badlar: "Banco Central de la República Argentina (BCRA)",
+  tib: "Banco Central de la República Argentina (BCRA)",
+  gini: "Instituto Nacional de Estadística y Censos (INDEC)",
+  ingreso_laboral: "Instituto Nacional de Estadística y Censos (INDEC)",
+  deuda_pib: "Secretaría de Finanzas, Ministerio de Economía"
+}
+
+function getIndicatorSource(key: string, originalSource?: string): string {
+  if (originalSource && originalSource !== "—") {
+    return originalSource
+  }
+  return FALLBACK_SOURCES[key] || "INDEC / BCRA / Ministerio de Economía"
+}
+
 export default function StpPage() {
   const [view, setView] = React.useState<"charts" | "table">("charts")
   const [selectedIndKey, setSelectedIndKey] = React.useState<string>(
@@ -305,7 +330,7 @@ export default function StpPage() {
                     {/* Fuente en Caption */}
                     <div className="text-xs text-slate-400 border-t pt-3 flex items-center justify-between">
                       <span>
-                        <strong>Fuente:</strong> {ind.meta.source}
+                        <strong>Fuente:</strong> {getIndicatorSource(ind.key, ind.meta.source)}
                       </span>
                       <Button
                         variant="ghost"
@@ -360,7 +385,7 @@ export default function StpPage() {
                   <CardDescription className="text-slate-500 text-sm">
                     Consolidado mensual de todas las series de datos del Grupo A.
                     <span className="block mt-1 text-xs text-slate-400">
-                      <strong>Fuentes:</strong> {Array.from(new Set(stpData.indicators.map(ind => ind.meta.source))).join(" · ")}
+                      <strong>Fuentes:</strong> {Array.from(new Set(stpData.indicators.map(ind => getIndicatorSource(ind.key, ind.meta.source)))).join(" · ")}
                     </span>
                   </CardDescription>
                 </div>
@@ -487,7 +512,7 @@ export default function StpPage() {
                     <div className="border border-slate-200 rounded-lg overflow-hidden">
                       <div className="bg-slate-50 border-b p-3 flex justify-between items-center">
                         <span className="text-sm font-semibold text-slate-700">Historial de datos</span>
-                        <span className="text-xs text-slate-500"><strong>Fuente:</strong> {selectedInd.meta.source}</span>
+                        <span className="text-xs text-slate-500"><strong>Fuente:</strong> {getIndicatorSource(selectedInd.key, selectedInd.meta.source)}</span>
                       </div>
                       
                       <div className="max-h-[300px] overflow-y-auto">

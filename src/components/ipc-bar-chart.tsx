@@ -82,6 +82,9 @@ export function IpcBarChartHorizontal() {
             </Bar>
           </BarChart>
         </ChartContainer>
+        <div className="mt-4 border-t pt-3 text-xs text-muted-foreground">
+          <strong>Fuente:</strong> INDEC
+        </div>
       </CardContent>
     </Card>
   )
