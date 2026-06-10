@@ -439,29 +439,18 @@ export default function StpPage() {
                       </Button>
                     </div>
 
-                    {/* Fila inferior con Conclusión y Detalles */}
-                    <div className="grid md:grid-cols-3 gap-4">
-                      <div className="md:col-span-2 bg-slate-50 rounded-lg p-4 border border-slate-100 flex items-start gap-2.5">
-                        <TrendingUp className="size-5 text-blue-600 mt-0.5 shrink-0" />
-                        <div>
-                          <h4 className="text-sm font-semibold text-slate-800">Conclusión del análisis</h4>
-                          <p className="text-sm text-slate-600 mt-1">{ind.conclusion}</p>
-                        </div>
+                    {expandedCard[ind.key] && (
+                      <div className="bg-slate-50 rounded-lg p-4 border border-slate-100 space-y-2 text-sm text-slate-600">
+                        <h4 className="font-semibold text-slate-800 text-xs uppercase tracking-wider">Metadatos de la Serie</h4>
+                        <div><span className="font-medium text-slate-700">Frecuencia:</span> {ind.meta.frequency}</div>
+                        <div><span className="font-medium text-slate-700">Unidades:</span> {ind.meta.units}</div>
+                        <div><span className="font-medium text-slate-700">Dataset:</span> {ind.meta.dataset}</div>
+                        <div><span className="font-medium text-slate-700">Serie ID:</span> <code className="bg-slate-200 px-1 rounded text-xs">{ind.meta.id}</code></div>
+                        {ind.meta.note && (
+                          <div className="text-xs italic border-t pt-1.5 mt-1.5">{ind.meta.note}</div>
+                        )}
                       </div>
-
-                      {expandedCard[ind.key] && (
-                        <div className="bg-slate-50 rounded-lg p-4 border border-slate-100 space-y-2 text-sm text-slate-600">
-                          <h4 className="font-semibold text-slate-800 text-xs uppercase tracking-wider">Metadatos de la Serie</h4>
-                          <div><span className="font-medium text-slate-700">Frecuencia:</span> {ind.meta.frequency}</div>
-                          <div><span className="font-medium text-slate-700">Unidades:</span> {ind.meta.units}</div>
-                          <div><span className="font-medium text-slate-700">Dataset:</span> {ind.meta.dataset}</div>
-                          <div><span className="font-medium text-slate-700">Serie ID:</span> <code className="bg-slate-200 px-1 rounded text-xs">{ind.meta.id}</code></div>
-                          {ind.meta.note && (
-                            <div className="text-xs italic border-t pt-1.5 mt-1.5">{ind.meta.note}</div>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                    )}
                   </CardContent>
                 </Card>
               )

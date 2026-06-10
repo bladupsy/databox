@@ -159,18 +159,14 @@ if view == "📈 Gráficos":
             # Mostrar la fuente con st.caption
             st.caption(f"**Fuente:** {source}")
             
-            # Mostrar detalles y conclusión
-            col1, col2 = st.columns([2, 1])
-            with col1:
-                st.info(f"**Conclusión:** {ind.get('conclusion', '')}")
-            with col2:
-                with st.expander("ℹ️ Detalles de la serie"):
-                    st.markdown(f"**Descripción:** {meta.get('description', '—')}")
-                    st.markdown(f"**Dataset:** {meta.get('dataset', '—')}")
-                    st.markdown(f"**Unidades:** {meta.get('units', '—')}")
-                    st.markdown(f"**ID Serie:** `{meta.get('id', '—')}`")
-                    if meta.get("note"):
-                        st.markdown(f"**Nota:** {meta.get('note')}")
+            # Mostrar detalles de la serie
+            with st.expander("ℹ️ Detalles de la serie"):
+                st.markdown(f"**Descripción:** {meta.get('description', '—')}")
+                st.markdown(f"**Dataset:** {meta.get('dataset', '—')}")
+                st.markdown(f"**Unidades:** {meta.get('units', '—')}")
+                st.markdown(f"**ID Serie:** `{meta.get('id', '—')}`")
+                if meta.get("note"):
+                    st.markdown(f"**Nota:** {meta.get('note')}")
         else:
             st.warning("No hay datos para este indicador.")
             
