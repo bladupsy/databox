@@ -11,26 +11,43 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 
+const navItems = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/stp-grupo-a", label: "STP Grupo A" },
+  { href: "/inflacion", label: "Inflación" },
+  { href: "/radial", label: "Resumen Radial" },
+  { href: "/tabla", label: "Tabla" },
+  { href: "/capacidad", label: "Capacidad" },
+  { href: "/blog", label: "Blog" },
+]
+
 export function Navbar() {
+  const pathname = usePathname()
+
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <Link href="/" className={navigationMenuTriggerStyle()}>
-            Inflación
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/radial" className={navigationMenuTriggerStyle()}>
-            Resumen Radial
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/tabla" className={navigationMenuTriggerStyle()}>
-            Tabla
-          </Link>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+    <header className="border-b bg-white">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <Link href="/" className="text-xl font-bold text-slate-800">
+          📊 DataBox
+        </Link>
+        <NavigationMenu>
+          <NavigationMenuList>
+            {navItems.map((item) => (
+              <NavigationMenuItem key={item.href}>
+                <Link
+                  href={item.href}
+                  className={navigationMenuTriggerStyle()}
+                  style={{
+                    backgroundColor: pathname === item.href ? "#f1f5f9" : "transparent",
+                  }}
+                >
+                  {item.label}
+                </Link>
+              </NavigationMenuItem>
+            ))}
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
+    </header>
   )
 }

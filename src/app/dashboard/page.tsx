@@ -1,4 +1,3 @@
-import { SiteHeader } from "@/components/site-header"
 import { MacroIndicadores } from "@/components/macro-indicadores"
 import { MacroIndicadoresChart } from "@/components/macro-indicadores-chart"
 import { TasasChart } from "@/components/tasas-chart"
@@ -17,7 +16,6 @@ import data from "../data.json"
 export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-slate-50">
-      <SiteHeader />
       <div className="flex flex-1 flex-col gap-4 p-6 overflow-auto">
         <div className="flex flex-col gap-4 md:gap-6">
           <div>
