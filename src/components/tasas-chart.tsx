@@ -151,7 +151,14 @@ export function TasasChart() {
           </LineChart>
         </ChartContainer>
         <div className="mt-4 border-t pt-3 text-xs text-muted-foreground">
-          <strong>Fuente:</strong> BCRA y Ministerio de Economía
+          <strong>Fuente:</strong>{" "}
+          <a href="https://www.bcra.gob.ar/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+            BCRA
+          </a>{" "}
+          y{" "}
+          <a href="https://www.argentina.gob.ar/economia" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+            Ministerio de Economía
+          </a>
         </div>
       </CardContent>
     </Card>

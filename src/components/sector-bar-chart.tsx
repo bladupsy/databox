@@ -74,7 +74,10 @@ export function SectorBarChart() {
           </BarChart>
         </ChartContainer>
         <div className="mt-4 border-t pt-3 text-xs text-muted-foreground">
-          <strong>Fuente:</strong> INDEC
+          <strong>Fuente:</strong>{" "}
+          <a href="https://www.indec.gob.ar/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+            INDEC
+          </a>
         </div>
       </CardContent>
     </Card>

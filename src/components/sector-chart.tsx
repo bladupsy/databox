@@ -105,7 +105,14 @@ export function SectorChart() {
           </LineChart>
         </ChartContainer>
         <div className="mt-4 border-t pt-3 text-xs text-muted-foreground">
-          <strong>Fuente:</strong> INDEC y Ministerio de Trabajo
+          <strong>Fuente:</strong>{" "}
+          <a href="https://www.indec.gob.ar/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+            INDEC
+          </a>{" "}
+          y{" "}
+          <a href="https://www.argentina.gob.ar/trabajo" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+            Ministerio de Trabajo
+          </a>
         </div>
       </CardContent>
     </Card>

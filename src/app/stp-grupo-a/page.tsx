@@ -104,6 +104,31 @@ function getIndicatorSource(key: string, originalSource?: string): string {
   return FALLBACK_SOURCES[key] || "INDEC / BCRA / Ministerio de Economía"
 }
 
+const FALLBACK_URLS: Record<string, string> = {
+  ipc: "https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31",
+  rf_primario: "https://datos.gob.ar/dataset/sspm-resultado-base-caja-sector-publico-nacional-no-financiero",
+  rf_global: "https://datos.gob.ar/dataset/sspm-resultado-base-caja-sector-publico-nacional-no-financiero",
+  bienes_personales: "https://www.argentina.gob.ar/economia/ingresospublicos/recaudacion",
+  ingresos_tributarios_total: "https://www.argentina.gob.ar/economia/ingresospublicos/recaudacion",
+  iva: "https://www.argentina.gob.ar/economia/ingresospublicos/recaudacion",
+  ganancias: "https://www.argentina.gob.ar/economia/ingresospublicos/recaudacion",
+  presion_tributaria: "https://www.argentina.gob.ar/economia/ingresospublicos/recaudacion",
+  tc_nominal: "https://www.bcra.gob.ar/PublicacionesEstadisticas/Principales_variables.asp",
+  tc_real: "https://www.bcra.gob.ar/PublicacionesEstadisticas/Principales_variables.asp",
+  badlar: "https://www.bcra.gob.ar/PublicacionesEstadisticas/Principales_variables.asp",
+  tib: "https://www.bcra.gob.ar/PublicacionesEstadisticas/Principales_variables.asp",
+  gini: "https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-31-60",
+  ingreso_laboral: "https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-31-60",
+  deuda_pib: "https://www.argentina.gob.ar/economia/finanzas/deudapublica/informes-trimestrales-de-la-deuda"
+}
+
+function getIndicatorUrl(key: string, originalUrl?: string): string {
+  if (originalUrl) {
+    return originalUrl
+  }
+  return FALLBACK_URLS[key] || "https://datos.gob.ar/"
+}
+
 export default function StpPage() {
   const [view, setView] = React.useState<"charts" | "table">("charts")
   const [selectedIndKey, setSelectedIndKey] = React.useState<string>(
@@ -330,7 +355,15 @@ export default function StpPage() {
                     {/* Fuente en Caption */}
                     <div className="text-xs text-slate-400 border-t pt-3 flex items-center justify-between">
                       <span>
-                        <strong>Fuente:</strong> {getIndicatorSource(ind.key, ind.meta.source)}
+                        <strong>Fuente:</strong>{" "}
+                        <a
+                          href={getIndicatorUrl(ind.key, ind.meta.url)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                        >
+                          {getIndicatorSource(ind.key, ind.meta.source)} ↗
+                        </a>
                       </span>
                       <Button
                         variant="ghost"
@@ -512,7 +545,17 @@ export default function StpPage() {
                     <div className="border border-slate-200 rounded-lg overflow-hidden">
                       <div className="bg-slate-50 border-b p-3 flex justify-between items-center">
                         <span className="text-sm font-semibold text-slate-700">Historial de datos</span>
-                        <span className="text-xs text-slate-500"><strong>Fuente:</strong> {getIndicatorSource(selectedInd.key, selectedInd.meta.source)}</span>
+                        <span className="text-xs text-slate-500">
+                          <strong>Fuente:</strong>{" "}
+                          <a
+                            href={getIndicatorUrl(selectedInd.key, selectedInd.meta.url)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                          >
+                            {getIndicatorSource(selectedInd.key, selectedInd.meta.source)} ↗
+                          </a>
+                        </span>
                       </div>
                       
                       <div className="max-h-[300px] overflow-y-auto">

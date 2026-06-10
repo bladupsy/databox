@@ -58,6 +58,34 @@ def get_indicator_source(key, original_source=None):
         return original_source
     return FALLBACK_SOURCES.get(key, "INDEC / BCRA / Ministerio de Economía")
 
+FALLBACK_URLS = {
+    "ipc": "https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31",
+    "rf_primario": "https://datos.gob.ar/dataset/sspm-resultado-base-caja-sector-publico-nacional-no-financiero",
+    "rf_global": "https://datos.gob.ar/dataset/sspm-resultado-base-caja-sector-publico-nacional-no-financiero",
+    "bienes_personales": "https://www.argentina.gob.ar/economia/ingresospublicos/recaudacion",
+    "ingresos_tributarios_total": "https://www.argentina.gob.ar/economia/ingresospublicos/recaudacion",
+    "iva": "https://www.argentina.gob.ar/economia/ingresospublicos/recaudacion",
+    "ganancias": "https://www.argentina.gob.ar/economia/ingresospublicos/recaudacion",
+    "presion_tributaria": "https://www.argentina.gob.ar/economia/ingresospublicos/recaudacion",
+    "tc_nominal": "https://www.bcra.gob.ar/PublicacionesEstadisticas/Principales_variables.asp",
+    "tc_real": "https://www.bcra.gob.ar/PublicacionesEstadisticas/Principales_variables.asp",
+    "badlar": "https://www.bcra.gob.ar/PublicacionesEstadisticas/Principales_variables.asp",
+    "tib": "https://www.bcra.gob.ar/PublicacionesEstadisticas/Principales_variables.asp",
+    "gini": "https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-31-60",
+    "ingreso_laboral": "https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-31-60",
+    "deuda_pib": "https://www.argentina.gob.ar/economia/finanzas/deudapublica/informes-trimestrales-de-la-deuda"
+}
+
+def get_indicator_url(key, original_url=None):
+    if original_url:
+        return original_url
+    return FALLBACK_URLS.get(key, "https://datos.gob.ar/")
+
+def get_indicator_source_link(key, original_source=None, original_url=None):
+    source = get_indicator_source(key, original_source)
+    url = get_indicator_url(key, original_url)
+    return f"[{source}]({url})"
+
 # Barra lateral de navegación
 st.sidebar.image("https://img.icons8.com/clouds/100/line-chart.png", width=80)
 st.sidebar.title("STP Grupo A")
@@ -89,7 +117,7 @@ if view == "📈 Gráficos":
         
         points = ind.get("points", [])
         meta = ind.get("meta", {})
-        source = get_indicator_source(ind.get("key"), meta.get("source", "—"))
+        source = get_indicator_source_link(ind.get("key"), meta.get("source", "—"), meta.get("url"))
         
         if points:
             # Convertir a DataFrame para facilitar Plotly
@@ -174,7 +202,7 @@ else:  # view == "📋 Tabla de Datos"
         )
         
         st.dataframe(display_df, use_container_width=True, hide_index=True)
-        sources = sorted(list(set(get_indicator_source(ind.get("key"), ind.get("meta", {}).get("source", "—")) for ind in indicators)))
+        sources = sorted(list(set(get_indicator_source_link(ind.get("key"), ind.get("meta", {}).get("source", "—"), ind.get("meta", {}).get("url")) for ind in indicators)))
         st.caption(f"**Fuentes:** {' · '.join(sources)}")
         
         # Botón para descargar CSV
@@ -218,7 +246,7 @@ else:  # view == "📋 Tabla de Datos"
             df_single_display["Período"] = df_single_display["Período"].apply(format_period)
             
             # Mostrar tabla individual y fuente
-            st.markdown(f"**Fuente de los datos:** {get_indicator_source(selected_ind.get('key'), selected_ind.get('meta', {}).get('source', '—'))}")
+            st.markdown(f"**Fuente de los datos:** {get_indicator_source_link(selected_ind.get('key'), selected_ind.get('meta', {}).get('source', '—'), selected_ind.get('meta', {}).get('url'))}")
             st.dataframe(df_single_display, use_container_width=True, hide_index=True)
         else:
             st.warning("No hay datos disponibles para este indicador.")
