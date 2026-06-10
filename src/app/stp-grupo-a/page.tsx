@@ -15,7 +15,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend
+  Legend,
+  Label
 } from "recharts"
 import { Info, Download, BarChart3, Table as TableIcon, Calendar, TrendingUp } from "lucide-react"
 
@@ -333,21 +334,33 @@ export default function StpPage() {
                     <div className="h-[320px] w-full">
                       <ResponsiveContainer width="100%" height="100%">
                         {ind.chart_type === "bar" ? (
-                          <BarChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
+                          <BarChart data={chartData} margin={{ top: 10, right: 10, left: 15, bottom: 20 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                             <XAxis
                               dataKey="periodoFormat"
                               tick={{ fill: "#64748b", fontSize: 11 }}
                               tickLine={false}
                               axisLine={false}
-                            />
+                              dy={5}
+                            >
+                              <Label value="Período" offset={-5} position="insideBottom" fill="#94a3b8" style={{ fontSize: 11, fontWeight: 500 }} />
+                            </XAxis>
                             <YAxis
                               tick={{ fill: "#64748b", fontSize: 11 }}
                               tickFormatter={(v) => formatVal(v)}
                               tickLine={false}
                               axisLine={false}
-                              width={60}
-                            />
+                              width={80}
+                            >
+                              <Label
+                                value={displayYLabel}
+                                angle={-90}
+                                position="insideLeft"
+                                offset={-5}
+                                fill="#94a3b8"
+                                style={{ fontSize: 11, fontWeight: 500, textAnchor: "middle" }}
+                              />
+                            </YAxis>
                             <Tooltip
                               contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
                               labelStyle={{ fontWeight: "bold", color: "#1e293b" }}
@@ -356,21 +369,33 @@ export default function StpPage() {
                             <Bar dataKey="valor" fill="#3b82f6" radius={[4, 4, 0, 0]} name={displayYLabel} />
                           </BarChart>
                         ) : (
-                          <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
+                          <LineChart data={chartData} margin={{ top: 10, right: 10, left: 15, bottom: 20 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                             <XAxis
                               dataKey="periodoFormat"
                               tick={{ fill: "#64748b", fontSize: 11 }}
                               tickLine={false}
                               axisLine={false}
-                            />
+                              dy={5}
+                            >
+                              <Label value="Período" offset={-5} position="insideBottom" fill="#94a3b8" style={{ fontSize: 11, fontWeight: 500 }} />
+                            </XAxis>
                             <YAxis
                               tick={{ fill: "#64748b", fontSize: 11 }}
                               tickFormatter={(v) => formatVal(v)}
                               tickLine={false}
                               axisLine={false}
-                              width={60}
-                            />
+                              width={80}
+                            >
+                              <Label
+                                value={displayYLabel}
+                                angle={-90}
+                                position="insideLeft"
+                                offset={-5}
+                                fill="#94a3b8"
+                                style={{ fontSize: 11, fontWeight: 500, textAnchor: "middle" }}
+                              />
+                            </YAxis>
                             <Tooltip
                               contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
                               labelStyle={{ fontWeight: "bold", color: "#1e293b" }}

@@ -150,7 +150,7 @@ if view == "📈 Gráficos":
                 )
                 
             fig.update_layout(
-                margin=dict(l=0, r=0, t=10, b=0),
+                margin=dict(l=60, r=10, t=20, b=40),
                 xaxis=dict(type="category")  # Forzar tipo categórico para conservar el orden cronológico
             )
             
