@@ -157,23 +157,45 @@ export default function StpPage() {
     })
 
     const periods = Object.keys(dfs).sort()
-    const headers = ["Período", ...indicators.map(ind => ind.title)]
+    const headers = [
+      "Período",
+      ...indicators.map(ind => {
+        const isMillions = ind.y_label.includes("Millones")
+        return isMillions ? `${ind.title} (miles de millones)` : ind.title
+      })
+    ]
 
     const rows = periods.map(p => {
       const rowData: Record<string, string | number | null> = { period: p }
       indicators.forEach(ind => {
-        rowData[ind.key] = dfs[p][ind.key] !== undefined ? dfs[p][ind.key] : null
+        const rawVal = dfs[p][ind.key]
+        const isMillions = ind.y_label.includes("Millones")
+        rowData[ind.key] = rawVal !== undefined && rawVal !== null
+          ? (isMillions ? rawVal / 1000 : rawVal)
+          : null
       })
       return rowData
     })
 
     // Construir contenido CSV
-    const csvHeaders = ["Periodo", ...indicators.map(ind => ind.title.replace(/,/g, " "))].join(",")
+    const csvHeaders = [
+      "Periodo",
+      ...indicators.map(ind => {
+        const isMillions = ind.y_label.includes("Millones")
+        const headerTitle = isMillions ? `${ind.title} (miles de millones)` : ind.title
+        return headerTitle.replace(/,/g, " ")
+      })
+    ].join(",")
+    
     const csvLines = periods.map(p => {
       const lineData = [p]
       indicators.forEach(ind => {
-        const val = dfs[p][ind.key]
-        lineData.push(val !== undefined && val !== null ? String(val) : "")
+        const rawVal = dfs[p][ind.key]
+        const isMillions = ind.y_label.includes("Millones")
+        const val = rawVal !== undefined && rawVal !== null
+          ? (isMillions ? rawVal / 1000 : rawVal)
+          : null
+        lineData.push(val !== null ? String(val) : "")
       })
       return lineData.join(",")
     })
@@ -200,9 +222,19 @@ export default function StpPage() {
 
   // Estadísticas del indicador individual seleccionado
   const selectedInd = stpData.indicators.find(i => i.key === selectedIndKey)
+  const isSelectedIndMillions = selectedInd?.y_label.includes("Millones") || false
+  const displaySelectedYLabel = selectedInd && isSelectedIndMillions
+    ? selectedInd.y_label.replace("Millones", "Miles de millones").replace("millones", "miles de millones")
+    : selectedInd?.y_label || ""
+
   const selectedStats = React.useMemo(() => {
     if (!selectedInd || !selectedInd.points.length) return null
-    const vals = selectedInd.points.map(([_, v]) => v).filter((v): v is number => v !== null)
+    
+    const vals = selectedInd.points.map(([_, v]) => {
+      if (v === null) return null
+      return isSelectedIndMillions ? v / 1000 : v
+    }).filter((v): v is number => v !== null)
+    
     if (!vals.length) return null
 
     const sum = vals.reduce((a, b) => a + b, 0)
@@ -210,15 +242,16 @@ export default function StpPage() {
     const min = Math.min(...vals)
     const max = Math.max(...vals)
     const lastPoint = selectedInd.points[selectedInd.points.length - 1]
+    const lastVal = lastPoint[1] !== null && isSelectedIndMillions ? lastPoint[1] / 1000 : lastPoint[1]
 
     return {
-      lastVal: lastPoint[1],
+      lastVal,
       lastPeriod: lastPoint[0],
       avg,
       min,
       max
     }
-  }, [selectedInd])
+  }, [selectedInd, isSelectedIndMillions])
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -262,10 +295,15 @@ export default function StpPage() {
           /* Vista de Gráficos */
           <div className="space-y-6">
             {stpData.indicators.map(ind => {
+              const isMillions = ind.y_label.includes("Millones")
+              const displayYLabel = isMillions 
+                ? ind.y_label.replace("Millones", "Miles de millones").replace("millones", "miles de millones")
+                : ind.y_label
+
               const chartData = ind.points.map(([p, v]) => ({
                 periodo: p,
                 periodoFormat: formatPeriod(p),
-                valor: v
+                valor: v !== null && isMillions ? v / 1000 : v
               }))
 
               return (
@@ -313,9 +351,9 @@ export default function StpPage() {
                             <Tooltip
                               contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
                               labelStyle={{ fontWeight: "bold", color: "#1e293b" }}
-                              formatter={(value: any) => [formatVal(value === undefined || value === null ? null : Number(value)), ind.y_label]}
+                              formatter={(value: any) => [formatVal(value === undefined || value === null ? null : Number(value)), displayYLabel]}
                             />
-                            <Bar dataKey="valor" fill="#3b82f6" radius={[4, 4, 0, 0]} name={ind.y_label} />
+                            <Bar dataKey="valor" fill="#3b82f6" radius={[4, 4, 0, 0]} name={displayYLabel} />
                           </BarChart>
                         ) : (
                           <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
@@ -336,7 +374,7 @@ export default function StpPage() {
                             <Tooltip
                               contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
                               labelStyle={{ fontWeight: "bold", color: "#1e293b" }}
-                              formatter={(value: any) => [formatVal(value === undefined || value === null ? null : Number(value)), ind.y_label]}
+                              formatter={(value: any) => [formatVal(value === undefined || value === null ? null : Number(value)), displayYLabel]}
                             />
                             <Line
                               type="monotone"
@@ -345,7 +383,7 @@ export default function StpPage() {
                               strokeWidth={3}
                               dot={{ r: 4, stroke: "#3b82f6", strokeWidth: 2, fill: "#ffffff" }}
                               activeDot={{ r: 6 }}
-                              name={ind.y_label}
+                              name={displayYLabel}
                             />
                           </LineChart>
                         )}
@@ -563,7 +601,7 @@ export default function StpPage() {
                           <thead className="bg-slate-100 border-b sticky top-0 z-10">
                             <tr>
                               <th className="p-2.5 font-semibold text-slate-600">Período</th>
-                              <th className="p-2.5 font-semibold text-slate-600 text-right">{selectedInd.y_label}</th>
+                              <th className="p-2.5 font-semibold text-slate-600 text-right">{displaySelectedYLabel}</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-slate-100 bg-white">
@@ -571,7 +609,7 @@ export default function StpPage() {
                               <tr key={idx} className="hover:bg-slate-50/50">
                                 <td className="p-2.5 text-slate-700 font-medium">{formatPeriod(p)}</td>
                                 <td className="p-2.5 text-right font-mono text-slate-600">
-                                  {v !== null ? formatVal(v) : "—"}
+                                  {v !== null ? formatVal(isSelectedIndMillions ? v / 1000 : v) : "—"}
                                 </td>
                               </tr>
                             ))}

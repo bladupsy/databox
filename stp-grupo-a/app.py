@@ -120,9 +120,15 @@ if view == "📈 Gráficos":
         source = get_indicator_source_link(ind.get("key"), meta.get("source", "—"), meta.get("url"))
         
         if points:
+            y_label = ind.get("y_label", "Valor")
+            is_millions = "Millones" in y_label
+            y_label_display = y_label.replace("Millones", "Miles de millones").replace("millones", "miles de millones") if is_millions else y_label
+
             # Convertir a DataFrame para facilitar Plotly
-            df = pd.DataFrame(points, columns=["Período", ind.get("y_label", "Valor")])
-            
+            df = pd.DataFrame(points, columns=["Período", y_label_display])
+            if is_millions:
+                df[y_label_display] = df[y_label_display] / 1000.0
+
             # Formatear el eje X con meses en español
             df["Período Formateado"] = df["Período"].apply(format_period)
             
@@ -131,14 +137,14 @@ if view == "📈 Gráficos":
                 fig = px.bar(
                     df,
                     x="Período Formateado",
-                    y=ind.get("y_label", "Valor"),
+                    y=y_label_display,
                     labels={"Período Formateado": "Período"}
                 )
             else:
                 fig = px.line(
                     df,
                     x="Período Formateado",
-                    y=ind.get("y_label", "Valor"),
+                    y=y_label_display,
                     markers=True,
                     labels={"Período Formateado": "Período"}
                 )
@@ -178,8 +184,14 @@ else:  # view == "📋 Tabla de Datos"
     for ind in indicators:
         points = ind.get("points", [])
         if points:
-            y_col = ind.get("title", ind.get("key"))
+            title = ind.get("title", ind.get("key"))
+            y_label = ind.get("y_label", "Valor")
+            is_millions = "Millones" in y_label
+            y_col = f"{title} (miles de millones)" if is_millions else title
+            
             df_ind = pd.DataFrame(points, columns=["Período", y_col])
+            if is_millions:
+                df_ind[y_col] = df_ind[y_col] / 1000.0
             dfs.append(df_ind)
             
     if dfs:
@@ -226,11 +238,17 @@ else:  # view == "📋 Tabla de Datos"
         
         if ind_points:
             y_label = selected_ind.get("y_label", "Valor")
-            df_single = pd.DataFrame(ind_points, columns=["Período", y_label])
+            is_millions = "Millones" in y_label
+            y_label_display = y_label.replace("Millones", "Miles de millones").replace("millones", "miles de millones") if is_millions else y_label
+
+            df_single = pd.DataFrame(ind_points, columns=["Período", y_label_display])
+            if is_millions:
+                df_single[y_label_display] = df_single[y_label_display] / 1000.0
+
             df_single = df_single.sort_values("Período")
             
             # Calcular estadísticas rápidas
-            vals = df_single[y_label].dropna()
+            vals = df_single[y_label_display].dropna()
             
             if not vals.empty:
                 col1, col2, col3, col4 = st.columns(4)
