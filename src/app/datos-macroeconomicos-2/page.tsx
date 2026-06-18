@@ -230,7 +230,7 @@ export default function DatosMacroeconomicos2Page() {
             { id: 'diagnostico', label: 'Informe' },
             { id: 'graficos', label: 'Tablero Gráfico' },
             { id: 'simulador', label: 'Simulador Reforma' },
-            { id: 'intercambio', label: 'Intercambio Crítico' }
+            // { id: 'intercambio', label: 'Intercambio Crítico' }
           ].map((tab) => (
             <button
               key={tab.id}
