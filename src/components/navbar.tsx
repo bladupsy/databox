@@ -14,6 +14,7 @@ import {
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/stp-grupo-a", label: "STP Grupo A" },
+  { href: "/datos-macroeconomicos-2", label: "Datos Macroeconómicos 2" },
   { href: "/inflacion", label: "Inflación" },
   { href: "/radial", label: "Resumen Radial" },
   { href: "/tabla", label: "Tabla" },
