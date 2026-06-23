@@ -205,18 +205,18 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-indigo-100 selection:text-indigo-900">
+    <div className="min-h-screen bg-slate-50/50 text-slate-900 flex flex-col font-sans selection:bg-slate-900 selection:text-slate-50">
 
       {/* HEADER PRINCIPAL */}
-      <header className="border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-50 px-6 py-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 shadow-sm">
+      <header className="border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-50 px-6 py-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-lg text-white shadow-md shadow-indigo-500/10">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+          <div className="p-2 border border-slate-200 rounded-lg text-slate-900 bg-slate-50">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
             </svg>
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900">
+            <h1 className="text-base font-semibold tracking-tight text-slate-900">
               Simulador Fiscal de Modelos Comparados
             </h1>
             <p className="text-xs text-slate-500 font-medium">Asesoría de Política Pública • Cátedra Teoría y Análisis Económico II (UNAM)</p>
@@ -224,7 +224,7 @@ export default function App() {
         </div>
 
         {/* NAVEGACIÓN TABLERO */}
-        <nav className="flex bg-slate-100 p-1 rounded-lg border border-slate-200 self-stretch lg:self-auto overflow-x-auto">
+        <nav className="inline-flex h-9 items-center justify-center rounded-lg bg-slate-100 p-1 text-slate-500 self-stretch lg:self-auto overflow-x-auto">
           {[
             { id: 'comparacion', label: 'Evidencia Comparada' },
             { id: 'simulador', label: 'Simulador por Modelos' }
@@ -232,10 +232,11 @@ export default function App() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-1.5 text-sm font-semibold rounded-md transition-all duration-200 whitespace-nowrap ${activeTab === tab.id
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
-                }`}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-xs font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
+                activeTab === tab.id
+                  ? 'bg-white text-slate-950 shadow-sm border border-slate-200/50'
+                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50/50'
+              }`}
             >
               {tab.label}
             </button>
@@ -244,22 +245,22 @@ export default function App() {
       </header>
 
       {/* CONTENIDO PRINCIPAL */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-6 flex flex-col gap-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-6 flex flex-col gap-6">
 
         {/* TAB 1: EVIDENCIA COMPARADA HISTÓRICA */}
         {activeTab === 'comparacion' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             {/* Controles del Gráfico */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-6">
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-5">
               <div>
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 mb-1">Mapeo de Evidencia</h3>
-                <p className="text-xs text-slate-500">Seleccione la variable macroeconómica de referencia para visualizar la evolución histórica comparada (2000-2022).</p>
+                <h3 className="text-sm font-semibold tracking-tight text-slate-900">Mapeo de Evidencia</h3>
+                <p className="text-xs text-slate-500 mt-1">Seleccione la variable macroeconómica de referencia para visualizar la evolución histórica comparada (2000-2022).</p>
               </div>
 
               {/* Selector de Variable */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700">Variable Macroeconómica</label>
+                <label className="text-xs font-semibold text-slate-700">Variable Macroeconómica</label>
                 <div className="flex flex-col gap-1.5">
                   {([
                     { id: 'gini', label: 'Coeficiente de Gini' },
@@ -270,10 +271,11 @@ export default function App() {
                     <button
                       key={ind.id}
                       onClick={() => setSelectedIndicator(ind.id)}
-                      className={`px-4 py-2.5 text-xs font-bold rounded-lg border text-left transition-all duration-150 ${selectedIndicator === ind.id
-                          ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm'
-                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-800'
-                        }`}
+                      className={`w-full px-3 py-2 text-xs font-medium rounded-md border text-left transition-all duration-150 ${
+                        selectedIndicator === ind.id
+                          ? 'bg-slate-900 border-slate-900 text-slate-50 shadow-sm'
+                          : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900'
+                      }`}
                     >
                       {ind.label}
                     </button>
@@ -282,31 +284,31 @@ export default function App() {
               </div>
 
               <div className="border-t border-slate-200 pt-4 text-[11px] text-slate-500 leading-relaxed space-y-2">
-                <p>💡 <strong>Nota sobre archivos consultados:</strong></p>
-                <p>Las series de Dinamarca provienen del archivo <em>"Dinamarca y Argentina.xlsx"</em>, reflejando su bajísima desigualdad estructural (Gini &lt; 29) [cite: 32].</p>
-                <p>El perfil de ahorro de China proviene de <em>"china(1)_2.xlsx"</em>, mostrando una tasa récord de generación interna de capital que supera el 45% del PIB [cite: 4].</p>
+                <p className="font-medium text-slate-800">💡 Nota sobre archivos consultados:</p>
+                <p>Las series de Dinamarca provienen del archivo <em className="text-slate-700 font-medium">"Dinamarca y Argentina.xlsx"</em>, reflejando su bajísima desigualdad estructural (Gini &lt; 29) [cite: 32].</p>
+                <p>El perfil de ahorro de China proviene de <em className="text-slate-700 font-medium">"china(1)_2.xlsx"</em>, mostrando una tasa récord de generación interna de capital que supera el 45% del PIB [cite: 4].</p>
                 <p>Uruguay se incorpora como un exitoso modelo regional de reforma impositiva dual (Astori 2007) que atenuó el Gini manteniendo grado de inversión soberano [cite: 1.1.1, 1.2.3].</p>
               </div>
             </div>
 
             {/* Visualización Gráfica SVG */}
-            <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div className="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
+                  <h3 className="text-sm font-semibold tracking-tight text-slate-900">
                     {selectedIndicator === 'gini' ? 'Desigualdad (Coeficiente de Gini)' : selectedIndicator === 'presionTributaria' ? 'Presión Fiscal (% PIB)' : selectedIndicator === 'ahorro' ? 'Ahorro Bruto (% PIB)' : 'Deuda Pública (% PIB)'} (2000-2022)
                   </h3>
-                  <p className="text-xs text-slate-500 font-medium">Mapeo de tendencia oficial sobre el PIB por país de origen.</p>
+                  <p className="text-xs text-slate-500 mt-1">Mapeo de tendencia oficial sobre el PIB por país de origen.</p>
                 </div>
               </div>
 
               {/* Leyenda del Gráfico */}
-              <div className="flex flex-wrap gap-4 items-center justify-center my-3 text-[11px] font-semibold text-slate-700 bg-slate-50 py-2 px-3 rounded-lg border border-slate-200">
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#6366f1] inline-block"></span>🇦🇷 Argentina</span>
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#ef4444] inline-block"></span>🇳🇴 Noruega</span>
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#10b981] inline-block"></span>🇩🇰 Dinamarca</span>
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#f59e0b] inline-block"></span>🇨🇳 China</span>
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#06b6d4] inline-block"></span>🇺🇾 Uruguay</span>
+              <div className="flex flex-wrap gap-4 items-center justify-center my-3 text-[11px] font-medium text-slate-650 bg-slate-50/50 py-2 px-3 rounded-lg border border-slate-200/80">
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#0f172a] inline-block"></span>🇦🇷 Argentina</span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#e11d48] inline-block"></span>🇳🇴 Noruega</span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#16a34a] inline-block"></span>🇩🇰 Dinamarca</span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#ea580c] inline-block"></span>🇨🇳 China</span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#0891b2] inline-block"></span>🇺🇾 Uruguay</span>
               </div>
 
               {/* Gráfico SVG */}
@@ -377,18 +379,18 @@ export default function App() {
                   {/* Trazado de las Líneas por País */}
                   {chartVisualData.countryLines.map(({ country, points }) => {
                     const strokeColor = 
-                      country === 'arg' ? '#6366f1' : // Indigo
-                      country === 'nor' ? '#ef4444' : // Red
-                      country === 'dnk' ? '#10b981' : // Green
-                      country === 'chn' ? '#f59e0b' : // Orange/Gold
-                      '#06b6d4'; // Uruguay (Cyan)
+                      country === 'arg' ? '#0f172a' : // Slate 900
+                      country === 'nor' ? '#e11d48' : // Rose 600
+                      country === 'dnk' ? '#16a34a' : // Green 600
+                      country === 'chn' ? '#ea580c' : // Orange 600
+                      '#0891b2'; // Cyan 600
 
                     const shadowColor =
-                      country === 'arg' ? 'rgba(99,102,241,0.15)' :
-                      country === 'nor' ? 'rgba(239,68,68,0.15)' :
-                      country === 'dnk' ? 'rgba(16,185,129,0.15)' :
-                      country === 'chn' ? 'rgba(245,158,11,0.15)' :
-                      'rgba(6,182,212,0.15)';
+                      country === 'arg' ? 'rgba(15,23,42,0.1)' :
+                      country === 'nor' ? 'rgba(225,29,72,0.1)' :
+                      country === 'dnk' ? 'rgba(22,163,74,0.1)' :
+                      country === 'chn' ? 'rgba(234,88,12,0.1)' :
+                      'rgba(8,145,178,0.1)';
 
                     return (
                       <g key={country}>
@@ -429,53 +431,53 @@ export default function App() {
 
               {/* Resumen Comparativo de Países (Tabla) */}
               <div className="mt-6 pt-4 border-t border-slate-200">
-                <span className="block text-xs font-bold text-slate-700 mb-2">Resumen de la Serie Comparada (2000-2022)</span>
+                <span className="block text-xs font-semibold text-slate-900 mb-3">Resumen de la Serie Comparada (2000-2022)</span>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="border-b border-slate-200 text-slate-500 font-semibold">
-                        <th className="py-2 pr-4">País</th>
-                        <th className="py-2 px-4 text-center">Promedio</th>
-                        <th className="py-2 px-4 text-center">Mínimo</th>
-                        <th className="py-2 px-4 text-center">Máximo</th>
-                        <th className="py-2 pl-4">Enfoque de Política Económica</th>
+                      <tr className="border-b border-slate-200 text-slate-500 font-medium">
+                        <th className="py-2.5 pr-4">País</th>
+                        <th className="py-2.5 px-4 text-center">Promedio</th>
+                        <th className="py-2.5 px-4 text-center">Mínimo</th>
+                        <th className="py-2.5 px-4 text-center">Máximo</th>
+                        <th className="py-2.5 pl-4">Enfoque de Política Económica</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-slate-700">
-                      <tr>
-                        <td className="py-2 pr-4 font-bold text-indigo-600 flex items-center gap-1"><span>🇦🇷</span> Argentina</td>
-                        <td className="py-2 px-4 text-center">{(seriesHistoricas.arg[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 px-4 text-center">{Math.min(...seriesHistoricas.arg[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 px-4 text-center">{Math.max(...seriesHistoricas.arg[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 pl-4 text-slate-500">Alta volatilidad, ausencia histórica de tributación patrimonial de base robusta.</td>
+                      <tr className="hover:bg-slate-50/50">
+                        <td className="py-2.5 pr-4 font-semibold text-slate-900 flex items-center gap-1.5"><span>🇦🇷</span> Argentina</td>
+                        <td className="py-2.5 px-4 text-center">{(seriesHistoricas.arg[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 px-4 text-center">{Math.min(...seriesHistoricas.arg[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 px-4 text-center">{Math.max(...seriesHistoricas.arg[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 pl-4 text-slate-500">Alta volatilidad, ausencia histórica de tributación patrimonial de base robusta.</td>
                       </tr>
-                      <tr>
-                        <td className="py-2 pr-4 font-bold text-red-600 flex items-center gap-1"><span>🇳🇴</span> Noruega</td>
-                        <td className="py-2 px-4 text-center">{(seriesHistoricas.nor[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 px-4 text-center">{Math.min(...seriesHistoricas.nor[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 px-4 text-center">{Math.max(...seriesHistoricas.nor[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 pl-4 text-slate-500">Intangibilidad del gasto mediante retención en Fondo Soberano y Formuesskatt.</td>
+                      <tr className="hover:bg-slate-50/50">
+                        <td className="py-2.5 pr-4 font-semibold text-slate-900 flex items-center gap-1.5"><span>🇳🇴</span> Noruega</td>
+                        <td className="py-2.5 px-4 text-center">{(seriesHistoricas.nor[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 px-4 text-center">{Math.min(...seriesHistoricas.nor[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 px-4 text-center">{Math.max(...seriesHistoricas.nor[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 pl-4 text-slate-500">Intangibilidad del gasto mediante retención en Fondo Soberano y Formuesskatt.</td>
                       </tr>
-                      <tr>
-                        <td className="py-2 pr-4 font-bold text-emerald-600 flex items-center gap-1"><span>🇩🇰</span> Dinamarca</td>
-                        <td className="py-2 px-4 text-center">{(seriesHistoricas.dnk[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 px-4 text-center">{Math.min(...seriesHistoricas.dnk[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 px-4 text-center">{Math.max(...seriesHistoricas.dnk[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 pl-4 text-slate-500">Alta presión fiscal directa, impuesto catastral al suelo y equidad universal.</td>
+                      <tr className="hover:bg-slate-50/50">
+                        <td className="py-2.5 pr-4 font-semibold text-slate-900 flex items-center gap-1.5"><span>🇩🇰</span> Dinamarca</td>
+                        <td className="py-2.5 px-4 text-center">{(seriesHistoricas.dnk[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 px-4 text-center">{Math.min(...seriesHistoricas.dnk[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 px-4 text-center">{Math.max(...seriesHistoricas.dnk[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 pl-4 text-slate-500">Alta presión fiscal directa, impuesto catastral al suelo y equidad universal.</td>
                       </tr>
-                      <tr>
-                        <td className="py-2 pr-4 font-bold text-amber-600 flex items-center gap-1"><span>🇨🇳</span> China</td>
-                        <td className="py-2 px-4 text-center">{(seriesHistoricas.chn[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 px-4 text-center">{Math.min(...seriesHistoricas.chn[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 px-4 text-center">{Math.max(...seriesHistoricas.chn[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 pl-4 text-slate-500">Fuerte ahorro interno, coparticipación centralizada (IIT) para atenuar asimetrías.</td>
+                      <tr className="hover:bg-slate-50/50">
+                        <td className="py-2.5 pr-4 font-semibold text-slate-900 flex items-center gap-1.5"><span>🇨🇳</span> China</td>
+                        <td className="py-2.5 px-4 text-center">{(seriesHistoricas.chn[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 px-4 text-center">{Math.min(...seriesHistoricas.chn[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 px-4 text-center">{Math.max(...seriesHistoricas.chn[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 pl-4 text-slate-500">Fuerte ahorro interno, coparticipación centralizada (IIT) para atenuar asimetrías.</td>
                       </tr>
-                      <tr>
-                        <td className="py-2 pr-4 font-bold text-cyan-600 flex items-center gap-1"><span>🇺🇾</span> Uruguay</td>
-                        <td className="py-2 px-4 text-center">{(seriesHistoricas.ury[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 px-4 text-center">{Math.min(...seriesHistoricas.ury[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 px-4 text-center">{Math.max(...seriesHistoricas.ury[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
-                        <td className="py-2 pl-4 text-slate-500">Esquema impositivo dual (IRPF) equilibrando progresividad y grado de inversión.</td>
+                      <tr className="hover:bg-slate-50/50">
+                        <td className="py-2.5 pr-4 font-semibold text-slate-900 flex items-center gap-1.5"><span>🇺🇾</span> Uruguay</td>
+                        <td className="py-2.5 px-4 text-center">{(seriesHistoricas.ury[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 px-4 text-center">{Math.min(...seriesHistoricas.ury[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 px-4 text-center">{Math.max(...seriesHistoricas.ury[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2.5 pl-4 text-slate-500">Esquema impositivo dual (IRPF) equilibrando progresividad y grado de inversión.</td>
                       </tr>
                     </tbody>
                   </table>
@@ -486,68 +488,74 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 2: EL SIMULADOR DE POLÍTICAS - TABS POR MODELO */}
-        {activeTab === 'simulador' && (
-          <div className="space-y-8">
-
             {/* Cabecera explicativa */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-              <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-1.5">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
                 Entorno de Modelos de Simulación
               </span>
-              <h2 className="text-2xl font-bold text-slate-950 tracking-tight">
+              <h2 className="text-xl font-semibold text-slate-900 tracking-tight">
                 Simulador de Políticas Públicas
               </h2>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <p className="text-xs text-slate-500 leading-normal">
                 Explore y ajuste los parámetros de los diferentes modelos internacionales para proyectar su impacto simulado sobre la economía de Argentina.
               </p>
             </div>
 
             {/* CUADRO COMPARATIVO DE IMPACTO GINI (TODOS LOS CASOS) */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-4">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-600">Monitoreo Redistributivo</span>
-                <h3 className="text-base font-bold text-slate-800">Impacto Proyectado en el Coeficiente de Gini (Argentina)</h3>
-                <p className="text-xs text-slate-500 mt-1">
-                  El escenario base de la economía argentina parte de un Coeficiente de Gini de <strong>{baseArg.gini}</strong>. La calibración de cada modelo proyecta los siguientes coeficientes finales y sus respectivas reducciones en puntos:
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Monitoreo Redistributivo</span>
+                <h3 className="text-sm font-semibold tracking-tight text-slate-900 mt-0.5">Impacto Proyectado en el Coeficiente de Gini (Argentina)</h3>
+                <p className="text-xs text-slate-550 mt-1">
+                  El escenario base de la economía argentina parte de un Coeficiente de Gini de <strong className="text-slate-900 font-semibold">{baseArg.gini}</strong>. La calibración de cada modelo proyecta los siguientes coeficientes finales y sus respectivas reducciones en puntos:
                 </p>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center flex flex-col justify-center">
-                  <span className="block text-[10px] text-slate-500 uppercase font-bold">🇦🇷 Escenario Base</span>
-                  <span className="text-xl font-black text-slate-700 mt-1">{baseArg.gini}</span>
-                  <span className="block text-[9px] text-slate-400 mt-0.5">Sin Cambios</span>
+                <div className="bg-slate-50/50 p-3 rounded-lg border border-slate-200/80 text-center flex flex-col justify-center items-center">
+                  <span className="block text-[10px] text-slate-500 uppercase font-medium">🇦🇷 Escenario Base</span>
+                  <span className="text-lg font-semibold tracking-tight text-slate-900 mt-1">{baseArg.gini}</span>
+                  <span className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium bg-slate-100 text-slate-600 mt-1.5">Sin Cambios</span>
                 </div>
-                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center flex flex-col justify-center">
-                  <span className="block text-[10px] text-slate-500 uppercase font-bold">🇳🇴 Mod. Noruega</span>
-                  <span className="text-xl font-black text-red-600 mt-1">{simNoruegaResult.gini.toFixed(1)}</span>
-                  <span className="block text-[9px] text-emerald-600 font-bold mt-0.5">-{Math.max(0, parseFloat((baseArg.gini - simNoruegaResult.gini).toFixed(1)))} pts</span>
+                <div className="bg-slate-50/50 p-3 rounded-lg border border-slate-200/80 text-center flex flex-col justify-center items-center">
+                  <span className="block text-[10px] text-slate-500 uppercase font-medium">🇳🇴 Mod. Noruega</span>
+                  <span className="text-lg font-semibold tracking-tight text-slate-900 mt-1">{simNoruegaResult.gini.toFixed(1)}</span>
+                  <span className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium bg-emerald-50 text-emerald-700 mt-1.5">
+                    -{Math.max(0, parseFloat((baseArg.gini - simNoruegaResult.gini).toFixed(1)))} pts
+                  </span>
                 </div>
-                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center flex flex-col justify-center">
-                  <span className="block text-[10px] text-slate-500 uppercase font-bold">🇩🇰 Mod. Dinamarca</span>
-                  <span className="text-xl font-black text-emerald-600 mt-1">{simDinamarcaResult.gini.toFixed(1)}</span>
-                  <span className="block text-[9px] text-emerald-600 font-bold mt-0.5">-{Math.max(0, parseFloat((baseArg.gini - simDinamarcaResult.gini).toFixed(1)))} pts</span>
+                <div className="bg-slate-50/50 p-3 rounded-lg border border-slate-200/80 text-center flex flex-col justify-center items-center">
+                  <span className="block text-[10px] text-slate-500 uppercase font-medium">🇩🇰 Mod. Dinamarca</span>
+                  <span className="text-lg font-semibold tracking-tight text-slate-900 mt-1">{simDinamarcaResult.gini.toFixed(1)}</span>
+                  <span className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium bg-emerald-50 text-emerald-700 mt-1.5">
+                    -{Math.max(0, parseFloat((baseArg.gini - simDinamarcaResult.gini).toFixed(1)))} pts
+                  </span>
                 </div>
-                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center flex flex-col justify-center">
-                  <span className="block text-[10px] text-slate-500 uppercase font-bold">🇨🇳 Mod. China</span>
-                  <span className="text-xl font-black text-amber-600 mt-1">{simChinaResult.gini.toFixed(1)}</span>
-                  <span className="block text-[9px] text-emerald-600 font-bold mt-0.5">-{Math.max(0, parseFloat((baseArg.gini - simChinaResult.gini).toFixed(1)))} pts</span>
+                <div className="bg-slate-50/50 p-3 rounded-lg border border-slate-200/80 text-center flex flex-col justify-center items-center">
+                  <span className="block text-[10px] text-slate-500 uppercase font-medium">🇨🇳 Mod. China</span>
+                  <span className="text-lg font-semibold tracking-tight text-slate-900 mt-1">{simChinaResult.gini.toFixed(1)}</span>
+                  <span className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium bg-emerald-50 text-emerald-700 mt-1.5">
+                    -{Math.max(0, parseFloat((baseArg.gini - simChinaResult.gini).toFixed(1)))} pts
+                  </span>
                 </div>
-                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center flex flex-col justify-center">
-                  <span className="block text-[10px] text-slate-500 uppercase font-bold">🇺🇾 Mod. Uruguay</span>
-                  <span className="text-xl font-black text-cyan-600 mt-1">{simUruguayResult.gini.toFixed(1)}</span>
-                  <span className="block text-[9px] text-emerald-600 font-bold mt-0.5">-{Math.max(0, parseFloat((baseArg.gini - simUruguayResult.gini).toFixed(1)))} pts</span>
+                <div className="bg-slate-50/50 p-3 rounded-lg border border-slate-200/80 text-center flex flex-col justify-center items-center">
+                  <span className="block text-[10px] text-slate-500 uppercase font-medium">🇺🇾 Mod. Uruguay</span>
+                  <span className="text-lg font-semibold tracking-tight text-slate-900 mt-1">{simUruguayResult.gini.toFixed(1)}</span>
+                  <span className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium bg-emerald-50 text-emerald-700 mt-1.5">
+                    -{Math.max(0, parseFloat((baseArg.gini - simUruguayResult.gini).toFixed(1)))} pts
+                  </span>
                 </div>
-                <div className="bg-indigo-50 p-3 rounded-xl border border-indigo-100 text-center flex flex-col justify-center shadow-inner">
-                  <span className="block text-[10px] text-indigo-700 uppercase font-bold">🛡️ Consenso Unificado</span>
-                  <span className="text-xl font-black text-indigo-700 mt-1">{simUnificadoResult.gini.toFixed(1)}</span>
-                  <span className="block text-[9px] text-indigo-600 font-bold mt-0.5">-{Math.max(0, parseFloat((baseArg.gini - simUnificadoResult.gini).toFixed(1)))} pts</span>
+                <div className="bg-slate-55/70 p-3 rounded-lg border border-slate-300 text-center flex flex-col justify-center items-center shadow-sm">
+                  <span className="block text-[10px] text-slate-900 uppercase font-semibold">🛡️ Unificado</span>
+                  <span className="text-lg font-bold tracking-tight text-slate-900 mt-1">{simUnificadoResult.gini.toFixed(1)}</span>
+                  <span className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium bg-indigo-50 text-indigo-700 mt-1.5 font-semibold">
+                    -{Math.max(0, parseFloat((baseArg.gini - simUnificadoResult.gini).toFixed(1)))} pts
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Sub-Navegación de Modelos */}
-            <div className="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200 overflow-x-auto gap-1">
+            <div className="flex bg-slate-100 p-1.5 rounded-lg border border-slate-250/70 overflow-x-auto gap-1">
               {[
                 { id: 'noruega', label: '🇳🇴 Modelo Noruega', desc: 'Fondo GPFG & Formuesskatt' },
                 { id: 'dinamarca', label: '🇩🇰 Modelo Dinamarca', desc: 'Impuesto al Suelo & Verde' },
@@ -558,100 +566,100 @@ export default function App() {
                 <button
                   key={m.id}
                   onClick={() => setActiveModelTab(m.id)}
-                  className={`flex-1 min-w-[140px] px-4 py-2.5 rounded-lg text-left transition-all duration-150 ${activeModelTab === m.id
-                      ? 'bg-white border border-slate-200 text-indigo-650 font-bold shadow-sm'
-                      : 'text-slate-600 hover:text-slate-800'
+                  className={`flex-1 min-w-[140px] px-3.5 py-2 rounded-md text-left transition-all duration-150 ${activeModelTab === m.id
+                      ? 'bg-white border border-slate-200 text-slate-900 font-medium shadow-sm'
+                      : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50/50'
                     }`}
                 >
-                  <span className="block text-xs md:text-sm">{m.label}</span>
-                  <span className="text-[10px] text-slate-500 font-semibold block">{m.desc}</span>
+                  <span className="block text-xs font-semibold">{m.label}</span>
+                  <span className="block text-[10px] text-slate-400 mt-0.5">{m.desc}</span>
                 </button>
               ))}
             </div>
 
             {/* 1. SUB-TAB: NORUEGA */}
             {activeModelTab === 'noruega' && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
-                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-6">
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700">⚙️ Parámetros Noruega</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fadeIn">
+                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-5">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">⚙️ Parámetros Noruega</h3>
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-slate-650">Alícuota Formuesskatt (Patrimonio)</span>
-                        <span className="text-indigo-600 font-bold">{norPatrimonio}%</span>
+                      <div className="flex justify-between text-xs font-medium">
+                        <span className="text-slate-600">Alícuota Formuesskatt (Patrimonio)</span>
+                        <span className="text-slate-900 font-semibold">{norPatrimonio}%</span>
                       </div>
                       <input
                         type="range" min="0.2" max="3.0" step="0.1" value={norPatrimonio}
                         onChange={(e) => setNorPatrimonio(parseFloat(e.target.value))}
-                        className="w-full accent-indigo-550 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400"
                       />
-                      <span className="text-[10px] text-slate-500 block">Impuesto progresivo permanente aplicado sobre el stock de activos netos declarados.</span>
+                      <span className="text-[10px] text-slate-400 block">Impuesto progresivo permanente aplicado sobre el stock de activos netos declarados.</span>
                     </div>
 
                     <div className="space-y-2">
-                      <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-slate-650">Retención de Renta para GPFG (Ahorro)</span>
-                        <span className="text-indigo-600 font-bold">{norFondoGPFG}%</span>
+                      <div className="flex justify-between text-xs font-medium">
+                        <span className="text-slate-600">Retención de Renta para GPFG (Ahorro)</span>
+                        <span className="text-slate-900 font-semibold">{norFondoGPFG}%</span>
                       </div>
                       <input
                         type="range" min="10" max="100" step="5" value={norFondoGPFG}
                         onChange={(e) => setNorFondoGPFG(parseInt(e.target.value))}
-                        className="w-full accent-indigo-550 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400"
                       />
-                      <span className="text-[10px] text-slate-500 block">Porcentaje de ingresos extraordinarios derivados directamente a la reserva intergeneracional.</span>
+                      <span className="text-[10px] text-slate-400 block">Porcentaje de ingresos extraordinarios derivados directamente a la reserva intergeneracional.</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between gap-6">
+                <div className="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between gap-5">
                   <div>
-                    <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 mb-4">📈 Impacto Proyectado en Argentina (Standalone)</h3>
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-4">📈 Impacto Proyectado en Argentina (Standalone)</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Coeficiente de Gini Proyectado</span>
-                        <span className="text-2xl font-black text-emerald-650 mt-1">{simNoruegaResult.gini.toFixed(1)}</span>
-                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 42.3</span>
+                      <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80">
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Coeficiente de Gini Proyectado</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1">{simNoruegaResult.gini.toFixed(1)}</span>
+                        <span className="block text-[10px] text-slate-400 mt-0.5">Escenario Base: 42.3</span>
                       </div>
-                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Ahorro Nacional Bruto Proyectado</span>
-                        <span className="text-2xl font-black text-indigo-650 mt-1">{simNoruegaResult.ahorro}% del PIB</span>
-                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 15.8% (Fondo: USD {simNoruegaResult.usdRecaudado}M)</span>
+                      <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80">
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Ahorro Nacional Bruto Proyectado</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1">{simNoruegaResult.ahorro}% del PIB</span>
+                        <span className="block text-[10px] text-slate-400 mt-0.5">Escenario Base: 15.8% (Fondo: USD {simNoruegaResult.usdRecaudado}M)</span>
                       </div>
-                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 col-span-1 md:col-span-2">
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Relación Deuda / PIB</span>
-                        <span className="text-2xl font-black text-red-650 mt-1">{simNoruegaResult.deuda}% del PIB</span>
-                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 95.0%</span>
+                      <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 col-span-1 md:col-span-2">
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Relación Deuda / PIB</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1">{simNoruegaResult.deuda}% del PIB</span>
+                        <span className="block text-[10px] text-slate-400 mt-0.5">Escenario Base: 95.0%</span>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600 leading-relaxed">
+                  <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 text-xs text-slate-500 leading-normal">
                     ℹ️ <strong>Mecánica del Modelo:</strong> El modelo noruego de acumulación desvincula el consumo del sector público de la inestabilidad. Al ahorrar la recaudación patrimonial y canalizarla al fondo soberano, la deuda externa de Argentina cae drásticamente debido a la desmonetización del déficit [cite: 4, 12].
                   </div>
 
                   {/* Nota de pie con Fórmula */}
-                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-650 space-y-2">
-                    <p className="font-bold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
-                    <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-2 text-slate-800 font-medium text-[12px]">
+                  <div className="p-4 bg-slate-50/50 rounded-lg border border-slate-200/80 text-xs text-slate-505 space-y-2">
+                    <p className="font-semibold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
+                    <div className="bg-white p-3 rounded-lg border border-slate-200/80 space-y-2 text-slate-700 font-medium text-[11px]">
                       <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                         <span>1. Recaudación Patrimonial Proyectada (norPatrimonio):</span>
-                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
                           {norPatrimonio}% × 1.5 = {(norPatrimonio * 1.5).toFixed(3)}% del PIB (USD {Math.round(norPatrimonio * 1.5 * 4505)}M)
                         </span>
                       </div>
                       <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                         <span>2. Destinación a Ahorro Soberano (norFondoGPFG):</span>
-                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
                           Recaudación × ({norFondoGPFG}% / 100) = {(norPatrimonio * 1.5 * (norFondoGPFG / 100)).toFixed(3)}% del PIB
                         </span>
                       </div>
-                      <div className="flex items-center justify-between font-bold text-indigo-850 pt-1.5">
+                      <div className="flex items-center justify-between font-bold text-slate-800 pt-1.5">
                         <span>Gini Proyectado Final:</span>
-                        <span className="font-mono bg-indigo-50 px-2.5 py-1 rounded text-indigo-700 text-sm">
+                        <span className="font-mono bg-slate-900 px-2.5 py-1 rounded text-slate-50 text-xs font-semibold shadow-sm">
                           42.3 - (Recaudación × 1.8) = {simNoruegaResult.gini.toFixed(1)}
                         </span>
                       </div>
                     </div>
-                    <p className="leading-relaxed">
+                    <p className="leading-normal">
                       <strong>Planteo:</strong> Se introduce un impuesto directo sobre la riqueza neta de las personas físicas (tipo Formuesskatt noruego). Para evitar la fuga de capitales y el impacto inflacionario en el consumo directo, una parte sustancial de la recaudación se retira del flujo local para capitalizar un fondo anticíclico que invierte a nivel internacional, reduciendo el endeudamiento neto y la volatilidad cambiaria histórica de Argentina.
                     </p>
                   </div>
@@ -661,92 +669,92 @@ export default function App() {
 
             {/* 2. SUB-TAB: DINAMARCA */}
             {activeModelTab === 'dinamarca' && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
-                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-6">
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700">⚙️ Parámetros Dinamarca</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fadeIn">
+                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-5">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">⚙️ Parámetros Dinamarca</h3>
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-slate-650">Impuesto catastral al Suelo</span>
-                        <span className="text-indigo-600 font-bold">{dnkSuelo}%</span>
+                      <div className="flex justify-between text-xs font-medium">
+                        <span className="text-slate-600">Impuesto catastral al Suelo</span>
+                        <span className="text-slate-900 font-semibold">{dnkSuelo}%</span>
                       </div>
                       <input
                         type="range" min="0.5" max="4.0" step="0.1" value={dnkSuelo}
                         onChange={(e) => setDnkSuelo(parseFloat(e.target.value))}
-                        className="w-full accent-indigo-550 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400"
                       />
-                      <span className="text-[10px] text-slate-500 block">Tasa directa municipal sobre el valor del suelo libre de mejoras para descentralización fiscal.</span>
+                      <span className="text-[10px] text-slate-400 block">Tasa directa municipal sobre el valor del suelo libre de mejoras para descentralización fiscal.</span>
                     </div>
 
                     <div className="space-y-2">
-                      <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-slate-650">Impuesto Verde a Rodados</span>
-                        <span className="text-indigo-600 font-bold">{dnkVehiculos}%</span>
+                      <div className="flex justify-between text-xs font-medium">
+                        <span className="text-slate-600">Impuesto Verde a Rodados</span>
+                        <span className="text-slate-900 font-semibold">{dnkVehiculos}%</span>
                       </div>
                       <input
                         type="range" min="10" max="100" step="5" value={dnkVehiculos}
                         onChange={(e) => setDnkVehiculos(parseInt(e.target.value))}
-                        className="w-full accent-indigo-550 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400"
                       />
-                      <span className="text-[10px] text-slate-500 block">Gravamen ambiental progresivo para desincentivar el uso de automóviles particulares de lujo.</span>
+                      <span className="text-[10px] text-slate-400 block">Gravamen ambiental progresivo para desincentivar el uso de automóviles particulares de lujo.</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between gap-6">
+                <div className="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between gap-5">
                   <div>
-                    <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 mb-4">📈 Impacto Proyectado en Argentina (Standalone)</h3>
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-4">📈 Impacto Proyectado en Argentina (Standalone)</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Presión Tributaria Final</span>
-                        <span className="text-2xl font-black text-indigo-600 mt-1">{simDinamarcaResult.presion}% del PIB</span>
-                        <span className="block text-[10px] text-slate-550 mt-0.5">Recaudación Adicional: USD {simDinamarcaResult.usdRecaudado}M</span>
+                      <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80">
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Presión Tributaria Final</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1">{simDinamarcaResult.presion}% del PIB</span>
+                        <span className="block text-[10px] text-slate-400 mt-0.5">Recaudación Adicional: USD {simDinamarcaResult.usdRecaudado}M</span>
                       </div>
-                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Coeficiente de Gini Proyectado</span>
-                        <span className="text-2xl font-black text-emerald-650 mt-1">{simDinamarcaResult.gini.toFixed(1)}</span>
-                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 42.3</span>
+                      <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80">
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Coeficiente de Gini Proyectado</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1">{simDinamarcaResult.gini.toFixed(1)}</span>
+                        <span className="block text-[10px] text-slate-400 mt-0.5">Escenario Base: 42.3</span>
                       </div>
-                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 col-span-1 md:col-span-2">
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Relación Deuda / PIB</span>
-                        <span className="text-2xl font-black text-red-650 mt-1">{simDinamarcaResult.deuda}% del PIB</span>
-                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 95.0%</span>
+                      <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 col-span-1 md:col-span-2">
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Relación Deuda / PIB</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1">{simDinamarcaResult.deuda}% del PIB</span>
+                        <span className="block text-[10px] text-slate-400 mt-0.5">Escenario Base: 95.0%</span>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-650 leading-relaxed">
+                  <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 text-xs text-slate-500 leading-normal">
                     ℹ️ <strong>Mecánica del Modelo:</strong> El modelo danés capta recaudación líquida a nivel de base patrimonial inmobiliaria y ambiental, permitiendo desarmar impuestos regresivos de consumo e igualar el Coeficiente de Gini a mínimos históricos.
                   </div>
-                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-650 space-y-2">
-                    <p className="font-bold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
-                    <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-2 text-slate-800 font-medium text-[12px]">
+                  <div className="p-4 bg-slate-50/50 rounded-lg border border-slate-200/80 text-xs text-slate-505 space-y-2">
+                    <p className="font-semibold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
+                    <div className="bg-white p-3 rounded-lg border border-slate-200/80 space-y-2 text-slate-700 font-medium text-[11px]">
                       <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                         <span>1. Recaudación por Suelo (dnkSuelo):</span>
-                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
                           {dnkSuelo}% × 1.6 = {(dnkSuelo * 1.6).toFixed(3)}% del PIB
                         </span>
                       </div>
                       <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                         <span>2. Recaudación Impuesto Verde (dnkVehiculos):</span>
-                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
                           ({dnkVehiculos}% / 100) × 0.9 = {((dnkVehiculos / 100) * 0.9).toFixed(3)}% del PIB
                         </span>
                       </div>
                       <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                         <span>3. Recaudación Total Adicional (R):</span>
-                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
                           {(dnkSuelo * 1.6).toFixed(3)}% + {((dnkVehiculos / 100) * 0.9).toFixed(3)}% = {(dnkSuelo * 1.6 + (dnkVehiculos / 100) * 0.9).toFixed(3)}% del PIB
                         </span>
                       </div>
-                      <div className="flex items-center justify-between font-bold text-indigo-850 pt-1.5">
+                      <div className="flex items-center justify-between font-bold text-slate-800 pt-1.5">
                         <span>Gini Proyectado Final:</span>
-                        <span className="font-mono bg-indigo-50 px-2.5 py-1 rounded text-indigo-700 text-sm">
+                        <span className="font-mono bg-slate-900 px-2.5 py-1 rounded text-slate-50 text-xs font-semibold shadow-sm">
                           42.3 - (R × 2.8) = {simDinamarcaResult.gini.toFixed(1)}
                         </span>
                       </div>
                     </div>
-                    <p className="leading-relaxed">
-                      <strong>Planteo:</strong> Se descartan los gravámenes distorsivos sobre las mejoras y la producción, y en su lugar se aplica un impuesto al valor de la tierra libre de mejoras (Land Value Tax). En paralelo, se grava la adquisición y patentamiento de vehículos según su huella de carbono (tasa ecológica de transición), derivando los recursos al financiamiento directo de infraestructura pública.
+                    <p className="leading-normal">
+                      <strong>Planteo:</strong> Se descartan los gravámenes distorsivos sobre las mejoras y la producción, y en su lugar se aplica un impuesto al valor de la tierra libre de mejoras (Land Value Tax). En paralelo, se grava la adquisición de vehículos ineficientes (Impuesto Verde), redireccionando los recursos a la reducción de aportes patronales para fomentar el empleo registrado.
                     </p>
                   </div>
                 </div>
@@ -755,90 +763,90 @@ export default function App() {
 
             {/* 3. SUB-TAB: CHINA */}
             {activeModelTab === 'china' && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
-                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-6">
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700">⚙️ Parámetros China</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fadeIn">
+                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-5">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">⚙️ Parámetros China</h3>
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-slate-650">Retención de IIT (Federal)</span>
-                        <span className="text-indigo-600 font-bold">{chnCentralizacion}%</span>
+                      <div className="flex justify-between text-xs font-medium">
+                        <span className="text-slate-600">Retención de IIT (Federal)</span>
+                        <span className="text-slate-900 font-semibold">{chnCentralizacion}%</span>
                       </div>
                       <input
                         type="range" min="20" max="90" step="5" value={chnCentralizacion}
                         onChange={(e) => setChnCentralizacion(parseInt(e.target.value))}
-                        className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400"
                       />
-                      <span className="text-[10px] text-slate-500 block">Porcentaje del impuesto progresivo a los ingresos capturado de forma central para igualar regiones.</span>
+                      <span className="text-[10px] text-slate-400 block">Porcentaje del impuesto progresivo a los ingresos capturado de forma central para igualar regiones.</span>
                     </div>
 
                     <div className="space-y-2">
-                      <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-slate-650">Presupuesto en Salud y Seguridad</span>
-                        <span className="text-indigo-600 font-bold">{chnGastoWelfare}%</span>
+                      <div className="flex justify-between text-xs font-medium">
+                        <span className="text-slate-600">Presupuesto en Salud y Seguridad</span>
+                        <span className="text-slate-900 font-semibold">{chnGastoWelfare}%</span>
                       </div>
                       <input
                         type="range" min="5" max="50" step="1" value={chnGastoWelfare}
                         onChange={(e) => setChnGastoWelfare(parseInt(e.target.value))}
-                        className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400"
                       />
-                      <span className="text-[10px] text-slate-500 block">Proporción del gasto reorientada desde infraestructura física hacia bienestar social directo.</span>
+                      <span className="text-[10px] text-slate-400 block">Proporción del gasto reorientada desde infraestructura física hacia bienestar social directo.</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between gap-6">
+                <div className="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between gap-5">
                   <div>
-                    <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 mb-4">📈 Impacto Proyectado en Argentina (Standalone)</h3>
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-505 mb-4">📈 Impacto Proyectado en Argentina (Standalone)</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Recaudación Centralizada Proyectada</span>
-                        <span className="text-2xl font-black text-indigo-650 mt-1">{simChinaResult.presion}% del PIB</span>
-                        <span className="block text-[10px] text-slate-550 mt-0.5">Recaudación Federal: USD {simChinaResult.usdRecaudado}M</span>
+                      <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80">
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Recaudación Centralizada Proyectada</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1">{simChinaResult.presion}% del PIB</span>
+                        <span className="block text-[10px] text-slate-400 mt-0.5">Recaudación Federal: USD {simChinaResult.usdRecaudado}M</span>
                       </div>
-                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                      <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 flex items-center justify-between">
                         <div>
-                          <span className="text-[10px] font-bold text-slate-500 block uppercase">Gini de Equilibrio Regional</span>
-                          <span className="text-2xl font-black text-emerald-650 mt-1">{simChinaResult.gini.toFixed(1)}</span>
-                          <span className="block text-[10px] text-slate-555 mt-0.5">Escenario Base: 42.3</span>
+                          <span className="text-[10px] font-semibold text-slate-500 block uppercase">Gini de Equilibrio Regional</span>
+                          <span className="text-xl font-bold tracking-tight text-slate-900 mt-1">{simChinaResult.gini.toFixed(1)}</span>
+                          <span className="block text-[10px] text-slate-400 mt-0.5">Escenario Base: 42.3</span>
                         </div>
                       </div>
-                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 col-span-1 md:col-span-2">
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Relación Deuda / PIB</span>
-                        <span className="text-2xl font-black text-red-650 mt-1">{simChinaResult.deuda}% del PIB</span>
-                        <span className="block text-[10px] text-slate-555 mt-0.5">Escenario Base: 95.0%</span>
+                      <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 col-span-1 md:col-span-2">
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Relación Deuda / PIB</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1">{simChinaResult.deuda}% del PIB</span>
+                        <span className="block text-[10px] text-slate-400 mt-0.5">Escenario Base: 95.0%</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-655 leading-relaxed">
+                  <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 text-xs text-slate-500 leading-normal">
                     <strong>Análisis:</strong> Al igual que la centralización del 60% que China aplica al IIT coparticipable [cite: 4], centralizar recursos progresivos federales en Argentina permitiría corregir las asimetrías de las provincias del NOA y NEA, financiando de forma automática infraestructura de salud donde el empleo informal encubre la precarización real del trabajo.
                   </div>
 
                   {/* Nota de pie con Fórmula */}
-                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-650 space-y-2">
-                    <p className="font-bold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
-                    <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-2 text-slate-800 font-medium text-[12px]">
+                  <div className="p-4 bg-slate-50/50 rounded-lg border border-slate-200/80 text-xs text-slate-505 space-y-2">
+                    <p className="font-semibold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
+                    <div className="bg-white p-3 rounded-lg border border-slate-200/80 space-y-2 text-slate-700 font-medium text-[11px]">
                       <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                         <span>1. IIT Federal Retenido (Rec):</span>
-                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
                           ({chnCentralizacion}% / 100) × 3.5 = {((chnCentralizacion / 100) * 3.5).toFixed(3)}% del PIB
                         </span>
                       </div>
                       <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                         <span>2. Gasto en Bienestar Directo (B):</span>
-                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
                           ({chnGastoWelfare}% / 100) × 2.2 = {((chnGastoWelfare / 100) * 2.2).toFixed(3)}% del PIB
                         </span>
                       </div>
-                      <div className="flex items-center justify-between font-bold text-indigo-850 pt-1.5">
+                      <div className="flex items-center justify-between font-bold text-slate-800 pt-1.5">
                         <span>Gini Proyectado Final:</span>
-                        <span className="font-mono bg-indigo-50 px-2.5 py-1 rounded text-indigo-700 text-sm">
+                        <span className="font-mono bg-slate-900 px-2.5 py-1 rounded text-slate-50 text-xs font-semibold shadow-sm">
                           42.3 - (Rec × 1.5 + B × 15) = {simChinaResult.gini.toFixed(1)}
                         </span>
                       </div>
                     </div>
-                    <p className="leading-relaxed">
+                    <p className="leading-normal">
                       <strong>Planteo:</strong> Se reestructura el impuesto a los ingresos individuales (IIT) centralizando su recaudación a nivel federal, reduciendo los incentivos de competencia fiscal interprovincial nociva. Los recursos recaudados se redirigen específicamente a la mejora de la cobertura de salud y seguridad social básica en regiones históricamente postergadas.
                     </p>
                   </div>
@@ -848,92 +856,74 @@ export default function App() {
 
           {/* SUBTAB: URUGUAY */}
           {activeModelTab === 'uruguay' && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fadeIn">
 
               {/* Controles de Uruguay */}
-              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
-                  <span>🇺🇾</span> Parámetros del Modelo Uruguay
-                </h3>
+              <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-5">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">⚙️ Parámetros Uruguay</h3>
 
                 {/* Control 1 */}
                 <div className="space-y-2">
-                  <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-slate-655">IRPF Categoría I (Rentas del Capital)</span>
-                    <span className="text-indigo-600 font-bold">{uryRentasCapital}%</span>
+                  <div className="flex justify-between text-xs font-medium">
+                    <span className="text-slate-600">IRPF Categoría I (Rentas del Capital)</span>
+                    <span className="text-slate-900 font-semibold">{uryRentasCapital}%</span>
                   </div>
                   <input
-                    type="range"
-                    min="5"
-                    max="25"
-                    step="1"
-                    value={uryRentasCapital}
+                    type="range" min="5" max="25" step="1" value={uryRentasCapital}
                     onChange={(e) => setUryRentasCapital(parseInt(e.target.value))}
-                    className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                    className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400"
                   />
-                  <span className="text-[10px] text-slate-500 block">Doble imposición cedular sobre dividendos y rendimiento financiero (Astori, Ley 18083) [cite: 1.2.4].</span>
+                  <span className="text-[10px] text-slate-400 block">Doble imposición cedular sobre dividendos y rendimiento financiero (Astori, Ley 18083) [cite: 1.2.4].</span>
                 </div>
 
                 {/* Control 2 */}
                 <div className="space-y-2">
-                  <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-slate-655">Alícuota del Impuesto al Patrimonio (IP)</span>
-                    <span className="text-indigo-600 font-bold">{uryPatrimonioNeto}%</span>
+                  <div className="flex justify-between text-xs font-medium">
+                    <span className="text-slate-600">Alícuota del Impuesto al Patrimonio (IP)</span>
+                    <span className="text-slate-900 font-semibold">{uryPatrimonioNeto}%</span>
                   </div>
                   <input
-                    type="range"
-                    min="0.5"
-                    max="4.0"
-                    step="0.1"
-                    value={uryPatrimonioNeto}
+                    type="range" min="0.5" max="4.0" step="0.1" value={uryPatrimonioNeto}
                     onChange={(e) => setUryPatrimonioNeto(parseFloat(e.target.value))}
-                    className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                    className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400"
                   />
-                  <span className="text-[10px] text-slate-500 block">Tasa aplicada sobre bienes fijos netos individuales de las grandes fortunas declaradas [cite: 1.2.6].</span>
+                  <span className="text-[10px] text-slate-400 block">Tasa aplicada sobre bienes fijos netos individuales de las grandes fortunas declaradas [cite: 1.2.6].</span>
                 </div>
 
                 {/* Control 3 */}
                 <div className="space-y-2">
-                  <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-slate-655">Destinado a la Seguridad Social (IASS)</span>
-                    <span className="text-indigo-600 font-bold">{uryDestinoSocial}%</span>
+                  <div className="flex justify-between text-xs font-medium">
+                    <span className="text-slate-600">Destinado a la Seguridad Social (IASS)</span>
+                    <span className="text-slate-900 font-semibold">{uryDestinoSocial}%</span>
                   </div>
                   <input
-                    type="range"
-                    min="10"
-                    max="100"
-                    step="10"
-                    value={uryDestinoSocial}
+                    type="range" min="10" max="100" step="10" value={uryDestinoSocial}
                     onChange={(e) => setUryDestinoSocial(parseInt(e.target.value))}
-                    className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                    className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400"
                   />
-                  <span className="text-[10px] text-slate-500 block">Porcentaje de lo recaudado por el impuesto patrimonial destinado a aliviar los aportes jubilatorios de ingresos bajos [cite: 1.2.4].</span>
+                  <span className="text-[10px] text-slate-400 block">Porcentaje de lo recaudado por el impuesto patrimonial destinado a aliviar los aportes jubilatorios de ingresos bajos [cite: 1.2.4].</span>
                 </div>
               </div>
 
               {/* Resultados Uruguay */}
-              <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between gap-6">
+              <div className="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between gap-5">
                 <div>
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 mb-4 flex items-center gap-2">
-                    <span>🇺🇾</span> Aplicación del Faro Social de América Latina
-                  </h3>
-
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-4">📈 Impacto Proyectado en Argentina (Standalone)</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
                     {/* Tarjeta 1 */}
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                    <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Rating Soberano Proyectado</span>
-                        <span className="text-lg font-black text-emerald-650 mt-1">BBB+ (Investment Grade)</span>
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Rating Soberano Proyectado</span>
+                        <span className="text-lg font-bold tracking-tight text-slate-900 mt-1">BBB+ (Investment Grade)</span>
                       </div>
                       <span className="text-2xl">📈</span>
                     </div>
 
                     {/* Tarjeta 2 */}
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                    <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Recaudación Estimada de Patrimonio</span>
-                        <span className="text-xl font-black text-indigo-650 mt-1">
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Recaudación Estimada de Patrimonio</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1">
                           {simUruguayResult.recaudacionPib}% del PIB
                         </span>
                       </div>
@@ -941,10 +931,10 @@ export default function App() {
                     </div>
 
                     {/* Tarjeta 3 */}
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                    <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">PIB per Cápita Indirecto por Estabilidad</span>
-                        <span className="text-xl font-black text-slate-800 mt-1">
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">PIB per Cápita Indirecto por Estabilidad</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1">
                           USD {(13962 * 1.15).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                         </span>
                       </div>
@@ -952,10 +942,10 @@ export default function App() {
                     </div>
 
                     {/* Tarjeta 4 */}
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                    <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Coeficiente de Gini Obtenido</span>
-                        <span className="text-xl font-black text-emerald-650 mt-1">
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Coeficiente de Gini Obtenido</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1">
                           {simUruguayResult.gini.toFixed(1)}
                         </span>
                       </div>
@@ -965,47 +955,47 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-650 leading-relaxed space-y-2">
+                <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 text-xs text-slate-500 leading-normal space-y-2">
                   <p>💡 <strong>¿Por qué funciona el esquema Uruguayo?</strong></p>
                   <p>Uruguay combina la progresividad de las rentas con seguridad jurídica. Al implementar tasas duales (separar dividendos de salarios), se recauda de manera justa sin ahuyentar la inversión productiva, consolidando el mejor coeficiente de equidad de América Latina (Gini ~38.8) [cite: 1.1.1, 1.2.5].</p>
                 </div>
 
                 {/* Nota de pie con Fórmula */}
-                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-650 space-y-2">
-                  <p className="font-bold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
-                    <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-2 text-slate-800 font-medium text-[12px]">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                        <span>1. Recaudación Rentas del Capital:</span>
-                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
-                          ({uryRentasCapital}% / 100) × 1.1 = {((uryRentasCapital / 100) * 1.1).toFixed(3)}% del PIB
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                        <span>2. Recaudación Impuesto al Patrimonio:</span>
-                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
-                          {uryPatrimonioNeto}% × 1.3 = {(uryPatrimonioNeto * 1.3).toFixed(3)}% del PIB
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                        <span>3. Recaudación Fiscal Total (R):</span>
-                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
-                          {((uryRentasCapital / 100) * 1.1).toFixed(3)}% + {(uryPatrimonioNeto * 1.3).toFixed(3)}% = {(((uryRentasCapital / 100) * 1.1) + (uryPatrimonioNeto * 1.3)).toFixed(3)}% del PIB
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                        <span>4. Asignación Social (IASS):</span>
-                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
-                          R × ({uryDestinoSocial}% / 100) × 2.1 = {((((uryRentasCapital / 100) * 1.1) + (uryPatrimonioNeto * 1.3)) * (uryDestinoSocial / 100) * 2.1).toFixed(3)}% del PIB
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between font-bold text-indigo-850 pt-1.5">
-                        <span>Gini Proyectado Final:</span>
-                        <span className="font-mono bg-indigo-50 px-2.5 py-1 rounded text-indigo-700 text-sm">
-                          42.3 - (R × 1.6 + IASS) = {simUruguayResult.gini.toFixed(1)}
-                        </span>
-                      </div>
+                <div className="p-4 bg-slate-50/50 rounded-lg border border-slate-200/80 text-xs text-slate-500 space-y-2">
+                  <p className="font-semibold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
+                  <div className="bg-white p-3 rounded-lg border border-slate-200/80 space-y-2 text-slate-700 font-medium text-[11px]">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                      <span>1. Recaudación Rentas del Capital:</span>
+                      <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
+                        ({uryRentasCapital}% / 100) × 1.1 = {((uryRentasCapital / 100) * 1.1).toFixed(3)}% del PIB
+                      </span>
                     </div>
-                  <p className="leading-relaxed">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                      <span>2. Recaudación Impuesto al Patrimonio:</span>
+                      <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
+                        {uryPatrimonioNeto}% × 1.3 = {(uryPatrimonioNeto * 1.3).toFixed(3)}% del PIB
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                      <span>3. Recaudación Fiscal Total (R):</span>
+                      <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
+                        {((uryRentasCapital / 100) * 1.1).toFixed(3)}% + {(uryPatrimonioNeto * 1.3).toFixed(3)}% = {(((uryRentasCapital / 100) * 1.1) + (uryPatrimonioNeto * 1.3)).toFixed(3)}% del PIB
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                      <span>4. Asignación Social (IASS):</span>
+                      <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
+                        R × ({uryDestinoSocial}% / 100) × 2.1 = {((((uryRentasCapital / 100) * 1.1) + (uryPatrimonioNeto * 1.3)) * (uryDestinoSocial / 100) * 2.1).toFixed(3)}% del PIB
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between font-bold text-slate-800 pt-1.5">
+                      <span>Gini Proyectado Final:</span>
+                      <span className="font-mono bg-slate-900 px-2.5 py-1 rounded text-slate-55 text-xs font-semibold shadow-sm">
+                        42.3 - (R × 1.6 + IASS) = {simUruguayResult.gini.toFixed(1)}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="leading-normal text-slate-500">
                     <strong>Planteo:</strong> Se implementa un esquema tributario dual que separa los rendimientos del capital (gravados por IRPF Categoría I) de las rentas del trabajo. Adicionalmente, el Impuesto al Patrimonio se vincula de manera directa con el financiamiento del sistema de seguridad social (IASS), aliviando los aportes jubilatorios de los deciles de menores ingresos sin presionar el déficit fiscal.
                   </p>
                 </div>
@@ -1016,104 +1006,109 @@ export default function App() {
 
         {/* SUBTAB: UNIFICADO (ARGENTINA UNIFICADA) */}
         {activeModelTab === 'unificado' && (
-          <div className="space-y-8 animate-fadeIn">
+          <div className="space-y-6 animate-fadeIn">
 
             {/* Tarjeta de Consenso General */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col lg:flex-row items-stretch gap-6">
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col lg:flex-row items-stretch gap-6">
 
               {/* Controles Unificados */}
-              <div className="flex-1 space-y-4 pr-0 lg:pr-6 border-r-0 lg:border-r border-slate-200">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
-                  <span>⚙️</span> Consenso Unificado (SIPEF)
-                </h3>
+              <div className="flex-1 space-y-5 pr-0 lg:pr-6 border-r-0 lg:border-r border-slate-200 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-4">⚙️ Consenso Unificado (SIPEF)</h3>
 
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-slate-655">Alícuota del SIPEF (Patrimonio)</span>
-                    <span className="text-indigo-600 font-bold">{unifPatrimonio}%</span>
-                  </div>
-                  <input
-                    type="range" min="0.5" max="3.5" step="0.1" value={unifPatrimonio}
-                    onChange={(e) => setUnifPatrimonio(parseFloat(e.target.value))}
-                    className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
-                  />
-                  <span className="text-[10px] text-slate-500 block">Nuevo Impuesto Estructural Patrimonial unificado para los deciles más altos.</span>
-                </div>
+                  <div className="space-y-4">
+                    {/* Control 1 */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-medium">
+                        <span className="text-slate-600">Alícuota del SIPEF (Patrimonio)</span>
+                        <span className="text-slate-900 font-semibold">{unifPatrimonio}%</span>
+                      </div>
+                      <input
+                        type="range" min="0.5" max="3.5" step="0.1" value={unifPatrimonio}
+                        onChange={(e) => setUnifPatrimonio(parseFloat(e.target.value))}
+                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                      />
+                      <span className="text-[10px] text-slate-400 block">Nuevo Impuesto Estructural Patrimonial unificado para los deciles más altos.</span>
+                    </div>
 
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-slate-655">Destinación al Ahorro Soberano (Noruega)</span>
-                    <span className="text-indigo-600 font-bold">{unifFondoContraciclico}%</span>
-                  </div>
-                  <input
-                    type="range" min="10" max="90" step="5" value={unifFondoContraciclico}
-                    onChange={(e) => setUnifFondoContraciclico(parseInt(e.target.value))}
-                    className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
-                  />
-                  <span className="text-[10px] text-slate-500 block">Proporción del tributo patrimonial blindada para el Fondo Soberano contra shocks inflacionarios [cite: 4].</span>
-                </div>
+                    {/* Control 2 */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-medium">
+                        <span className="text-slate-600">Destinación al Ahorro Soberano (Noruega)</span>
+                        <span className="text-slate-900 font-semibold">{unifFondoContraciclico}%</span>
+                      </div>
+                      <input
+                        type="range" min="10" max="90" step="5" value={unifFondoContraciclico}
+                        onChange={(e) => setUnifFondoContraciclico(parseInt(e.target.value))}
+                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                      />
+                      <span className="text-[10px] text-slate-400 block">Proporción del tributo patrimonial blindada para el Fondo Soberano contra shocks inflacionarios [cite: 4].</span>
+                    </div>
 
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-slate-655">Centralización Federal Regional (China/Uruguay)</span>
-                    <span className="text-indigo-600 font-bold">{unifCentralizacionFederal}%</span>
+                    {/* Control 3 */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-medium">
+                        <span className="text-slate-600">Centralización Federal Regional (China/Uruguay)</span>
+                        <span className="text-slate-900 font-semibold">{unifCentralizacionFederal}%</span>
+                      </div>
+                      <input
+                        type="range" min="20" max="90" step="5" value={unifCentralizacionFederal}
+                        onChange={(e) => setUnifCentralizacion(parseInt(e.target.value))}
+                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                      />
+                      <span className="text-[10px] text-slate-400 block">Porcentaje coparticipado para compensar asimetrías subnacionales directas en el interior [cite: 4].</span>
+                    </div>
                   </div>
-                  <input
-                    type="range" min="20" max="90" step="5" value={unifCentralizacionFederal}
-                    onChange={(e) => setUnifCentralizacion(parseInt(e.target.value))}
-                    className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
-                  />
-                  <span className="text-[10px] text-slate-500 block">Porcentaje coparticipado para compensar asimetrías subnacionales directas en el interior [cite: 4].</span>
                 </div>
               </div>
 
               {/* Dashboard de Impacto Macroeconómico */}
-              <div className="flex-1 flex flex-col justify-between gap-6">
+              <div className="flex-1 flex flex-col justify-between gap-5">
                 <div>
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 mb-4">🏆 Proyecciones Macroeconómicas Consensuadas</h3>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-505 mb-4">🏆 Proyecciones Macroeconómicas Consensuadas</h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                    <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 flex flex-col justify-between">
                       <div>
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Coeficiente de Gini Proyectado</span>
-                        <span className="text-2xl font-black text-emerald-655 mt-1">{simUnificadoResult.gini.toFixed(1)}</span>
-                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 42.3 (Mejora: -{simUnificadoResult.gini < 42.3 ? (((42.3 - simUnificadoResult.gini) / 42.3) * 100).toFixed(1) : 0}%)</span>
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Coeficiente de Gini Proyectado</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1 block">{simUnificadoResult.gini.toFixed(1)}</span>
                       </div>
+                      <span className="block text-[10px] text-slate-400 mt-1.5 pt-1.5 border-t border-slate-200/40">Escenario Base: 42.3 (Mejora: -{simUnificadoResult.gini < 42.3 ? (((42.3 - simUnificadoResult.gini) / 42.3) * 100).toFixed(1) : 0}%)</span>
                     </div>
 
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                    <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 flex flex-col justify-between">
                       <div>
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Tasa de Ahorro Bruto</span>
-                        <span className="text-2xl font-black text-indigo-650 mt-1">{simUnificadoResult.ahorro}% del PIB</span>
-                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 15.8% (Fondo: USD {simUnificadoResult.ahorroFondoUsd}M)</span>
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Tasa de Ahorro Bruto</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1 block">{simUnificadoResult.ahorro}% del PIB</span>
                       </div>
+                      <span className="block text-[10px] text-slate-400 mt-1.5 pt-1.5 border-t border-slate-200/40">Escenario Base: 15.8% (Fondo: USD {simUnificadoResult.ahorroFondoUsd}M)</span>
                     </div>
 
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between col-span-1 md:col-span-2">
+                    <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 flex flex-col justify-between col-span-1 md:col-span-2">
                       <div>
-                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Relación Deuda / PIB</span>
-                        <span className="text-2xl font-black text-red-650 mt-1">{simUnificadoResult.deuda}% del PIB</span>
-                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 95.0% (Desendeudamiento genuino sin devaluación regresiva)</span>
+                        <span className="text-[10px] font-semibold text-slate-500 block uppercase">Relación Deuda / PIB</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 mt-1 block">{simUnificadoResult.deuda}% del PIB</span>
                       </div>
+                      <span className="block text-[10px] text-slate-400 mt-1.5 pt-1.5 border-t border-slate-200/40">Escenario Base: 95.0% (Desendeudamiento genuino sin devaluación regresiva)</span>
                     </div>
 
                   </div>
                 </div>
 
-                {/* Diagnóstico según meta Gini de Consenso */}
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs leading-relaxed">
+                {/* Diagnóstico según Gini de Consenso */}
+                <div className="text-xs leading-normal">
                   {simUnificadoResult.gini >= 40.0 ? (
-                    <p className="text-amber-700 font-semibold bg-amber-50/50 p-3 rounded-lg border border-amber-200">
-                      ⚠️ <strong>Insuficiencia Distributiva:</strong> El mínimo impositivo unificado o la tasa de redistribución de ganancias capital/patrimonio es insuficiente para quebrar la barrera histórica de desigualdad del Gini. Incrementa el peso del SIPEF.
+                    <p className="text-amber-800 bg-amber-50/40 p-3 rounded-lg border border-amber-200/60">
+                      ⚠️ <strong>Insuficiencia Distributiva:</strong> El mínimo impositivo unificado o la tasa de redistribución es insuficiente para quebrar la barrera histórica del Gini. Incrementa el peso del SIPEF.
                     </p>
                   ) : simUnificadoResult.gini < 40.0 && simUnificadoResult.gini >= 35.0 ? (
-                    <p className="text-indigo-700 font-semibold bg-indigo-50/50 p-3 rounded-lg border border-indigo-200">
-                      📈 <strong>Meta de Cohesión Uruguaya:</strong> Has consolidado el estándar fiscal distributivo de Uruguay, logrando revertir la brecha social estructural sin disparar devaluaciones inflacionarias [cite: 1.1.1].
+                    <p className="text-slate-800 bg-slate-50/60 p-3 rounded-lg border border-slate-200/80">
+                      📈 <strong>Meta de Cohesión Uruguaya:</strong> Has consolidado el estándar fiscal distributivo de Uruguay, logrando revertir la brecha social estructural sin devaluaciones inflacionarias [cite: 1.1.1].
                     </p>
                   ) : (
-                    <p className="text-emerald-700 font-semibold bg-emerald-50/50 p-3 rounded-lg border border-emerald-200">
-                      🌟 <strong>Estándar de Equidad Nórdico:</strong> ¡Éxito Absoluto! El Coeficiente de Gini rompe los mínimos históricos, logrando neutralizar la inercia inflacionaria mediante la sólida constitución del fondo de ahorro soberano contracíclico [cite: 4, 32].
+                    <p className="text-emerald-800 bg-emerald-50/40 p-3 rounded-lg border border-emerald-200/60">
+                      🌟 <strong>Estándar de Equidad Nórdico:</strong> ¡Éxito Absoluto! El Coeficiente de Gini rompe los mínimos históricos, logrando neutralizar la inercia inflacionaria mediante el fondo de ahorro soberano contracíclico [cite: 4, 32].
                     </p>
                   )}
                 </div>
@@ -1122,14 +1117,14 @@ export default function App() {
             </div>
 
             {/* Mapa de Destino del Presupuesto (Visualizador Esquemático de Consenso) */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700">📋 Mapa del Presupuesto Unificado (Justicia & Sostenibilidad)</h3>
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-4">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-505">📋 Mapa del Presupuesto Unificado (Justicia & Sostenibilidad)</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                 {/* Caja Sostenibilidad */}
-                <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3">
-                  <span className="text-xs font-bold text-indigo-650 block uppercase">1. Sostenibilidad Fiscal (60% al Ahorro Soberano)</span>
-                  <ul className="text-xs text-slate-650 space-y-2 list-disc pl-4">
+                <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 space-y-3">
+                  <span className="text-[11px] font-bold text-slate-700 block uppercase">1. Sostenibilidad Fiscal (60% al Ahorro Soberano)</span>
+                  <ul className="text-xs text-slate-500 space-y-2 list-disc pl-4 leading-normal">
                     <li><strong>USD {simUnificadoResult.ahorroFondoUsd}M</strong> destinados al Fondo Soberano de Desarrollo Federal (FSDF) para obras de infraestructura física en fases recesivas [cite: 4].</li>
                     <li>Descompresión de las deudas del sector público para eximir al Banco Central de emitir dinero inorgánico.</li>
                     <li>Constitución de reservas líquidas para mitigar shocks exógenos de precios agrícolas.</li>
@@ -1137,9 +1132,9 @@ export default function App() {
                 </div>
 
                 {/* Caja Justicia */}
-                <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3">
-                  <span className="text-xs font-bold text-emerald-650 block uppercase">2. Justicia Distributiva (40% a Compensación Directa)</span>
-                  <ul className="text-xs text-slate-650 space-y-2 list-disc pl-4">
+                <div className="bg-slate-50/50 p-4 rounded-lg border border-slate-200/80 space-y-3">
+                  <span className="text-[11px] font-bold text-slate-700 block uppercase">2. Justicia Distributiva (40% a Compensación Directa)</span>
+                  <ul className="text-xs text-slate-500 space-y-2 list-disc pl-4 leading-normal">
                     <li><strong>USD {simUnificadoResult.bienestarUsd}M</strong> destinados íntegramente a financiar la devolución del IVA de alimentos básicos para los deciles 1 a 4.</li>
                     <li>Transferencias compensatorias directas a provincias del norte profundo (NOA y NEA) para salud y redes edilicias escolares [cite: 4].</li>
                     <li>Financiamiento estable de asignaciones familiares para neutralizar picos inflacionarios.</li>
@@ -1149,41 +1144,41 @@ export default function App() {
               </div>
 
               {/* Nota de pie con Fórmula */}
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-650 space-y-2">
-                <p className="font-bold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
-                <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-2 text-slate-800 font-medium text-[12px]">
+              <div className="p-4 bg-slate-50/50 rounded-lg border border-slate-200/80 text-xs text-slate-500 space-y-2">
+                <p className="font-semibold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
+                <div className="bg-white p-3 rounded-lg border border-slate-200/80 space-y-2 text-slate-700 font-medium text-[11px]">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                     <span>1. Recaudación SIPEF (unifPatrimonio):</span>
-                    <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                    <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
                       {unifPatrimonio}% × 1.9 = {(unifPatrimonio * 1.9).toFixed(3)}% del PIB (USD {Math.round(unifPatrimonio * 1.9 * 4500)}M)
                     </span>
                   </div>
                   <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                     <span>2. Ahorro Soberano (unifFondoContraciclico):</span>
-                    <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                    <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
                       Recaudación × ({unifFondoContraciclico}% / 100) = {(unifPatrimonio * 1.9 * (unifFondoContraciclico / 100)).toFixed(3)}% del PIB (USD {simUnificadoResult.ahorroFondoUsd}M)
                     </span>
                   </div>
                   <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                     <span>3. Presupuesto Bienestar (B):</span>
-                    <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                    <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
                       Recaudación - Ahorro Soberano = {(unifPatrimonio * 1.9 * (1 - unifFondoContraciclico / 100)).toFixed(3)}% del PIB (USD {simUnificadoResult.bienestarUsd}M)
                     </span>
                   </div>
                   <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                     <span>4. Centralización Federal:</span>
-                    <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                    <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-slate-900 border border-slate-200/40">
                       B × ({unifCentralizacionFederal}% / 100) = {(unifPatrimonio * 1.9 * (1 - unifFondoContraciclico / 100) * (unifCentralizacionFederal / 100)).toFixed(3)}% del PIB
                     </span>
                   </div>
-                  <div className="flex items-center justify-between font-bold text-indigo-850 pt-1.5">
+                  <div className="flex items-center justify-between font-bold text-slate-800 pt-1.5">
                     <span>Gini Proyectado Final:</span>
-                    <span className="font-mono bg-indigo-50 px-2.5 py-1 rounded text-indigo-700 text-sm">
+                    <span className="font-mono bg-slate-900 px-2.5 py-1 rounded text-slate-55 text-xs font-semibold shadow-sm">
                       42.3 - ((((B × ({unifCentralizacionFederal}/100)) × 2.8 + Ahorro × 0.6) × 10)) = {simUnificadoResult.gini.toFixed(1)}
                     </span>
                   </div>
                 </div>
-                <p className="leading-relaxed">
+                <p className="leading-normal">
                   <strong>Planteo:</strong> Se unifica la estructura patrimonial distributiva bajo el SIPEF, canalizando de forma blindada el 60% de los ingresos al fondo de reservas contracíclico (FSDF) para amortiguar shocks económicos nacionales y regionales. El remanente recaudado es coparticipado de forma centralizada y asimétrica hacia las provincias rezagadas para financiar infraestructura básica e igualar oportunidades.
                 </p>
               </div>
@@ -1191,9 +1186,6 @@ export default function App() {
 
           </div>
         )}
-
-            </div>
-          )}
 
       </main>
 
