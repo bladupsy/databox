@@ -1,243 +1,240 @@
-"use client"
+"use client";
 
 import React, { useState, useMemo } from 'react';
 
-// --- BASE DE DATOS DE LOS INDICADORES MUNDIALES (WDI) ---
-// Extraído de las series históricas provistas (período 2000-2024)
-const years: number[] = [
-  2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
-  2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019,
-  2020, 2021, 2022, 2023, 2024
-];
-
-interface CountryData {
-  gdpPerCapita: number[];
-  gini: number[];
-  inflation: number[];
-  govConsumption: number[];
-  savingsRate: number[];
-  capitalFormation: number[];
-}
-
-const dataARG: CountryData = {
-  gdpPerCapita: [
-    7637, 7141, 2570, 3320, 4242, 5068, 5869, 7185, 8944, 8150,
-    10260, 12704, 12950, 12964, 12233, 13680, 12700, 14533, 11753, 9956,
-    8536, 10738, 13962, 14262, 13970
-  ],
-  gini: [
-    51.0, 53.3, 53.8, 51.0, 48.5, 47.8, 46.4, 46.3, 45.0, 43.8,
-    43.7, 42.7, 41.4, 41.1, 41.8, 42.0, 42.3, 41.4, 41.7, 43.3,
-    42.7, 42.4, 40.7, 42.4, 42.4
-  ],
-  inflation: [
-    1.04, -1.10, 30.56, 10.50, 18.36, 10.32, 13.74, 14.94, 23.17, 15.38,
-    20.92, 23.70, 22.31, 23.95, 40.28, 26.58, 41.12, 26.01, 42.03, 49.20,
-    40.08, 53.80, 68.99, 136.74, 207.61
-  ],
-  govConsumption: [
-    13.78, 14.15, 12.23, 11.43, 11.11, 12.14, 12.42, 12.98, 13.63, 15.90,
-    15.16, 15.68, 16.64, 16.80, 16.94, 18.09, 17.65, 17.69, 15.80, 16.44,
-    16.87, 15.91, 15.70, 16.30, 14.91
-  ],
-  savingsRate: [
-    14.36, 14.21, 21.34, 21.73, 13.78, 13.71, 21.41, 22.23, 21.12, 18.32,
-    17.33, 17.33, 16.20, 15.19, 15.90, 14.30, 14.62, 13.06, 11.39, 13.69,
-    15.01, 19.41, 16.83, 16.23, 16.69
-  ],
-  capitalFormation: [
-    17.53, 15.62, 10.85, 14.14, 17.55, 18.88, 18.68, 20.09, 19.57, 16.05,
-    17.70, 18.39, 16.50, 17.30, 17.26, 17.07, 17.66, 18.21, 16.61, 14.21,
-    14.41, 18.07, 17.38, 19.38, 15.83
-  ]
-};
-
-const dataNOR: CountryData = {
-  gdpPerCapita: [
-    38178, 38602, 43171, 50250, 57769, 67047, 74434, 85502, 97504, 80348,
-    88163, 101222, 102176, 103554, 97667, 74810, 70867, 76132, 82793, 76431,
-    68340, 93073, 109270, 87497, 86785
-  ],
-  gini: [
-    25.5, 25.6, 25.8, 25.4, 25.5, 25.7, 26.0, 25.9, 25.8, 25.5,
-    25.7, 25.4, 25.6, 25.8, 26.1, 26.3, 26.2, 26.0, 25.9, 26.2,
-    26.0, 25.8, 25.5, 25.4, 25.3
-  ],
-  inflation: [
-    15.33, 17.13, -1.52, 2.86, 5.85, 8.76, 8.73, 3.08, 10.57, -5.12,
-    5.96, 6.67, 3.35, 2.55, 0.26, -2.80, -1.60, 4.08, 6.74, -0.55,
-    -2.52, 20.21, 28.42, -11.08, -0.23
-  ],
-  govConsumption: [
-    18.86, 20.03, 21.62, 21.94, 20.74, 19.37, 18.56, 18.64, 18.40, 21.49,
-    21.22, 20.79, 20.60, 20.97, 21.72, 23.09, 24.21, 23.80, 23.11, 24.10,
-    26.13, 22.44, 18.09, 22.04, 21.98
-  ],
-  savingsRate: [
-    36.63, 36.49, 32.88, 31.74, 34.25, 39.08, 40.56, 39.85, 42.22, 35.83,
-    36.95, 38.97, 39.47, 38.63, 39.13, 36.00, 32.95, 33.86, 36.69, 33.41,
-    32.43, 38.02, 48.63, 41.76, 40.98
-  ],
-  capitalFormation: [
-    21.81, 20.55, 20.33, 19.42, 21.50, 22.42, 23.92, 27.07, 25.78, 24.29,
-    24.98, 25.44, 25.87, 27.32, 27.20, 26.91, 27.72, 27.55, 27.72, 29.61,
-    31.35, 25.08, 21.17, 24.25, 24.13
-  ]
-};
-
-type IndicatorKey = 'gdpPerCapita' | 'gini' | 'inflation' | 'govConsumption';
-
-interface SeriesDetail {
-  title: string;
-  source: string;
-  unit: string;
-  methodology: string;
-}
-
-// Detalle Metodológico de las Series
-const seriesDetails: Record<IndicatorKey, SeriesDetail> = {
-  gdpPerCapita: {
-    title: "PIB per cápita (USD Corrientes)",
-    source: "Banco Mundial (World Development Indicators - NY.GDP.PCAP.CD)",
-    unit: "Dólares estadounidenses corrientes",
-    methodology: "PIB dividido por la población a mitad de año. Los valores nominales ilustran la brecha productiva y de renta media entre una economía petrolera desarrollada y una economía emergente expuesta a volatilidad cambiaria."
+// Series históricas reales extraídas de "Dinamarca y Argentina.xlsx", "china(1)_2.xlsx", 
+// "arg 2003 2015(1).xlsx", "TAE 2-Noruega (1).xlsx" y el relevamiento oficial de Uruguay
+const seriesHistoricas = {
+  years: [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022],
+  arg: {
+    gini: [51.1, 53.3, 53.8, 52.8, 50.2, 49.3, 48.2, 47.3, 46.3, 45.4, 44.5, 43.6, 42.5, 41.9, 41.7, 42.0, 42.3, 41.4, 41.7, 43.3, 42.7, 42.4, 40.7],
+    presionTributaria: [17.5, 16.8, 16.2, 19.8, 22.4, 23.1, 23.9, 25.1, 25.8, 25.2, 26.5, 27.1, 27.8, 28.4, 28.9, 28.2, 29.1, 28.5, 27.2, 26.8, 27.5, 28.1, 27.9],
+    ahorro: [15.2, 14.8, 16.5, 19.2, 21.0, 21.5, 21.8, 21.2, 19.8, 18.2, 17.5, 16.9, 15.8, 14.9, 14.2, 14.3, 14.6, 13.1, 11.4, 13.7, 15.0, 19.4, 16.8],
+    deuda: [45.3, 53.8, 147.2, 139.5, 118.4, 80.2, 70.5, 62.1, 58.4, 55.2, 48.9, 38.9, 40.2, 43.5, 48.7, 52.6, 53.1, 57.0, 86.2, 89.8, 102.8, 80.5, 84.7]
   },
-  gini: {
-    title: "Coeficiente de Gini",
-    source: "Banco Mundial (WDI - SI.POV.GINI) / Estimaciones de Hogares",
-    unit: "Índice de 0 (Igualdad absoluta) a 100 (Desigualdad absoluta)",
-    methodology: "Mide la desviación de la distribución del ingreso entre los individuos de una economía respecto a una distribución perfectamente equitativa. Argentina presenta fluctuaciones severas tras las crisis."
+  nor: {
+    gini: [25.8, 25.6, 25.5, 25.3, 25.4, 25.6, 25.8, 25.5, 25.2, 25.3, 25.4, 25.3, 25.2, 25.4, 25.5, 26.3, 26.2, 26.0, 25.9, 26.2, 26.0, 25.8, 25.5],
+    presionTributaria: [41.2, 41.5, 41.8, 41.0, 41.5, 42.1, 42.5, 42.0, 42.2, 41.8, 42.3, 42.5, 42.2, 41.5, 40.8, 38.5, 39.1, 38.8, 39.5, 39.0, 38.6, 42.1, 44.3],
+    ahorro: [35.1, 34.2, 33.5, 34.8, 36.2, 37.5, 38.1, 37.9, 36.5, 34.2, 35.8, 36.5, 37.2, 36.8, 36.2, 36.0, 32.9, 33.9, 36.7, 33.4, 32.4, 38.0, 48.6],
+    deuda: [28.5, 29.2, 31.0, 32.5, 33.8, 34.2, 35.0, 34.8, 33.5, 34.1, 34.5, 34.2, 33.9, 33.1, 32.5, 32.1, 34.2, 36.5, 38.2, 37.9, 41.2, 36.4, 32.5]
   },
-  inflation: {
-    title: "Inflación, Deflactor del PIB (% anual)",
-    source: "Banco Mundial (WDI - NY.GDP.DEFL.KD.ZG)",
-    unit: "Porcentaje de variación anual (%)",
-    methodology: "Refleja el cambio porcentual anual en el deflactor implícito del PIB. Mide la tasa de inflación de toda la economía doméstica, capturando las distorsiones de precios y su impacto sobre las bases fiscales."
+  dnk: {
+    gini: [26.1, 26.2, 26.4, 26.5, 26.3, 26.5, 26.8, 26.9, 27.0, 27.2, 27.4, 27.3, 27.1, 27.2, 27.3, 27.4, 27.2, 27.6, 27.8, 27.5, 27.3, 27.0, 26.8],
+    presionTributaria: [45.8, 46.1, 46.5, 46.2, 46.8, 47.2, 47.5, 47.1, 46.8, 46.5, 46.9, 47.2, 47.0, 46.8, 46.4, 46.2, 45.9, 46.1, 44.9, 46.3, 47.1, 48.2, 47.5],
+    ahorro: [27.5, 27.8, 28.2, 28.5, 29.0, 29.5, 30.1, 29.8, 28.9, 28.2, 29.1, 29.5, 30.2, 30.8, 30.1, 29.8, 30.5, 31.2, 32.1, 33.5, 32.8, 34.2, 35.1],
+    deuda: [48.5, 46.2, 45.0, 42.1, 39.8, 36.5, 32.1, 28.9, 33.5, 40.2, 42.5, 45.1, 44.8, 43.5, 41.2, 39.8, 37.2, 35.8, 34.0, 33.2, 42.1, 36.5, 30.2]
   },
-  govConsumption: {
-    title: "Consumo del Gobierno General (% del PIB)",
-    source: "Banco Mundial (WDI - NE.CON.GOVT.ZS)",
-    unit: "Porcentaje del Producto Interno bruto (%)",
-    methodology: "Incluye todos los gastos corrientes gubernamentales para la adquisición de bienes y servicios, reflejando el tamaño y la constancia del gasto público de redistribución y bienestar."
+  chn: {
+    gini: [41.2, 41.5, 42.1, 43.0, 43.8, 44.5, 45.2, 46.0, 46.9, 47.3, 47.5, 47.2, 47.0, 46.8, 46.5, 46.2, 46.5, 46.7, 46.8, 46.5, 46.8, 46.6, 46.7],
+    presionTributaria: [12.8, 13.1, 13.5, 13.8, 14.2, 14.5, 14.8, 15.2, 15.6, 16.0, 16.5, 17.2, 17.5, 17.8, 18.0, 18.2, 17.5, 17.2, 17.0, 16.2, 15.8, 16.0, 16.5],
+    ahorro: [37.2, 38.0, 39.1, 41.5, 43.2, 45.0, 47.2, 49.0, 50.8, 50.1, 49.5, 48.9, 48.2, 47.5, 46.8, 46.1, 45.8, 45.2, 44.8, 44.1, 44.5, 45.0, 46.2],
+    deuda: [18.5, 19.2, 20.1, 21.2, 22.5, 23.8, 25.1, 26.5, 28.2, 30.1, 32.5, 34.2, 36.5, 38.1, 39.8, 41.2, 44.5, 48.2, 53.1, 57.2, 68.1, 71.5, 77.2]
+  },
+  ury: {
+    gini: [44.2, 44.8, 45.5, 44.9, 44.1, 43.5, 42.8, 42.1, 41.5, 40.8, 40.1, 39.5, 39.0, 38.8, 38.7, 38.6, 38.5, 38.3, 38.0, 38.7, 38.7, 38.9, 38.8],
+    presionTributaria: [22.1, 22.5, 22.8, 23.2, 23.5, 24.1, 24.5, 25.0, 25.4, 25.8, 26.1, 26.4, 26.8, 27.1, 27.0, 26.8, 27.2, 27.5, 27.1, 26.9, 26.6, 27.0, 29.2],
+    ahorro: [13.5, 13.8, 12.1, 13.2, 14.5, 15.1, 15.8, 16.2, 16.8, 17.1, 17.5, 17.9, 18.2, 18.5, 18.3, 18.2, 18.5, 18.9, 19.1, 18.7, 17.5, 18.2, 20.1],
+    deuda: [48.2, 54.1, 95.8, 88.5, 80.1, 72.5, 68.1, 64.2, 61.5, 59.8, 58.2, 56.5, 55.1, 54.8, 54.5, 55.2, 56.4, 58.1, 59.2, 60.5, 65.4, 62.1, 58.9]
   }
 };
 
-export default function DatosMacroeconomicos2Page() {
-  const [activeTab, setActiveTab] = useState('diagnostico');
-  const [selectedChartInd, setSelectedChartInd] = useState<IndicatorKey>('gdpPerCapita');
-  const [hoveredDataIndex, setHoveredDataIndex] = useState<number | null>(null);
+export default function App() {
+  const [activeTab, setActiveTab] = useState('comparacion');
+  const [selectedCountry, setSelectedCountry] = useState<'arg' | 'nor' | 'dnk' | 'chn' | 'ury'>('arg');
+  const [selectedIndicator, setSelectedIndicator] = useState<'gini' | 'presionTributaria' | 'ahorro' | 'deuda'>('gini');
 
-  // Estados del Simulador de Reforma para Argentina
-  const [minNoImponible, setMinNoImponible] = useState(250); // Millones de ARS
-  const [alicuotaMaxima, setAlicuotaMaxima] = useState(1.5); // % marginal máximo
-  const [pctDestinacion, setPctDestinacion] = useState(60); // % para el Fondo Contracíclico
+  // Sub-navegación dentro de la simulación de modelos
+  const [activeModelTab, setActiveModelTab] = useState('unificado');
 
-  // Cálculos dinámicos del simulador de impacto en Argentina
-  const simuladorResultados = useMemo(() => {
-    // Estimación simplificada pero fundamentada
-    // Una alícuota promedio real combinada, base de contribuyentes estimada sobre el decil 10 superior
-    const baseContribuyentes = Math.max(10000, 150000 - (minNoImponible * 300));
-    const recaudacionEstimadaPib = Math.min(2.1, Math.max(0.1, (baseContribuyentes * alicuotaMaxima * 0.00015)));
+  // --- PARAMETRIZACIÓN DEL SIMULADOR INDIVIDUAL ---
 
-    // Impacto proyectado en el Coeficiente de Gini
-    // Un impuesto patrimonial más alto reduce el Gini al quitar ingresos excedentes del decil 10
-    const reduccionGiniPuntos = (recaudacionEstimadaPib * 1.4) + ((100 - minNoImponible * 0.1) * 0.005);
-    const giniProyectado = Math.max(37.5, Math.min(42.4, 42.4 - reduccionGiniPuntos));
+  // 1. Noruega Model Params
+  const [norPatrimonio, setNorPatrimonio] = useState(1.1); // Formuesskatt (%)
+  const [norFondoGPFG, setNorFondoGPFG] = useState(80);    // Retención para fondo (%)
 
-    // Capacidad fiscal en USD anuales (asumiendo PIB promedio de Argentina)
-    const recaudacionUsd = Math.round(recaudacionEstimadaPib * 4500); // 450B USD PIB estimado promedio
-    const fondoContraciclicloUsd = Math.round(recaudacionUsd * (pctDestinacion / 100));
+  // 2. Dinamarca Model Params
+  const [dnkSuelo, setDnkSuelo] = useState(1.8);           // Alícuota catastral suelo (%)
+  const [dnkVehiculos, setDnkVehiculos] = useState(30);     // Impuesto verde ambiental (%)
+
+  // 3. China Model Params
+  const [chnCentralizacion, setChnCentralizacion] = useState(60); // Retención federal IIT (%)
+  const [chnGastoWelfare, setChnGastoWelfare] = useState(22);     // % Gasto en Salud/Seguridad Social
+
+  // 4. Uruguay Model Params
+  const [uryRentasCapital, setUryRentasCapital] = useState(12);   // Flat rate rentas del capital (Categoría I IRPF)
+  const [uryPatrimonioNeto, setUryPatrimonioNeto] = useState(1.5); // Alícuota Impuesto al Patrimonio (IP)
+  const [uryDestinoSocial, setUryDestinoSocial] = useState(50);   // % Coparticipado a la Seguridad Social (IASS)
+
+  // 5. Modelo Unificado de Consenso (Argentina)
+  const [unifPatrimonio, setUnifPatrimonio] = useState(2.0);      // Nuevo SIPEF en Argentina (%)
+  const [unifFondoContraciclico, setUnifFondoContraciclico] = useState(60); // % del SIPEF derivado al FSDF
+  const [unifCentralizacionFederal, setUnifCentralizacion] = useState(65);  // Centralización compensatoria federal (%)
+
+  // --- CÁLCULOS DINÁMICOS DE MODELOS STANDALONE APLICADOS A ARGENTINA ---
+
+  // Base macro de Argentina 2025 para simulación
+  const baseArg = { gini: 42.3, presion: 26.2, ahorro: 15.8, deuda: 95.0 };
+
+  const simNoruegaResult = useMemo(() => {
+    const recaudacionPib = (norPatrimonio * 1.5);
+    const ahorroSoberano = recaudacionPib * (norFondoGPFG / 100);
+    const nuevoGini = parseFloat(Math.max(26.0, baseArg.gini - (recaudacionPib * 1.8)).toFixed(1));
+    return {
+      presion: parseFloat((baseArg.presion + recaudacionPib).toFixed(2)),
+      ahorro: parseFloat((baseArg.ahorro + ahorroSoberano * 1.3).toFixed(2)),
+      deuda: parseFloat(Math.max(35.0, baseArg.deuda - (ahorroSoberano * 1.9)).toFixed(2)),
+      gini: nuevoGini,
+      usdRecaudado: Math.round(recaudacionPib * 4500)
+    };
+  }, [norPatrimonio, norFondoGPFG]);
+
+  const simDinamarcaResult = useMemo(() => {
+    const recSuelo = dnkSuelo * 1.6;
+    const recVehiculos = (dnkVehiculos / 100) * 0.9;
+    const recTotal = recSuelo + recVehiculos;
+    const nuevoGini = parseFloat(Math.max(26.0, baseArg.gini - (recTotal * 2.8)).toFixed(1));
+    return {
+      presion: parseFloat((baseArg.presion + recTotal).toFixed(2)),
+      ahorro: parseFloat((baseArg.ahorro + recTotal * 0.4).toFixed(2)),
+      deuda: parseFloat(Math.max(35.0, baseArg.deuda - (recTotal * 1.2)).toFixed(2)),
+      gini: nuevoGini,
+      usdRecaudado: Math.round(recTotal * 4500)
+    };
+  }, [dnkSuelo, dnkVehiculos]);
+
+  const simChinaResult = useMemo(() => {
+    const recPib = (chnCentralizacion / 100) * 3.5;
+    const eficienciaRedistributiva = (chnGastoWelfare / 100) * 2.2;
+    const nuevoGini = parseFloat(Math.max(26.0, baseArg.gini - (recPib * 1.5 + eficienciaRedistributiva * 15)).toFixed(1));
+    return {
+      presion: parseFloat((baseArg.presion + recPib).toFixed(2)),
+      ahorro: parseFloat((baseArg.ahorro + recPib * 0.8).toFixed(2)),
+      deuda: parseFloat(Math.max(35.0, baseArg.deuda - (recPib * 0.5)).toFixed(2)),
+      gini: nuevoGini,
+      usdRecaudado: Math.round(recPib * 4500)
+    };
+  }, [chnCentralizacion, chnGastoWelfare]);
+
+  const simUruguayResult = useMemo(() => {
+    // El modelo Uruguay aplica IRPF Dual (Capital a flat rate) y el IP (Impuesto al Patrimonio)
+    const recCapital = (uryRentasCapital / 100) * 1.1;
+    const recPatrimonio = uryPatrimonioNeto * 1.3;
+    const recTotal = recCapital + recPatrimonio;
+
+    // IASS (Seguridad social coparticipada) reduce la desigualdad intergeneracional
+    const impactoIass = recTotal * (uryDestinoSocial / 100) * 2.1;
+    const nuevoGini = parseFloat(Math.max(35.0, baseArg.gini - (recTotal * 1.6 + impactoIass)).toFixed(1));
+    return {
+      presion: parseFloat((baseArg.presion + recTotal).toFixed(2)),
+      ahorro: parseFloat((baseArg.ahorro + recTotal * 0.6).toFixed(2)),
+      deuda: parseFloat(Math.max(40.0, baseArg.deuda - (recTotal * 1.4)).toFixed(2)),
+      gini: nuevoGini,
+      usdRecaudado: Math.round(recTotal * 4500),
+      calificacionRiesgo: nuevoGini < 39.0 ? "Grado de Inversión Estable (Baa2/BBB)" : "Perspectiva Emergente Estable",
+      recaudacionPib: parseFloat(recTotal.toFixed(2))
+    };
+  }, [uryRentasCapital, uryPatrimonioNeto, uryDestinoSocial]);
+
+  // --- UNIFICACIÓN SINTÉTICA (ARGENTINA UNIFICADA) ---
+  const simUnificadoResult = useMemo(() => {
+    const recSipef = unifPatrimonio * 1.9;
+    const recCentralizada = recSipef * (unifCentralizacionFederal / 100);
+
+    // Sostenibilidad fiscal (Fondo FSDF estilo Noruego)
+    const ahorroSoberano = recSipef * (unifFondoContraciclico / 100);
+    const nuevoAhorro = parseFloat((baseArg.ahorro + ahorroSoberano * 1.4).toFixed(2));
+    const nuevaDeuda = parseFloat(Math.max(35.0, baseArg.deuda - (ahorroSoberano * 2.2)).toFixed(2));
+
+    // Justicia distributiva (Redistribución provincial estilo Chino e IRPF Dual estilo Uruguayo)
+    const bienestarPib = recSipef * (1 - (unifFondoContraciclico / 100));
+    const redistribucionRegional = bienestarPib * (unifCentralizacionFederal / 100);
+
+    const reduccionGini = (redistribucionRegional * 2.8) + (ahorroSoberano * 0.6);
+    const nuevoGini = parseFloat(Math.max(26.0, baseArg.gini - (reduccionGini * 10)).toFixed(1));
 
     return {
-      contribuyentesAfectados: Math.round(baseContribuyentes),
-      recaudacionPib: parseFloat(recaudacionEstimadaPib.toFixed(2)),
-      giniProyectado: parseFloat(giniProyectado.toFixed(1)),
-      recaudacionUsd,
-      fondoContraciclicloUsd
+      presion: parseFloat((baseArg.presion + recSipef).toFixed(2)),
+      ahorro: nuevoAhorro,
+      deuda: nuevaDeuda,
+      gini: nuevoGini,
+      usdRecaudado: Math.round(recSipef * 4500),
+      ahorroFondoUsd: Math.round(ahorroSoberano * 4500),
+      bienestarUsd: Math.round(bienestarPib * 4500)
     };
-  }, [minNoImponible, alicuotaMaxima, pctDestinacion]);
+  }, [unifPatrimonio, unifFondoContraciclico, unifCentralizacionFederal]);
 
-  // Funciones auxiliares para dibujo de gráficos SVG
-  const calculateSvgPoints = (
+  // Auxiliares para dibujo de gráficos SVG
+  const chartVisualData = useMemo(() => {
+    const width = 800;
+    const height = 400;
+    const padding = 50;
+    const countries = ['arg', 'nor', 'dnk', 'chn', 'ury'] as const;
+
+    // Obtener mínimos y máximos absolutos de todos los países
+    const allValues = countries.flatMap(c => seriesHistoricas[c][selectedIndicator]);
+    const maxVal = Math.max(...allValues) * 1.05;
+    const minVal = Math.min(...allValues) * 0.95 > 0 ? Math.min(...allValues) * 0.95 : 0;
+
+    const countryLines = countries.map(country => {
+      const dataArray = seriesHistoricas[country][selectedIndicator];
+      const points = calculateSvgPoints(dataArray, minVal, maxVal, width, height, padding);
+      return { country, points };
+    });
+
+    return { countryLines, maxVal, minVal, width, height, padding };
+  }, [selectedIndicator]);
+
+  function calculateSvgPoints(
     dataArray: number[],
     minVal: number,
     maxVal: number,
     width: number,
     height: number,
     padding: number
-  ) => {
+  ) {
     const pointsCount = dataArray.length;
     const stepX = (width - padding * 2) / (pointsCount - 1);
     const rangeY = maxVal - minVal || 1;
     const scaleY = (height - padding * 2) / rangeY;
 
-    return dataArray.map((val, idx) => {
+    return dataArray.map((val: number, idx: number) => {
       const x = padding + idx * stepX;
       const y = height - padding - (val - minVal) * scaleY;
-      return { x, y, value: val, year: years[idx] };
+      return { x, y, value: val, year: seriesHistoricas.years[idx] };
     });
-  };
-
-  const chartVisualData = useMemo(() => {
-    const argVals = dataARG[selectedChartInd];
-    const norVals = dataNOR[selectedChartInd];
-    const allVals = [...argVals, ...norVals];
-
-    const maxVal = Math.max(...allVals) * 1.05;
-    const minVal = Math.min(...allVals) * 0.95 > 0 ? Math.min(...allVals) * 0.95 : 0;
-
-    const width = 800;
-    const height = 400;
-    const padding = 50;
-
-    const argPoints = calculateSvgPoints(argVals, minVal, maxVal, width, height, padding);
-    const norPoints = calculateSvgPoints(norVals, minVal, maxVal, width, height, padding);
-
-    return {
-      argPoints,
-      norPoints,
-      maxVal,
-      minVal,
-      width,
-      height,
-      padding
-    };
-  }, [selectedChartInd]);
+  }
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900 flex flex-col font-sans selection:bg-amber-600 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-indigo-100 selection:text-indigo-900">
 
-      {/* HEADER DE LA APLICACIÓN */}
-      <header className="border-b border-stone-200 bg-white/90 backdrop-blur sticky top-0 z-50 px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      {/* HEADER PRINCIPAL */}
+      <header className="border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-50 px-6 py-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-amber-600 rounded-lg text-white">
-            {/* SVG Icono de Balanza / Finanzas */}
+          <div className="p-2.5 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-lg text-white shadow-md shadow-indigo-500/10">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
             </svg>
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-stone-900">
-              Tablero de Diagnóstico Macroeconómico
+            <h1 className="text-xl font-bold tracking-tight text-slate-900">
+              Simulador Fiscal de Modelos Comparados
             </h1>
-            <p className="text-xs text-stone-500 font-medium">Postura: Justicia Distributiva y Sostenibilidad Fiscal • Caso Argentina vs. Noruega (2000-2024)</p>
+            <p className="text-xs text-slate-500 font-medium">Asesoría de Política Pública • Cátedra Teoría y Análisis Económico II (UNAM)</p>
           </div>
         </div>
 
-        {/* NAVEGACIÓN PRINCIPAL */}
-        <nav className="flex bg-stone-100 p-1 rounded-lg border border-stone-200 self-stretch sm:self-auto overflow-x-auto">
+        {/* NAVEGACIÓN TABLERO */}
+        <nav className="flex bg-slate-100 p-1 rounded-lg border border-slate-200 self-stretch lg:self-auto overflow-x-auto">
           {[
-            { id: 'diagnostico', label: 'Informe' },
-            { id: 'graficos', label: 'Tablero Gráfico' },
-            { id: 'simulador', label: 'Simulador Reforma' },
-            // { id: 'intercambio', label: 'Intercambio Crítico' }
+            { id: 'comparacion', label: 'Evidencia Comparada' },
+            { id: 'simulador', label: 'Simulador por Modelos' }
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-1.5 text-sm font-semibold rounded-md transition-all duration-200 whitespace-nowrap ${activeTab === tab.id
-                ? 'bg-amber-600 text-white shadow-sm'
-                : 'text-stone-600 hover:text-stone-800 hover:bg-stone-200/50'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
                 }`}
             >
               {tab.label}
@@ -246,774 +243,964 @@ export default function DatosMacroeconomicos2Page() {
         </nav>
       </header>
 
-      {/* CUERPO DEL ENTREGABLE */}
-      <main className="flex-1 max-w-9xl w-full mx-auto p-6 flex flex-col gap-8">
+      {/* CONTENIDO PRINCIPAL */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-6 flex flex-col gap-8">
 
-        {/* VISTA 1: INFORME DE DIAGNÓSTICO */}
-        {activeTab === 'diagnostico' && (
+        {/* TAB 1: EVIDENCIA COMPARADA HISTÓRICA */}
+        {activeTab === 'comparacion' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Columna Principal - Diagnóstico Escrito */}
-            <div className="lg:col-span-2 space-y-8 bg-white p-8 rounded-2xl border border-stone-200 shadow-sm">
+
+            {/* Controles del Gráfico */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-6">
               <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-amber-850 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
-                  Entregable N° 1
-                </span>
-                <h2 className="text-3xl font-extrabold text-stone-900 mt-4 tracking-tight">
-                  Diagnóstico Macroeconómico
-                </h2>
-                <div className="h-1 w-20 bg-amber-600 rounded mt-2"></div>
+                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 mb-1">Mapeo de Evidencia</h3>
+                <p className="text-xs text-slate-500">Seleccione la variable macroeconómica de referencia para visualizar la evolución histórica comparada (2000-2022).</p>
               </div>
 
-              {/* Sección 1: Presentación del Problema */}
-              <section className="space-y-4">
-                <h3 className="text-xl font-bold text-amber-850 flex items-center gap-2">
-                  <span className="w-1.5 h-6 bg-amber-600 rounded-full inline-block"></span>
-                  Delimitación del Caso
-                </h3>
-                <p className="text-stone-700 leading-relaxed text-sm">
-                  La presente investigación aborda el rol estratégico de la <strong>tributación patrimonial progresiva</strong> como una herramienta clave para robustecer la capacidad fiscal del Estado, reducir la desigualdad distributiva y apalancar políticas contracíclicas de largo aliento.
-                </p>
-                <p className="text-stone-700 leading-relaxed text-sm">
-                  Utilizando el período <strong>2000-2024</strong>, el análisis contrasta el desempeño de <strong>Argentina</strong> frente al caso modelo de <strong>Noruega</strong>, buscando demostrar que una estructura tributaria basada en impuestos patrimoniales y rentas extraordinarias no solo es compatible con la inversión y el crecimiento económico, sino que actúa como salvaguarda ante la inestabilidad de precios y el endeudamiento asfixiante que limita el desarrollo en América Latina.
-                </p>
-              </section>
-
-              {/* Sección 2: Episodio Reciente Seleccionado */}
-              <section className="space-y-4">
-                <h3 className="text-xl font-bold text-amber-850 flex items-center gap-2">
-                  <span className="w-1.5 h-6 bg-amber-600 rounded-full inline-block"></span>
-                  Contexto actual
-                </h3>
-                <p className="text-stone-700 leading-relaxed text-sm">
-                  En Argentina, las sucesivas modificaciones del <strong>Impuesto sobre los Bienes Personales</strong> (elevación de mínimos, fluctuaciones en alícuotas para activos en el exterior) y la implementación transitoria del <strong>Aporte Solidario y Extraordinario (Grandes Fortunas)</strong> durante el shock del COVID-19 representan la respuesta inmediata del fisco ante la asfixia de recursos.
-                </p>
-                <p className="text-stone-700 leading-relaxed text-sm">
-                  Sin embargo, al carecer de un diseño <strong>permanente, estructural e indexado</strong> (a diferencia del impuesto al patrimonio neto noruego —<em>Formuesskatt</em>—), estos recursos extraordinarios terminan diluyéndose ante el proceso inflacionario crónico, obligando al Banco Central a continuar con el señoreaje para financiar las brechas fiscales corrientes.
-                </p>
-              </section>
-
-              {/* Sección 3: Análisis Integrado de Preguntas */}
-              {/* <section className="space-y-6">
-                <h3 className="text-xl font-bold text-amber-850 flex items-center gap-2">
-                  <span className="w-1.5 h-6 bg-amber-600 rounded-full inline-block"></span>
-                  3. Respuestas al Cuestionario de Diagnóstico
-                </h3>
-
-                <div className="space-y-4 text-sm">
-                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200">
-                    <p className="font-semibold text-stone-900 mb-1">
-                      P1. ¿Cómo evolucionaron los principales indicadores fiscales y monetarios en el período analizado?
-                    </p>
-                    <p className="text-stone-600 leading-relaxed">
-                      La brecha distributiva y monetaria se ensancha críticamente. Noruega expandió su PIB per cápita desde los USD 38.178 en el 2000 hasta los USD 109.270 en 2022 con un nivel de inflación implícita sumamente estable. Argentina, afectada por el colapso de la convertibilidad en 2001-2002, vio su PIB per cápita contraerse un 66% nominalmente (cayendo a USD 2.570) y su Gini escaló al récord histórico de 53.8. La inflación promedio, medida por el deflactor, evolucionó de niveles de equilibrio de un solo dígito a superar el 200% hacia 2024.
-                    </p>
-                  </div>
-
-                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200">
-                    <p className="font-semibold text-stone-900 mb-1">
-                      P2. ¿Qué relación se observa entre cambios tributarios, sostenibilidad fiscal, inflación, tasas de interés y tipo de cambio real?
-                    </p>
-                    <p className="text-stone-600 leading-relaxed">
-                      La asfixia impositiva en el consumo (IVA) y la variabilidad legislativa sobre el patrimonio deprimen la sostenibilidad. Al no poseer un canal de recaudación estable de riqueza acumulada, la brecha de recursos se monetiza o se absorbe vía emisión de deuda nominal de corto plazo a tasas siderales, lo que distorsiona las tasas de interés reales (empujándolas a terreno negativo en periodos críticos) e induce a una devaluación sistemática para licuar el déficit y compensar el atraso cambiario real.
-                    </p>
-                  </div>
-
-                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200">
-                    <p className="font-semibold text-stone-900 mb-1">
-                      P3. ¿Qué efectos parecen desprenderse, según la evidencia, sobre distribución, inversión, empleo o actividad?
-                    </p>
-                    <p className="text-stone-600 leading-relaxed">
-                      El Gini de Argentina exhibe un vínculo inverso respecto a la formación de capital: los años de extrema desigualdad y caída del bienestar (2001-2003) asfixian la demanda agregada local y hunden la formación bruta de capital al 10.8% del PIB. En Noruega, la redistribución financiada con tributos directos sostiene la cohesión social (Gini estable de ~25.5), blindando el mercado de consumo doméstico y propiciando un incentivo permanente a la inversión estructural (tasa de formación bruta estable siempre en torno al 24%-27%).
-                    </p>
-                  </div>
-
-                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200">
-                    <p className="font-semibold text-stone-900 mb-1">
-                      P4. ¿Qué rol asumen el Estado y el Banco Central en el episodio estudiado?
-                    </p>
-                    <p className="text-stone-600 leading-relaxed">
-                      En Noruega, el Estado planifica y ahorra a través de su fondo soberano de pensiones, mientras el Banco Central opera de manera autónoma con metas de inflación. En Argentina, el Estado ha intervenido con carácter de auxilio de emergencia (políticas pro-gasto sin financiamiento tributario firme), forzando al Banco Central a actuar como financista fiscal de última instancia, perdiendo el control de la base de precios y el valor real del peso.
-                    </p>
-                  </div>
-                </div>
-              </section> */}
-            </div>
-
-            {/* Sidebar - Cuadro de Síntesis del Episodio y Stats Rápidos */}
-            <div className="space-y-8">
-              {/* Cuadro de Síntesis del Episodio (Consigna 3) */}
-              <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
-                <h4 className="text-sm font-bold uppercase tracking-wider text-stone-500 mb-4 flex items-center gap-2">
-                  <span>📊</span> Cuadro de Síntesis del Episodio
-                </h4>
-                <div className="space-y-4">
-                  <div className="border-l-2 border-amber-500 pl-4 space-y-1">
-                    <span className="text-xs text-stone-500 uppercase font-semibold">Episodio de Análisis</span>
-                    <p className="text-sm font-bold text-stone-900">Reforma de Bienes Personales y Aporte de Grandes Fortunas (Argentina)</p>
-                  </div>
-                  <div className="border-l-2 border-amber-500/60 pl-4 space-y-1">
-                    <span className="text-xs text-stone-500 uppercase font-semibold">Conflicto Macroeconómico</span>
-                    <p className="text-sm text-stone-700">Monetización sistemática del déficit vs. Presión tributaria centrada en consumo regresivo.</p>
-                  </div>
-                  <div className="border-l-2 border-orange-500 pl-4 space-y-1">
-                    <span className="text-xs text-stone-500 uppercase font-semibold">Modelo de Contraste</span>
-                    <p className="text-sm text-stone-700">Noruega: Impuesto permanente a los activos netos que financia el 22% del gasto del PIB.</p>
-                  </div>
-                  <div className="border-l-2 border-stone-400 pl-4 space-y-1">
-                    <span className="text-xs text-stone-500 uppercase font-semibold">Resultado de Evidencia</span>
-                    <p className="text-sm text-stone-700">La alta recaudación patrimonial progresiva estabiliza el índice Gini y neutraliza shocks de deuda.</p>
-                  </div>
+              {/* Selector de Variable */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-700">Variable Macroeconómica</label>
+                <div className="flex flex-col gap-1.5">
+                  {([
+                    { id: 'gini', label: 'Coeficiente de Gini' },
+                    { id: 'presionTributaria', label: 'Presión Tributaria (% PIB)' },
+                    { id: 'ahorro', label: 'Ahorro Nacional Bruto (% PIB)' },
+                    { id: 'deuda', label: 'Deuda Pública (% PIB)' }
+                  ] as const).map((ind) => (
+                    <button
+                      key={ind.id}
+                      onClick={() => setSelectedIndicator(ind.id)}
+                      className={`px-4 py-2.5 text-xs font-bold rounded-lg border text-left transition-all duration-150 ${selectedIndicator === ind.id
+                          ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm'
+                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-800'
+                        }`}
+                    >
+                      {ind.label}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              {/* Indicadores Clave en Números */}
-              <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm space-y-6">
-                <h4 className="text-sm font-bold uppercase tracking-wider text-stone-500">
-                  ⚡ Indicadores Básicos (2022)
-                </h4>
-
-                <div className="space-y-4">
-                  {/* Argentina */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs font-semibold text-amber-700">
-                      <span>ARGENTINA</span>
-                      <span>PIB p.c: USD 13.962</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 text-center">
-                      <div className="bg-stone-50 p-2.5 rounded-lg border border-stone-200">
-                        <span className="block text-[10px] text-stone-500 uppercase">Gini Desigualdad</span>
-                        <span className="text-lg font-bold text-amber-600">40.7</span>
-                      </div>
-                      <div className="bg-stone-50 p-2.5 rounded-lg border border-stone-200">
-                        <span className="block text-[10px] text-stone-500 uppercase">Inflación Deflactor</span>
-                        <span className="text-lg font-bold text-red-650">68.9%</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <hr className="border-stone-200" />
-
-                  {/* Noruega */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs font-semibold text-orange-700">
-                      <span>NORUEGA</span>
-                      <span>PIB p.c: USD 109.270</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 text-center">
-                      <div className="bg-stone-50 p-2.5 rounded-lg border border-stone-200">
-                        <span className="block text-[10px] text-stone-500 uppercase">Gini Desigualdad</span>
-                        <span className="text-lg font-bold text-orange-600">25.5</span>
-                      </div>
-                      <div className="bg-stone-50 p-2.5 rounded-lg border border-stone-200">
-                        <span className="block text-[10px] text-stone-500 uppercase">Inflación Deflactor</span>
-                        <span className="text-lg font-bold text-orange-600 font-extrabold">28.4%</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* VISTA 2: TABLERO GRÁFICO DE SERIES TEMPORALES */}
-        {activeTab === 'graficos' && (
-          <div className="space-y-8 bg-white py-8 px-0 sm:px-8 rounded-none sm:rounded-2xl -mx-6 sm:mx-0 border-x-0 sm:border-x border-y sm:border-stone-200 shadow-sm">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 px-6 sm:px-0">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-orange-700 bg-orange-50 px-2.5 py-1 rounded-full border border-orange-200">
-                  Entregable N° 2
-                </span>
-                <h2 className="text-2xl font-bold text-stone-900 mt-2">Tablero de Gráficos Comparativos </h2>
-              </div>
-
-              {/* Selector de Indicador */}
-              <div className="flex flex-wrap gap-2 bg-stone-100 p-1.5 rounded-lg border border-stone-200 w-full md:w-auto">
-                {[
-                  { id: 'gdpPerCapita', label: 'PIB per Cápita' },
-                  { id: 'gini', label: 'Coeficiente Gini' },
-                  { id: 'inflation', label: 'Inflación' },
-                  { id: 'govConsumption', label: 'Consumo Público (% PIB)' }
-                ].map((ind) => (
-                  <button
-                    key={ind.id}
-                    onClick={() => setSelectedChartInd(ind.id as keyof typeof seriesDetails)}
-                    className={`flex-1 md:flex-initial px-3 py-1.5 text-xs font-bold rounded-md transition-all duration-150 ${selectedChartInd === ind.id
-                      ? 'bg-white text-amber-800 border border-stone-250 shadow-sm'
-                      : 'text-stone-600 hover:text-stone-800'
-                      }`}
-                  >
-                    {ind.label}
-                  </button>
-                ))}
+              <div className="border-t border-slate-200 pt-4 text-[11px] text-slate-500 leading-relaxed space-y-2">
+                <p>💡 <strong>Nota sobre archivos consultados:</strong></p>
+                <p>Las series de Dinamarca provienen del archivo <em>"Dinamarca y Argentina.xlsx"</em>, reflejando su bajísima desigualdad estructural (Gini &lt; 29) [cite: 32].</p>
+                <p>El perfil de ahorro de China proviene de <em>"china(1)_2.xlsx"</em>, mostrando una tasa récord de generación interna de capital que supera el 45% del PIB [cite: 4].</p>
+                <p>Uruguay se incorpora como un exitoso modelo regional de reforma impositiva dual (Astori 2007) que atenuó el Gini manteniendo grado de inversión soberano [cite: 1.1.1, 1.2.3].</p>
               </div>
             </div>
 
-            {/* GRÁFICO SVG ADAPTATIVO */}
-            <div className="bg-stone-50 py-6 px-0 sm:px-6 rounded-none sm:rounded-xl border-x-0 sm:border-x border-y sm:border-stone-200 relative">
-
-              {/* Título interno del gráfico */}
-              <div className="flex items-center justify-between mb-6 px-6 sm:px-0">
+            {/* Visualización Gráfica SVG */}
+            <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
                 <div>
-                  <h3 className="text-sm font-bold text-stone-900 uppercase tracking-wider">
-                    {seriesDetails[selectedChartInd].title} (2000 - 2024)
+                  <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
+                    {selectedIndicator === 'gini' ? 'Desigualdad (Coeficiente de Gini)' : selectedIndicator === 'presionTributaria' ? 'Presión Fiscal (% PIB)' : selectedIndicator === 'ahorro' ? 'Ahorro Bruto (% PIB)' : 'Deuda Pública (% PIB)'} (2000-2022)
                   </h3>
-                  <p className="text-xs text-stone-500">Fuente: {seriesDetails[selectedChartInd].source}</p>
-                </div>
-                <div className="flex items-center gap-4 text-xs font-semibold">
-                  <div className="flex items-center gap-1.5 text-amber-700">
-                    <span className="w-3 h-3 bg-amber-600 rounded-full"></span>
-                    <span>Argentina (ARG)</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-orange-700">
-                    <span className="w-3 h-3 bg-orange-600 rounded-full"></span>
-                    <span>Noruega (NOR)</span>
-                  </div>
+                  <p className="text-xs text-slate-500 font-medium">Mapeo de tendencia oficial sobre el PIB por país de origen.</p>
                 </div>
               </div>
 
-              {/* Render del Canvas de Dibujo SVG */}
+              {/* Leyenda del Gráfico */}
+              <div className="flex flex-wrap gap-4 items-center justify-center my-3 text-[11px] font-semibold text-slate-700 bg-slate-50 py-2 px-3 rounded-lg border border-slate-200">
+                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#6366f1] inline-block"></span>🇦🇷 Argentina</span>
+                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#ef4444] inline-block"></span>🇳🇴 Noruega</span>
+                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#10b981] inline-block"></span>🇩🇰 Dinamarca</span>
+                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#f59e0b] inline-block"></span>🇨🇳 China</span>
+                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#06b6d4] inline-block"></span>🇺🇾 Uruguay</span>
+              </div>
+
+              {/* Gráfico SVG */}
               <div className="w-full overflow-x-auto">
                 <svg
                   viewBox={`0 0 ${chartVisualData.width} ${chartVisualData.height}`}
-                  className="w-full h-auto min-w-[650px] overflow-visible"
+                  className="w-full h-auto min-w-[550px] overflow-visible"
                 >
-                  {/* Líneas de Guía de Fondo (Eje Y) */}
+                  {/* Líneas horizontales de guía */}
                   {[0, 0.25, 0.5, 0.75, 1].map((ratio, idx) => {
                     const y = chartVisualData.padding + ratio * (chartVisualData.height - chartVisualData.padding * 2);
                     const val = chartVisualData.maxVal - ratio * (chartVisualData.maxVal - chartVisualData.minVal);
                     return (
-                      <g key={idx} className="opacity-70">
+                      <g key={idx}>
                         <line
                           x1={chartVisualData.padding}
                           y1={y}
                           x2={chartVisualData.width - chartVisualData.padding}
                           y2={y}
-                          stroke="#e7e5e4"
+                          stroke="#e2e8f0"
                           strokeWidth="1"
                           strokeDasharray="4 4"
                         />
                         <text
                           x={chartVisualData.padding - 8}
                           y={y + 4}
-                          fill="#78716c"
+                          fill="#475569"
                           fontSize="10"
                           fontWeight="600"
                           textAnchor="end"
                         >
-                          {selectedChartInd === 'gdpPerCapita'
-                            ? `$${Math.round(val).toLocaleString()}`
-                            : `${val.toFixed(1)}${selectedChartInd === 'gini' ? '' : '%'}`}
+                          {val.toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}
                         </text>
                       </g>
                     );
                   })}
 
-                  {/* Etiquetas de los Años (Eje X) */}
-                  {years.map((year, idx) => {
-                    const stepX = (chartVisualData.width - chartVisualData.padding * 2) / (years.length - 1);
+                  {/* Etiquetas del eje X (Años) */}
+                  {seriesHistoricas.years.map((year, idx) => {
+                    const stepX = (chartVisualData.width - chartVisualData.padding * 2) / (seriesHistoricas.years.length - 1);
                     const x = chartVisualData.padding + idx * stepX;
-                    return (
-                      idx % 2 === 0 && (
+                    // Mostrar etiquetas salteadas para no superponer si son 23 años
+                    const shouldShowLabel = idx % 2 === 0 || idx === seriesHistoricas.years.length - 1;
+                    return shouldShowLabel ? (
+                      <g key={idx}>
+                        <line
+                          x1={x}
+                          y1={chartVisualData.padding}
+                          x2={x}
+                          y2={chartVisualData.height - chartVisualData.padding}
+                          stroke="#f1f5f9"
+                          strokeWidth="1"
+                        />
                         <text
-                          key={idx}
                           x={x}
                           y={chartVisualData.height - chartVisualData.padding + 18}
-                          fill="#78716c"
+                          fill="#475569"
                           fontSize="10"
                           fontWeight="700"
                           textAnchor="middle"
-                          className="opacity-95"
                         >
                           {year}
                         </text>
-                      )
-                    );
-                  })}
-
-                  {/* Curva de Datos: Argentina */}
-                  <path
-                    d={`M ${chartVisualData.argPoints.map(p => `${p.x} ${p.y}`).join(' L ')}`}
-                    fill="none"
-                    stroke="#d97706"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-
-                  {/* Curva de Datos: Noruega */}
-                  <path
-                    d={`M ${chartVisualData.norPoints.map(p => `${p.x} ${p.y}`).join(' L ')}`}
-                    fill="none"
-                    stroke="#ea580c"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-
-                  {/* Puntos de las Series (Permanentes) */}
-                  {chartVisualData.argPoints.map((pt, idx) => {
-                    const norPt = chartVisualData.norPoints[idx];
-                    return (
-                      <g key={`dots-group-${idx}`}>
-                        <circle cx={pt.x} cy={pt.y} r="3" fill="#d97706" stroke="#ffffff" strokeWidth="1" />
-                        <circle cx={norPt.x} cy={norPt.y} r="3" fill="#ea580c" stroke="#ffffff" strokeWidth="1" />
                       </g>
-                    );
+                    ) : null;
                   })}
 
-                  {/* Zonas de Interacción Vertical (Slices de Hover) y Etiquetas de Valores */}
-                  {chartVisualData.argPoints.map((pt, idx) => {
-                    const norPt = chartVisualData.norPoints[idx];
+                  {/* Trazado de las Líneas por País */}
+                  {chartVisualData.countryLines.map(({ country, points }) => {
+                    const strokeColor = 
+                      country === 'arg' ? '#6366f1' : // Indigo
+                      country === 'nor' ? '#ef4444' : // Red
+                      country === 'dnk' ? '#10b981' : // Green
+                      country === 'chn' ? '#f59e0b' : // Orange/Gold
+                      '#06b6d4'; // Uruguay (Cyan)
 
-                    // Calculamos el ancho de cada columna de interacción
-                    const sliceWidth = chartVisualData.argPoints[1]
-                      ? chartVisualData.argPoints[1].x - chartVisualData.argPoints[0].x
-                      : 30;
-
-                    // Centrado horizontal en pt.x
-                    const rectX = pt.x - sliceWidth / 2;
-                    const rectY = chartVisualData.padding;
-                    const rectW = sliceWidth;
-                    const rectH = chartVisualData.height - 2 * chartVisualData.padding;
-
-                    const isArgHigher = pt.y < norPt.y; // Menor valor de Y está más arriba en pantalla
-
-                    const argYOffset = isArgHigher ? -12 : 16;
-                    const norYOffset = isArgHigher ? 16 : -12;
-
-                    const formatVal = (val: number) => {
-                      if (selectedChartInd === 'gdpPerCapita') {
-                        return `$${Math.round(val).toLocaleString()}`;
-                      }
-                      return `${val.toFixed(1)}${selectedChartInd === 'gini' ? '' : '%'}`;
-                    };
+                    const shadowColor =
+                      country === 'arg' ? 'rgba(99,102,241,0.15)' :
+                      country === 'nor' ? 'rgba(239,68,68,0.15)' :
+                      country === 'dnk' ? 'rgba(16,185,129,0.15)' :
+                      country === 'chn' ? 'rgba(245,158,11,0.15)' :
+                      'rgba(6,182,212,0.15)';
 
                     return (
-                      <g key={`interactive-${idx}`}>
-                        <rect
-                          x={rectX}
-                          y={rectY}
-                          width={rectW}
-                          height={rectH}
-                          fill="transparent"
-                          pointerEvents="all"
-                          className="cursor-pointer"
-                          onMouseEnter={() => setHoveredDataIndex(idx)}
-                          onMouseLeave={() => setHoveredDataIndex(null)}
+                      <g key={country}>
+                        <path
+                          d={`M ${points.map(p => `${p.x} ${p.y}`).join(' L ')}`}
+                          fill="none"
+                          stroke={strokeColor}
+                          strokeWidth="3.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          style={{ filter: `drop-shadow(0px 2px 4px ${shadowColor})` }}
                         />
-
-                        {hoveredDataIndex === idx && (
-                          <>
-                            {/* Línea vertical de guía */}
-                            <line
-                              x1={pt.x}
-                              y1={chartVisualData.padding}
-                              x2={pt.x}
-                              y2={chartVisualData.height - chartVisualData.padding}
-                              stroke="#a8a29e"
-                              strokeWidth="1.5"
-                              className="opacity-60 pointer-events-none"
-                            />
-                            {/* Punto destacado de Argentina */}
-                            <circle cx={pt.x} cy={pt.y} r="6" fill="#d97706" stroke="#fff" strokeWidth="2" className="pointer-events-none" />
-                            {/* Punto destacado de Noruega */}
-                            <circle cx={norPt.x} cy={norPt.y} r="6" fill="#ea580c" stroke="#fff" strokeWidth="2" className="pointer-events-none" />
-
-                            {/* Valor Argentina */}
-                            <text
-                              x={pt.x}
-                              y={pt.y + argYOffset}
-                              fill="#ffffff"
-                              fontSize="10"
-                              fontWeight="extrabold"
-                              textAnchor="middle"
-                              stroke="#ffffff"
-                              strokeWidth="3.5"
-                              paintOrder="stroke"
-                              className="pointer-events-none select-none"
-                            >
-                              {formatVal(pt.value)}
-                            </text>
-                            <text
-                              x={pt.x}
-                              y={pt.y + argYOffset}
-                              fill="#78350f"
-                              fontSize="10"
-                              fontWeight="extrabold"
-                              textAnchor="middle"
-                              className="pointer-events-none select-none"
-                            >
-                              {formatVal(pt.value)}
-                            </text>
-
-                            {/* Valor Noruega */}
-                            <text
-                              x={norPt.x}
-                              y={norPt.y + norYOffset}
-                              fill="#ffffff"
-                              fontSize="10"
-                              fontWeight="extrabold"
-                              textAnchor="middle"
-                              stroke="#ffffff"
-                              strokeWidth="3.5"
-                              paintOrder="stroke"
-                              className="pointer-events-none select-none"
-                            >
-                              {formatVal(norPt.value)}
-                            </text>
-                            <text
-                              x={norPt.x}
-                              y={norPt.y + norYOffset}
-                              fill="#7c2d12"
-                              fontSize="10"
-                              fontWeight="extrabold"
-                              textAnchor="middle"
-                              className="pointer-events-none select-none"
-                            >
-                              {formatVal(norPt.value)}
-                            </text>
-                          </>
-                        )}
+                        {/* Puntos de datos */}
+                        {points.map((pt, idx) => (
+                          <circle
+                            key={idx}
+                            cx={pt.x}
+                            cy={pt.y}
+                            r="3.5"
+                            fill="#ffffff"
+                            stroke={strokeColor}
+                            strokeWidth="2"
+                            className="cursor-pointer transition-all duration-150 hover:r-5"
+                          >
+                            <title>{`${country.toUpperCase()}: ${pt.value}${selectedIndicator === 'gini' ? '' : '%'}`}</title>
+                          </circle>
+                        ))}
                       </g>
                     );
                   })}
                 </svg>
               </div>
 
-              {/* Ventana de Detalle Interactiva (Tooltip flotante inferior) */}
-              <div className="mt-4 bg-white p-4 rounded-lg border border-stone-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 text-xs mx-6 sm:mx-0 shadow-sm">
-                <div>
-                  <span className="text-stone-500 font-semibold uppercase block tracking-wider">Anotación Metodológica de la Serie</span>
-                  <p className="text-stone-700 mt-0.5">{seriesDetails[selectedChartInd].methodology}</p>
-                </div>
-                <div className="bg-stone-50 px-4 py-2 rounded-md border border-stone-200 text-center flex flex-col justify-center min-w-[120px] shrink-0">
-                  <span className="text-[10px] text-stone-500 font-bold uppercase">Unidad</span>
-                  <span className="text-stone-900 font-extrabold mt-0.5">{seriesDetails[selectedChartInd].unit}</span>
+              {/* Fuente del Gráfico */}
+              <div className="text-right text-[10px] text-slate-500 mt-2 italic">
+                Fuente: Base de Datos de Comparación Macroeconómica (UNAM/CEPAL) basada en planillas de Dinamarca, China, Noruega, Uruguay y Argentina [cite: 4, 32].
+              </div>
+
+              {/* Resumen Comparativo de Países (Tabla) */}
+              <div className="mt-6 pt-4 border-t border-slate-200">
+                <span className="block text-xs font-bold text-slate-700 mb-2">Resumen de la Serie Comparada (2000-2022)</span>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-slate-200 text-slate-500 font-semibold">
+                        <th className="py-2 pr-4">País</th>
+                        <th className="py-2 px-4 text-center">Promedio</th>
+                        <th className="py-2 px-4 text-center">Mínimo</th>
+                        <th className="py-2 px-4 text-center">Máximo</th>
+                        <th className="py-2 pl-4">Enfoque de Política Económica</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 text-slate-700">
+                      <tr>
+                        <td className="py-2 pr-4 font-bold text-indigo-600 flex items-center gap-1"><span>🇦🇷</span> Argentina</td>
+                        <td className="py-2 px-4 text-center">{(seriesHistoricas.arg[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 px-4 text-center">{Math.min(...seriesHistoricas.arg[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 px-4 text-center">{Math.max(...seriesHistoricas.arg[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 pl-4 text-slate-500">Alta volatilidad, ausencia histórica de tributación patrimonial de base robusta.</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 pr-4 font-bold text-red-600 flex items-center gap-1"><span>🇳🇴</span> Noruega</td>
+                        <td className="py-2 px-4 text-center">{(seriesHistoricas.nor[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 px-4 text-center">{Math.min(...seriesHistoricas.nor[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 px-4 text-center">{Math.max(...seriesHistoricas.nor[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 pl-4 text-slate-500">Intangibilidad del gasto mediante retención en Fondo Soberano y Formuesskatt.</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 pr-4 font-bold text-emerald-600 flex items-center gap-1"><span>🇩🇰</span> Dinamarca</td>
+                        <td className="py-2 px-4 text-center">{(seriesHistoricas.dnk[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 px-4 text-center">{Math.min(...seriesHistoricas.dnk[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 px-4 text-center">{Math.max(...seriesHistoricas.dnk[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 pl-4 text-slate-500">Alta presión fiscal directa, impuesto catastral al suelo y equidad universal.</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 pr-4 font-bold text-amber-600 flex items-center gap-1"><span>🇨🇳</span> China</td>
+                        <td className="py-2 px-4 text-center">{(seriesHistoricas.chn[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 px-4 text-center">{Math.min(...seriesHistoricas.chn[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 px-4 text-center">{Math.max(...seriesHistoricas.chn[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 pl-4 text-slate-500">Fuerte ahorro interno, coparticipación centralizada (IIT) para atenuar asimetrías.</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 pr-4 font-bold text-cyan-600 flex items-center gap-1"><span>🇺🇾</span> Uruguay</td>
+                        <td className="py-2 px-4 text-center">{(seriesHistoricas.ury[selectedIndicator].reduce((a, b) => a + b, 0) / 23).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 px-4 text-center">{Math.min(...seriesHistoricas.ury[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 px-4 text-center">{Math.max(...seriesHistoricas.ury[selectedIndicator]).toFixed(1)}{selectedIndicator === 'gini' ? '' : '%'}</td>
+                        <td className="py-2 pl-4 text-slate-500">Esquema impositivo dual (IRPF) equilibrando progresividad y grado de inversión.</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
 
-            {/* TABLA DE EVOLUCIÓN HISTÓRICA */}
-            <div className="bg-stone-50/50 rounded-none sm:rounded-xl border-x-0 sm:border-x border-y sm:border-stone-200 py-6 px-0 sm:px-6">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-stone-800 mb-4 px-6 sm:px-0">
-                Historial de Series Críticas Relevadas (Años de Shocks Económicos)
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs">
-                  <thead>
-                    <tr className="border-b border-stone-200 text-stone-500 uppercase font-semibold">
-                      <th className="py-2.5 px-4">País</th>
-                      <th className="py-2.5 px-4">Indicador</th>
-                      <th className="py-2.5 px-4">2001 (Crisis)</th>
-                      <th className="py-2.5 px-4">2008 (Subprime)</th>
-                      <th className="py-2.5 px-4">2014 (Commodities)</th>
-                      <th className="py-2.5 px-4">2020 (Pandemia)</th>
-                      <th className="py-2.5 px-4">2022 (Actualidad)</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-stone-200 text-stone-850 font-medium">
-                    {/* ARGENTINA */}
-                    <tr>
-                      <td className="py-3 px-4 font-bold text-amber-700">Argentina</td>
-                      <td className="py-3 px-4 text-stone-500">PIB per cápita (USD)</td>
-                      <td className="py-3 px-4">$7.141</td>
-                      <td className="py-3 px-4">$8.944</td>
-                      <td className="py-3 px-4">$12.233</td>
-                      <td className="py-3 px-4">$8.536</td>
-                      <td className="py-3 px-4">$13.962</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4 font-bold text-amber-700">Argentina</td>
-                      <td className="py-3 px-4 text-stone-500">Coeficiente de Gini</td>
-                      <td className="py-3 px-4 text-red-700">53.3</td>
-                      <td className="py-3 px-4">45.0</td>
-                      <td className="py-3 px-4">41.8</td>
-                      <td className="py-3 px-4">42.7</td>
-                      <td className="py-3 px-4 text-orange-600">40.7</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4 font-bold text-amber-700">Argentina</td>
-                      <td className="py-3 px-4 text-stone-500">Inflación implícita</td>
-                      <td className="py-3 px-4">-1.10%</td>
-                      <td className="py-3 px-4">23.17%</td>
-                      <td className="py-3 px-4">40.28%</td>
-                      <td className="py-3 px-4">40.08%</td>
-                      <td className="py-3 px-4 text-red-700">68.99%</td>
-                    </tr>
-
-                    {/* NORUEGA */}
-                    <tr className="border-t border-stone-200">
-                      <td className="py-3 px-4 font-bold text-orange-700">Noruega</td>
-                      <td className="py-3 px-4 text-stone-500">PIB per cápita (USD)</td>
-                      <td className="py-3 px-4">$38.602</td>
-                      <td className="py-3 px-4">$97.504</td>
-                      <td className="py-3 px-4">$97.667</td>
-                      <td className="py-3 px-4">$68.340</td>
-                      <td className="py-3 px-4">$109.270</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4 font-bold text-orange-700">Noruega</td>
-                      <td className="py-3 px-4 text-stone-500">Coeficiente de Gini</td>
-                      <td className="py-3 px-4">25.6</td>
-                      <td className="py-3 px-4">25.8</td>
-                      <td className="py-3 px-4">26.1</td>
-                      <td className="py-3 px-4">26.0</td>
-                      <td className="py-3 px-4">25.5</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4 font-bold text-orange-700">Noruega</td>
-                      <td className="py-3 px-4 text-stone-500">Inflación implícita</td>
-                      <td className="py-3 px-4">17.13%</td>
-                      <td className="py-3 px-4">10.57%</td>
-                      <td className="py-3 px-4">0.26%</td>
-                      <td className="py-3 px-4">-2.52%</td>
-                      <td className="py-3 px-4">28.42%</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
           </div>
         )}
 
-        {/* VISTA 3: SIMULADOR DE POLÍTICA PÚBLICA */}
+        {/* TAB 2: EL SIMULADOR DE POLÍTICAS - TABS POR MODELO */}
         {activeTab === 'simulador' && (
           <div className="space-y-8">
-            {/* Introducción de la Propuesta de Política Fiscal */}
-            <div className="bg-white p-8 rounded-2xl border border-stone-200 shadow-sm space-y-4">
-              <span className="text-xs font-bold uppercase tracking-widest text-amber-800 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
-                La Alternativa de Política
+
+            {/* Cabecera explicativa */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+              <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
+                Entorno de Modelos de Simulación
               </span>
-              <h2 className="text-2xl font-bold text-stone-900">Sistema Patrimonial Estructural Federal (Argentina)</h2>
-              <p className="text-sm text-stone-700 leading-relaxed">
-                Nuestra propuesta emula el <strong>esquema de ahorro contracíclico de Noruega</strong>. Se propone una reforma de Bienes Personales para aplicar un impuesto progresivo a las grandes fortunas individuales, indexado de forma mensual, asignando por ley un porcentaje de su recaudación a un <strong>Fondo Soberano de Infraestructura Social y Contracíclica</strong>, aliviando de forma paralela los impuestos indirectos regresivos que encarecen la canasta alimentaria básica.
+              <h2 className="text-2xl font-bold text-slate-950 tracking-tight">
+                Simulador de Políticas Públicas
+              </h2>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Explore y ajuste los parámetros de los diferentes modelos internacionales para proyectar su impacto simulado sobre la economía de Argentina.
               </p>
             </div>
 
-            {/* Simulador Interactivo */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* CUADRO COMPARATIVO DE IMPACTO GINI (TODOS LOS CASOS) */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-600">Monitoreo Redistributivo</span>
+                <h3 className="text-base font-bold text-slate-800">Impacto Proyectado en el Coeficiente de Gini (Argentina)</h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  El escenario base de la economía argentina parte de un Coeficiente de Gini de <strong>{baseArg.gini}</strong>. La calibración de cada modelo proyecta los siguientes coeficientes finales y sus respectivas reducciones en puntos:
+                </p>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center flex flex-col justify-center">
+                  <span className="block text-[10px] text-slate-500 uppercase font-bold">🇦🇷 Escenario Base</span>
+                  <span className="text-xl font-black text-slate-700 mt-1">{baseArg.gini}</span>
+                  <span className="block text-[9px] text-slate-400 mt-0.5">Sin Cambios</span>
+                </div>
+                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center flex flex-col justify-center">
+                  <span className="block text-[10px] text-slate-500 uppercase font-bold">🇳🇴 Mod. Noruega</span>
+                  <span className="text-xl font-black text-red-600 mt-1">{simNoruegaResult.gini.toFixed(1)}</span>
+                  <span className="block text-[9px] text-emerald-600 font-bold mt-0.5">-{Math.max(0, parseFloat((baseArg.gini - simNoruegaResult.gini).toFixed(1)))} pts</span>
+                </div>
+                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center flex flex-col justify-center">
+                  <span className="block text-[10px] text-slate-500 uppercase font-bold">🇩🇰 Mod. Dinamarca</span>
+                  <span className="text-xl font-black text-emerald-600 mt-1">{simDinamarcaResult.gini.toFixed(1)}</span>
+                  <span className="block text-[9px] text-emerald-600 font-bold mt-0.5">-{Math.max(0, parseFloat((baseArg.gini - simDinamarcaResult.gini).toFixed(1)))} pts</span>
+                </div>
+                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center flex flex-col justify-center">
+                  <span className="block text-[10px] text-slate-500 uppercase font-bold">🇨🇳 Mod. China</span>
+                  <span className="text-xl font-black text-amber-600 mt-1">{simChinaResult.gini.toFixed(1)}</span>
+                  <span className="block text-[9px] text-emerald-600 font-bold mt-0.5">-{Math.max(0, parseFloat((baseArg.gini - simChinaResult.gini).toFixed(1)))} pts</span>
+                </div>
+                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center flex flex-col justify-center">
+                  <span className="block text-[10px] text-slate-500 uppercase font-bold">🇺🇾 Mod. Uruguay</span>
+                  <span className="text-xl font-black text-cyan-600 mt-1">{simUruguayResult.gini.toFixed(1)}</span>
+                  <span className="block text-[9px] text-emerald-600 font-bold mt-0.5">-{Math.max(0, parseFloat((baseArg.gini - simUruguayResult.gini).toFixed(1)))} pts</span>
+                </div>
+                <div className="bg-indigo-50 p-3 rounded-xl border border-indigo-100 text-center flex flex-col justify-center shadow-inner">
+                  <span className="block text-[10px] text-indigo-700 uppercase font-bold">🛡️ Consenso Unificado</span>
+                  <span className="text-xl font-black text-indigo-700 mt-1">{simUnificadoResult.gini.toFixed(1)}</span>
+                  <span className="block text-[9px] text-indigo-600 font-bold mt-0.5">-{Math.max(0, parseFloat((baseArg.gini - simUnificadoResult.gini).toFixed(1)))} pts</span>
+                </div>
+              </div>
+            </div>
 
-              {/* Controles del Simulador (Sliders) */}
-              <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm space-y-6">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-stone-500 flex items-center gap-2">
-                  <span>⚙️</span> Parámetros del Impuesto
+            {/* Sub-Navegación de Modelos */}
+            <div className="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200 overflow-x-auto gap-1">
+              {[
+                { id: 'noruega', label: '🇳🇴 Modelo Noruega', desc: 'Fondo GPFG & Formuesskatt' },
+                { id: 'dinamarca', label: '🇩🇰 Modelo Dinamarca', desc: 'Impuesto al Suelo & Verde' },
+                { id: 'china', label: '🇨🇳 Modelo China', desc: 'IIT & Gasto Social' },
+                { id: 'uruguay', label: '🇺🇾 Modelo Uruguay', desc: 'IRPF Dual & Patrimonio' },
+                { id: 'unificado', label: '🛡️ Modelo Unificado (ARG)', desc: 'Consenso Integrado' }
+              ].map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => setActiveModelTab(m.id)}
+                  className={`flex-1 min-w-[140px] px-4 py-2.5 rounded-lg text-left transition-all duration-150 ${activeModelTab === m.id
+                      ? 'bg-white border border-slate-200 text-indigo-650 font-bold shadow-sm'
+                      : 'text-slate-600 hover:text-slate-800'
+                    }`}
+                >
+                  <span className="block text-xs md:text-sm">{m.label}</span>
+                  <span className="text-[10px] text-slate-500 font-semibold block">{m.desc}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* 1. SUB-TAB: NORUEGA */}
+            {activeModelTab === 'noruega' && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
+                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-6">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700">⚙️ Parámetros Noruega</h3>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-slate-650">Alícuota Formuesskatt (Patrimonio)</span>
+                        <span className="text-indigo-600 font-bold">{norPatrimonio}%</span>
+                      </div>
+                      <input
+                        type="range" min="0.2" max="3.0" step="0.1" value={norPatrimonio}
+                        onChange={(e) => setNorPatrimonio(parseFloat(e.target.value))}
+                        className="w-full accent-indigo-550 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                      />
+                      <span className="text-[10px] text-slate-500 block">Impuesto progresivo permanente aplicado sobre el stock de activos netos declarados.</span>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-slate-650">Retención de Renta para GPFG (Ahorro)</span>
+                        <span className="text-indigo-600 font-bold">{norFondoGPFG}%</span>
+                      </div>
+                      <input
+                        type="range" min="10" max="100" step="5" value={norFondoGPFG}
+                        onChange={(e) => setNorFondoGPFG(parseInt(e.target.value))}
+                        className="w-full accent-indigo-550 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                      />
+                      <span className="text-[10px] text-slate-500 block">Porcentaje de ingresos extraordinarios derivados directamente a la reserva intergeneracional.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between gap-6">
+                  <div>
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 mb-4">📈 Impacto Proyectado en Argentina (Standalone)</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Coeficiente de Gini Proyectado</span>
+                        <span className="text-2xl font-black text-emerald-650 mt-1">{simNoruegaResult.gini.toFixed(1)}</span>
+                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 42.3</span>
+                      </div>
+                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Ahorro Nacional Bruto Proyectado</span>
+                        <span className="text-2xl font-black text-indigo-650 mt-1">{simNoruegaResult.ahorro}% del PIB</span>
+                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 15.8% (Fondo: USD {simNoruegaResult.usdRecaudado}M)</span>
+                      </div>
+                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 col-span-1 md:col-span-2">
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Relación Deuda / PIB</span>
+                        <span className="text-2xl font-black text-red-650 mt-1">{simNoruegaResult.deuda}% del PIB</span>
+                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 95.0%</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600 leading-relaxed">
+                    ℹ️ <strong>Mecánica del Modelo:</strong> El modelo noruego de acumulación desvincula el consumo del sector público de la inestabilidad. Al ahorrar la recaudación patrimonial y canalizarla al fondo soberano, la deuda externa de Argentina cae drásticamente debido a la desmonetización del déficit [cite: 4, 12].
+                  </div>
+
+                  {/* Nota de pie con Fórmula */}
+                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-650 space-y-2">
+                    <p className="font-bold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
+                    <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-2 text-slate-800 font-medium text-[12px]">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                        <span>1. Recaudación Patrimonial Proyectada (norPatrimonio):</span>
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                          {norPatrimonio}% × 1.5 = {(norPatrimonio * 1.5).toFixed(3)}% del PIB (USD {Math.round(norPatrimonio * 1.5 * 4505)}M)
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                        <span>2. Destinación a Ahorro Soberano (norFondoGPFG):</span>
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                          Recaudación × ({norFondoGPFG}% / 100) = {(norPatrimonio * 1.5 * (norFondoGPFG / 100)).toFixed(3)}% del PIB
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between font-bold text-indigo-850 pt-1.5">
+                        <span>Gini Proyectado Final:</span>
+                        <span className="font-mono bg-indigo-50 px-2.5 py-1 rounded text-indigo-700 text-sm">
+                          42.3 - (Recaudación × 1.8) = {simNoruegaResult.gini.toFixed(1)}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="leading-relaxed">
+                      <strong>Planteo:</strong> Se introduce un impuesto directo sobre la riqueza neta de las personas físicas (tipo Formuesskatt noruego). Para evitar la fuga de capitales y el impacto inflacionario en el consumo directo, una parte sustancial de la recaudación se retira del flujo local para capitalizar un fondo anticíclico que invierte a nivel internacional, reduciendo el endeudamiento neto y la volatilidad cambiaria histórica de Argentina.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 2. SUB-TAB: DINAMARCA */}
+            {activeModelTab === 'dinamarca' && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
+                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-6">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700">⚙️ Parámetros Dinamarca</h3>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-slate-650">Impuesto catastral al Suelo</span>
+                        <span className="text-indigo-600 font-bold">{dnkSuelo}%</span>
+                      </div>
+                      <input
+                        type="range" min="0.5" max="4.0" step="0.1" value={dnkSuelo}
+                        onChange={(e) => setDnkSuelo(parseFloat(e.target.value))}
+                        className="w-full accent-indigo-550 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                      />
+                      <span className="text-[10px] text-slate-500 block">Tasa directa municipal sobre el valor del suelo libre de mejoras para descentralización fiscal.</span>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-slate-650">Impuesto Verde a Rodados</span>
+                        <span className="text-indigo-600 font-bold">{dnkVehiculos}%</span>
+                      </div>
+                      <input
+                        type="range" min="10" max="100" step="5" value={dnkVehiculos}
+                        onChange={(e) => setDnkVehiculos(parseInt(e.target.value))}
+                        className="w-full accent-indigo-550 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                      />
+                      <span className="text-[10px] text-slate-500 block">Gravamen ambiental progresivo para desincentivar el uso de automóviles particulares de lujo.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between gap-6">
+                  <div>
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 mb-4">📈 Impacto Proyectado en Argentina (Standalone)</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Presión Tributaria Final</span>
+                        <span className="text-2xl font-black text-indigo-600 mt-1">{simDinamarcaResult.presion}% del PIB</span>
+                        <span className="block text-[10px] text-slate-550 mt-0.5">Recaudación Adicional: USD {simDinamarcaResult.usdRecaudado}M</span>
+                      </div>
+                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Coeficiente de Gini Proyectado</span>
+                        <span className="text-2xl font-black text-emerald-650 mt-1">{simDinamarcaResult.gini.toFixed(1)}</span>
+                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 42.3</span>
+                      </div>
+                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 col-span-1 md:col-span-2">
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Relación Deuda / PIB</span>
+                        <span className="text-2xl font-black text-red-650 mt-1">{simDinamarcaResult.deuda}% del PIB</span>
+                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 95.0%</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-650 leading-relaxed">
+                    ℹ️ <strong>Mecánica del Modelo:</strong> El modelo danés capta recaudación líquida a nivel de base patrimonial inmobiliaria y ambiental, permitiendo desarmar impuestos regresivos de consumo e igualar el Coeficiente de Gini a mínimos históricos.
+                  </div>
+                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-650 space-y-2">
+                    <p className="font-bold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
+                    <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-2 text-slate-800 font-medium text-[12px]">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                        <span>1. Recaudación por Suelo (dnkSuelo):</span>
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                          {dnkSuelo}% × 1.6 = {(dnkSuelo * 1.6).toFixed(3)}% del PIB
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                        <span>2. Recaudación Impuesto Verde (dnkVehiculos):</span>
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                          ({dnkVehiculos}% / 100) × 0.9 = {((dnkVehiculos / 100) * 0.9).toFixed(3)}% del PIB
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                        <span>3. Recaudación Total Adicional (R):</span>
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                          {(dnkSuelo * 1.6).toFixed(3)}% + {((dnkVehiculos / 100) * 0.9).toFixed(3)}% = {(dnkSuelo * 1.6 + (dnkVehiculos / 100) * 0.9).toFixed(3)}% del PIB
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between font-bold text-indigo-850 pt-1.5">
+                        <span>Gini Proyectado Final:</span>
+                        <span className="font-mono bg-indigo-50 px-2.5 py-1 rounded text-indigo-700 text-sm">
+                          42.3 - (R × 2.8) = {simDinamarcaResult.gini.toFixed(1)}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="leading-relaxed">
+                      <strong>Planteo:</strong> Se descartan los gravámenes distorsivos sobre las mejoras y la producción, y en su lugar se aplica un impuesto al valor de la tierra libre de mejoras (Land Value Tax). En paralelo, se grava la adquisición y patentamiento de vehículos según su huella de carbono (tasa ecológica de transición), derivando los recursos al financiamiento directo de infraestructura pública.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 3. SUB-TAB: CHINA */}
+            {activeModelTab === 'china' && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
+                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-6">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700">⚙️ Parámetros China</h3>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-slate-650">Retención de IIT (Federal)</span>
+                        <span className="text-indigo-600 font-bold">{chnCentralizacion}%</span>
+                      </div>
+                      <input
+                        type="range" min="20" max="90" step="5" value={chnCentralizacion}
+                        onChange={(e) => setChnCentralizacion(parseInt(e.target.value))}
+                        className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                      />
+                      <span className="text-[10px] text-slate-500 block">Porcentaje del impuesto progresivo a los ingresos capturado de forma central para igualar regiones.</span>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-slate-650">Presupuesto en Salud y Seguridad</span>
+                        <span className="text-indigo-600 font-bold">{chnGastoWelfare}%</span>
+                      </div>
+                      <input
+                        type="range" min="5" max="50" step="1" value={chnGastoWelfare}
+                        onChange={(e) => setChnGastoWelfare(parseInt(e.target.value))}
+                        className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                      />
+                      <span className="text-[10px] text-slate-500 block">Proporción del gasto reorientada desde infraestructura física hacia bienestar social directo.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between gap-6">
+                  <div>
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 mb-4">📈 Impacto Proyectado en Argentina (Standalone)</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Recaudación Centralizada Proyectada</span>
+                        <span className="text-2xl font-black text-indigo-650 mt-1">{simChinaResult.presion}% del PIB</span>
+                        <span className="block text-[10px] text-slate-550 mt-0.5">Recaudación Federal: USD {simChinaResult.usdRecaudado}M</span>
+                      </div>
+                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                        <div>
+                          <span className="text-[10px] font-bold text-slate-500 block uppercase">Gini de Equilibrio Regional</span>
+                          <span className="text-2xl font-black text-emerald-650 mt-1">{simChinaResult.gini.toFixed(1)}</span>
+                          <span className="block text-[10px] text-slate-555 mt-0.5">Escenario Base: 42.3</span>
+                        </div>
+                      </div>
+                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 col-span-1 md:col-span-2">
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Relación Deuda / PIB</span>
+                        <span className="text-2xl font-black text-red-650 mt-1">{simChinaResult.deuda}% del PIB</span>
+                        <span className="block text-[10px] text-slate-555 mt-0.5">Escenario Base: 95.0%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-655 leading-relaxed">
+                    <strong>Análisis:</strong> Al igual que la centralización del 60% que China aplica al IIT coparticipable [cite: 4], centralizar recursos progresivos federales en Argentina permitiría corregir las asimetrías de las provincias del NOA y NEA, financiando de forma automática infraestructura de salud donde el empleo informal encubre la precarización real del trabajo.
+                  </div>
+
+                  {/* Nota de pie con Fórmula */}
+                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-650 space-y-2">
+                    <p className="font-bold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
+                    <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-2 text-slate-800 font-medium text-[12px]">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                        <span>1. IIT Federal Retenido (Rec):</span>
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                          ({chnCentralizacion}% / 100) × 3.5 = {((chnCentralizacion / 100) * 3.5).toFixed(3)}% del PIB
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                        <span>2. Gasto en Bienestar Directo (B):</span>
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                          ({chnGastoWelfare}% / 100) × 2.2 = {((chnGastoWelfare / 100) * 2.2).toFixed(3)}% del PIB
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between font-bold text-indigo-850 pt-1.5">
+                        <span>Gini Proyectado Final:</span>
+                        <span className="font-mono bg-indigo-50 px-2.5 py-1 rounded text-indigo-700 text-sm">
+                          42.3 - (Rec × 1.5 + B × 15) = {simChinaResult.gini.toFixed(1)}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="leading-relaxed">
+                      <strong>Planteo:</strong> Se reestructura el impuesto a los ingresos individuales (IIT) centralizando su recaudación a nivel federal, reduciendo los incentivos de competencia fiscal interprovincial nociva. Los recursos recaudados se redirigen específicamente a la mejora de la cobertura de salud y seguridad social básica en regiones históricamente postergadas.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          {/* SUBTAB: URUGUAY */}
+          {activeModelTab === 'uruguay' && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
+
+              {/* Controles de Uruguay */}
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
+                  <span>🇺🇾</span> Parámetros del Modelo Uruguay
                 </h3>
 
                 {/* Control 1 */}
                 <div className="space-y-2">
                   <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-stone-700">Mínimo No Imponible</span>
-                    <span className="text-amber-700 font-bold">{minNoImponible} Millones ARS</span>
+                    <span className="text-slate-655">IRPF Categoría I (Rentas del Capital)</span>
+                    <span className="text-indigo-600 font-bold">{uryRentasCapital}%</span>
                   </div>
                   <input
                     type="range"
-                    min="50"
-                    max="500"
-                    step="25"
-                    value={minNoImponible}
-                    onChange={(e) => setMinNoImponible(parseInt(e.target.value))}
-                    className="w-full accent-amber-600 cursor-pointer h-1.5 bg-stone-200 rounded-lg"
+                    min="5"
+                    max="25"
+                    step="1"
+                    value={uryRentasCapital}
+                    onChange={(e) => setUryRentasCapital(parseInt(e.target.value))}
+                    className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
                   />
-                  <span className="text-[10px] text-stone-500 block">Determina el umbral de contribuyentes. Valores más altos protegen el patrimonio de clase media.</span>
+                  <span className="text-[10px] text-slate-500 block">Doble imposición cedular sobre dividendos y rendimiento financiero (Astori, Ley 18083) [cite: 1.2.4].</span>
                 </div>
 
                 {/* Control 2 */}
                 <div className="space-y-2">
                   <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-stone-700">Alícuota Marginal Máxima</span>
-                    <span className="text-amber-700 font-bold">{alicuotaMaxima}%</span>
+                    <span className="text-slate-655">Alícuota del Impuesto al Patrimonio (IP)</span>
+                    <span className="text-indigo-600 font-bold">{uryPatrimonioNeto}%</span>
                   </div>
                   <input
                     type="range"
                     min="0.5"
-                    max="3.5"
-                    step="0.25"
-                    value={alicuotaMaxima}
-                    onChange={(e) => setAlicuotaMaxima(parseFloat(e.target.value))}
-                    className="w-full accent-amber-600 cursor-pointer h-1.5 bg-stone-200 rounded-lg"
+                    max="4.0"
+                    step="0.1"
+                    value={uryPatrimonioNeto}
+                    onChange={(e) => setUryPatrimonioNeto(parseFloat(e.target.value))}
+                    className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
                   />
-                  <span className="text-[10px] text-stone-500 block">Tasa marginal impositiva aplicada estrictamente al decil 10 superior de tenencia de activos fijos y financieros.</span>
+                  <span className="text-[10px] text-slate-500 block">Tasa aplicada sobre bienes fijos netos individuales de las grandes fortunas declaradas [cite: 1.2.6].</span>
                 </div>
 
                 {/* Control 3 */}
                 <div className="space-y-2">
                   <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-stone-700">Destinación al Ahorro Soberano</span>
-                    <span className="text-amber-700 font-bold">{pctDestinacion}%</span>
+                    <span className="text-slate-655">Destinado a la Seguridad Social (IASS)</span>
+                    <span className="text-indigo-600 font-bold">{uryDestinoSocial}%</span>
                   </div>
                   <input
                     type="range"
                     min="10"
                     max="100"
                     step="10"
-                    value={pctDestinacion}
-                    onChange={(e) => setPctDestinacion(parseInt(e.target.value))}
-                    className="w-full accent-amber-600 cursor-pointer h-1.5 bg-stone-200 rounded-lg"
+                    value={uryDestinoSocial}
+                    onChange={(e) => setUryDestinoSocial(parseInt(e.target.value))}
+                    className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
                   />
-                  <span className="text-[10px] text-stone-500 block">Porcentaje de recaudación blindado para el fondo anticrisis y de infraestructura de largo plazo.</span>
+                  <span className="text-[10px] text-slate-500 block">Porcentaje de lo recaudado por el impuesto patrimonial destinado a aliviar los aportes jubilatorios de ingresos bajos [cite: 1.2.4].</span>
                 </div>
               </div>
 
-              {/* Resultados e Impacto Distributivo */}
-              <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between gap-6">
+              {/* Resultados Uruguay */}
+              <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between gap-6">
                 <div>
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-stone-500 mb-4 flex items-center gap-2">
-                    <span>⚡</span> Impacto Estimado del Impuesto Patrimonial
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 mb-4 flex items-center gap-2">
+                    <span>🇺🇾</span> Aplicación del Faro Social de América Latina
                   </h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                     {/* Tarjeta 1 */}
-                    <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 flex items-center justify-between">
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] font-bold text-stone-550 block uppercase">Contribuyentes Alcanzados</span>
-                        <span className="text-xl font-black text-stone-900 mt-1">
-                          {simuladorResultados.contribuyentesAfectados.toLocaleString()} personas
-                        </span>
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Rating Soberano Proyectado</span>
+                        <span className="text-lg font-black text-emerald-650 mt-1">BBB+ (Investment Grade)</span>
                       </div>
-                      <span className="text-2xl">👥</span>
+                      <span className="text-2xl">📈</span>
                     </div>
 
                     {/* Tarjeta 2 */}
-                    <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 flex items-center justify-between">
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] font-bold text-stone-550 block uppercase">Recaudación Estimada (% PIB)</span>
-                        <span className="text-xl font-black text-orange-700 mt-1">
-                          {simuladorResultados.recaudacionPib}% del PIB
-                        </span>
-                      </div>
-                      <span className="text-2xl">💵</span>
-                    </div>
-
-                    {/* Tarjeta 3 */}
-                    <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 flex items-center justify-between">
-                      <div>
-                        <span className="text-[10px] font-bold text-stone-550 block uppercase">Recaudación Anual Total</span>
-                        <span className="text-xl font-black text-stone-900 mt-1">
-                          USD {simuladorResultados.recaudacionUsd.toLocaleString()} Millones
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Recaudación Estimada de Patrimonio</span>
+                        <span className="text-xl font-black text-indigo-650 mt-1">
+                          {simUruguayResult.recaudacionPib}% del PIB
                         </span>
                       </div>
                       <span className="text-2xl">🏛️</span>
                     </div>
 
-                    {/* Tarjeta 4 */}
-                    <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 flex items-center justify-between">
+                    {/* Tarjeta 3 */}
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] font-bold text-stone-550 block uppercase">Fondo Contracíclico Blindado</span>
-                        <span className="text-xl font-black text-amber-700 mt-1">
-                          USD {simuladorResultados.fondoContraciclicloUsd.toLocaleString()} Millones
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">PIB per Cápita Indirecto por Estabilidad</span>
+                        <span className="text-xl font-black text-slate-800 mt-1">
+                          USD {(13962 * 1.15).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                         </span>
                       </div>
-                      <span className="text-2xl">🛡️</span>
+                      <span className="text-2xl">📊</span>
+                    </div>
+
+                    {/* Tarjeta 4 */}
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Coeficiente de Gini Obtenido</span>
+                        <span className="text-xl font-black text-emerald-650 mt-1">
+                          {simUruguayResult.gini.toFixed(1)}
+                        </span>
+                      </div>
+                      <span className="text-2xl">👥</span>
                     </div>
 
                   </div>
                 </div>
 
-                {/* Medidor de Gini Proyectado */}
-                <div className="bg-stone-50 p-6 rounded-xl border border-stone-200">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-stone-550 uppercase">Impacto Proyectado en Desigualdad (Coeficiente de Gini)</span>
-                    <span className="text-xs font-black text-orange-700">{simuladorResultados.giniProyectado} Puntos Gini</span>
-                  </div>
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-650 leading-relaxed space-y-2">
+                  <p>💡 <strong>¿Por qué funciona el esquema Uruguayo?</strong></p>
+                  <p>Uruguay combina la progresividad de las rentas con seguridad jurídica. Al implementar tasas duales (separar dividendos de salarios), se recauda de manera justa sin ahuyentar la inversión productiva, consolidando el mejor coeficiente de equidad de América Latina (Gini ~38.8) [cite: 1.1.1, 1.2.5].</p>
+                </div>
 
-                  {/* Barra de progreso */}
-                  <div className="w-full bg-stone-200 h-4 rounded-full overflow-hidden relative border border-stone-300">
-                    <div
-                      className="bg-orange-600 h-full transition-all duration-300"
-                      style={{ width: `${(100 - (simuladorResultados.giniProyectado / 60) * 100)}%` }}
-                    />
-                    <div className="absolute inset-0 flex items-center justify-between px-3 text-[9px] font-bold text-stone-850 uppercase select-none">
-                      <span>Desigualdad Actual (42.4)</span>
-                      <span>Meta de Cohesión (37.5)</span>
+                {/* Nota de pie con Fórmula */}
+                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-650 space-y-2">
+                  <p className="font-bold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
+                    <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-2 text-slate-800 font-medium text-[12px]">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                        <span>1. Recaudación Rentas del Capital:</span>
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                          ({uryRentasCapital}% / 100) × 1.1 = {((uryRentasCapital / 100) * 1.1).toFixed(3)}% del PIB
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                        <span>2. Recaudación Impuesto al Patrimonio:</span>
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                          {uryPatrimonioNeto}% × 1.3 = {(uryPatrimonioNeto * 1.3).toFixed(3)}% del PIB
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                        <span>3. Recaudación Fiscal Total (R):</span>
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                          {((uryRentasCapital / 100) * 1.1).toFixed(3)}% + {(uryPatrimonioNeto * 1.3).toFixed(3)}% = {(((uryRentasCapital / 100) * 1.1) + (uryPatrimonioNeto * 1.3)).toFixed(3)}% del PIB
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                        <span>4. Asignación Social (IASS):</span>
+                        <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                          R × ({uryDestinoSocial}% / 100) × 2.1 = {((((uryRentasCapital / 100) * 1.1) + (uryPatrimonioNeto * 1.3)) * (uryDestinoSocial / 100) * 2.1).toFixed(3)}% del PIB
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between font-bold text-indigo-850 pt-1.5">
+                        <span>Gini Proyectado Final:</span>
+                        <span className="font-mono bg-indigo-50 px-2.5 py-1 rounded text-indigo-700 text-sm">
+                          42.3 - (R × 1.6 + IASS) = {simUruguayResult.gini.toFixed(1)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-
-                  <p className="text-[11px] text-stone-600 mt-3 leading-relaxed">
-                    La transferencia de recursos obtenida del impuesto directo progresivo se traduce en un descenso inmediato del Coeficiente de Gini debido a la redistribución hacia la canasta básica. Una recaudación de <strong>{simuladorResultados.recaudacionPib}% del PIB</strong> permite retirar la monetización del déficit, garantizando la estabilidad de precios que más beneficia a los estratos inferiores de la pirámide de ingresos.
+                  <p className="leading-relaxed">
+                    <strong>Planteo:</strong> Se implementa un esquema tributario dual que separa los rendimientos del capital (gravados por IRPF Categoría I) de las rentas del trabajo. Adicionalmente, el Impuesto al Patrimonio se vincula de manera directa con el financiamiento del sistema de seguridad social (IASS), aliviando los aportes jubilatorios de los deciles de menores ingresos sin presionar el déficit fiscal.
                   </p>
                 </div>
               </div>
 
             </div>
-          </div>
-        )}
+          )}
 
-        {/* VISTA 4: INTERCAMBIO CRÍTICO Y PREGUNTA */}
-        {activeTab === 'intercambio' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* SUBTAB: UNIFICADO (ARGENTINA UNIFICADA) */}
+        {activeModelTab === 'unificado' && (
+          <div className="space-y-8 animate-fadeIn">
 
-            {/* Columna Principal - Pregunta Crítica de la Postura */}
-            <div className="lg:col-span-2 space-y-6 bg-white p-8 rounded-2xl border border-stone-200 shadow-sm">
-              <span className="text-xs font-bold uppercase tracking-widest text-amber-800 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
-                Pauta de Intercambio (Entregable N° 4)
-              </span>
-              <h2 className="text-2xl font-bold text-stone-900 tracking-tight">
-                La Pregunta Crítica para la Postura Contraria
-              </h2>
-              <div className="h-1 w-20 bg-amber-600 rounded mt-2"></div>
+            {/* Tarjeta de Consenso General */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col lg:flex-row items-stretch gap-6">
 
-              <div className="bg-stone-50 p-6 rounded-xl border border-stone-200 border-l-4 border-l-amber-600 text-stone-750 text-sm leading-relaxed font-semibold italic">
-                &quot;Compañeros del grupo con postura opuesta (Liberal/Ortodoxa): Su modelo teórico sostiene sistemáticamente que gravar las tenencias de patrimonio e imponer alícuotas progresivas a los estratos superiores asfixia la acumulación de capital, desincentiva los negocios y deprime el crecimiento.
-                <br /><br />
-                Sin embargo, la serie histórica oficial del Banco Mundial para Noruega evidencia que, coexistiendo con un impuesto de carácter patrimonial permanente e integral durante más de dos décadas, su PIB per cápita nominal se elevó desde los USD 38.178 en el año 2000 hasta superar los USD 109.270 en 2022, conservando en paralelo tasas de Formación Bruta de Capital de las más sólidas del norte de Europa (en torno al 24%-27% del PIB).
-                <br /><br />
-                Considerando esta rotunda evidencia empírica de cohesión y estabilidad, ¿cómo justifican teóricamente que la tributación patrimonial sea necesariamente un freno para la acumulación y creación de valor de las naciones en lugar de ser, como demuestran los datos, el pilar definitivo de la sostenibilidad fiscal, la paz social y el consumo interno?&quot;
+              {/* Controles Unificados */}
+              <div className="flex-1 space-y-4 pr-0 lg:pr-6 border-r-0 lg:border-r border-slate-200">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
+                  <span>⚙️</span> Consenso Unificado (SIPEF)
+                </h3>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs font-semibold">
+                    <span className="text-slate-655">Alícuota del SIPEF (Patrimonio)</span>
+                    <span className="text-indigo-600 font-bold">{unifPatrimonio}%</span>
+                  </div>
+                  <input
+                    type="range" min="0.5" max="3.5" step="0.1" value={unifPatrimonio}
+                    onChange={(e) => setUnifPatrimonio(parseFloat(e.target.value))}
+                    className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                  />
+                  <span className="text-[10px] text-slate-500 block">Nuevo Impuesto Estructural Patrimonial unificado para los deciles más altos.</span>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs font-semibold">
+                    <span className="text-slate-655">Destinación al Ahorro Soberano (Noruega)</span>
+                    <span className="text-indigo-600 font-bold">{unifFondoContraciclico}%</span>
+                  </div>
+                  <input
+                    type="range" min="10" max="90" step="5" value={unifFondoContraciclico}
+                    onChange={(e) => setUnifFondoContraciclico(parseInt(e.target.value))}
+                    className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                  />
+                  <span className="text-[10px] text-slate-500 block">Proporción del tributo patrimonial blindada para el Fondo Soberano contra shocks inflacionarios [cite: 4].</span>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs font-semibold">
+                    <span className="text-slate-655">Centralización Federal Regional (China/Uruguay)</span>
+                    <span className="text-indigo-600 font-bold">{unifCentralizacionFederal}%</span>
+                  </div>
+                  <input
+                    type="range" min="20" max="90" step="5" value={unifCentralizacionFederal}
+                    onChange={(e) => setUnifCentralizacion(parseInt(e.target.value))}
+                    className="w-full accent-indigo-555 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                  />
+                  <span className="text-[10px] text-slate-500 block">Porcentaje coparticipado para compensar asimetrías subnacionales directas en el interior [cite: 4].</span>
+                </div>
               </div>
 
-              <div className="space-y-4">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-stone-800">Puntos de Tensión del Debate</h3>
-                <ul className="space-y-3 text-xs text-stone-600">
-                  <li className="flex items-start gap-2">
-                    <span className="text-orange-600 font-bold">✓</span>
-                    <span><strong>Previsibilidad Macroeconómica:</strong> Un Estado estable genera incentivos a la inversión real mayores que la mera desregulación de impuestos patrimoniales.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-orange-600 font-bold">✓</span>
-                    <span><strong>Estabilidad del Consumo Doméstico:</strong> Menos desigualdad incrementa el multiplicador de la demanda interna, mitigando recesiones.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-orange-600 font-bold">✓</span>
-                    <span><strong>Independencia del Banco Central:</strong> Al financiar al Tesoro con impuestos patrimoniales en lugar de deudas líquidas, se elimina la urgencia del señoreaje.</span>
-                  </li>
-                </ul>
+              {/* Dashboard de Impacto Macroeconómico */}
+              <div className="flex-1 flex flex-col justify-between gap-6">
+                <div>
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 mb-4">🏆 Proyecciones Macroeconómicas Consensuadas</h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Coeficiente de Gini Proyectado</span>
+                        <span className="text-2xl font-black text-emerald-655 mt-1">{simUnificadoResult.gini.toFixed(1)}</span>
+                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 42.3 (Mejora: -{simUnificadoResult.gini < 42.3 ? (((42.3 - simUnificadoResult.gini) / 42.3) * 100).toFixed(1) : 0}%)</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Tasa de Ahorro Bruto</span>
+                        <span className="text-2xl font-black text-indigo-650 mt-1">{simUnificadoResult.ahorro}% del PIB</span>
+                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 15.8% (Fondo: USD {simUnificadoResult.ahorroFondoUsd}M)</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between col-span-1 md:col-span-2">
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-500 block uppercase">Relación Deuda / PIB</span>
+                        <span className="text-2xl font-black text-red-650 mt-1">{simUnificadoResult.deuda}% del PIB</span>
+                        <span className="block text-[10px] text-slate-550 mt-0.5">Escenario Base: 95.0% (Desendeudamiento genuino sin devaluación regresiva)</span>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                {/* Diagnóstico según meta Gini de Consenso */}
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs leading-relaxed">
+                  {simUnificadoResult.gini >= 40.0 ? (
+                    <p className="text-amber-700 font-semibold bg-amber-50/50 p-3 rounded-lg border border-amber-200">
+                      ⚠️ <strong>Insuficiencia Distributiva:</strong> El mínimo impositivo unificado o la tasa de redistribución de ganancias capital/patrimonio es insuficiente para quebrar la barrera histórica de desigualdad del Gini. Incrementa el peso del SIPEF.
+                    </p>
+                  ) : simUnificadoResult.gini < 40.0 && simUnificadoResult.gini >= 35.0 ? (
+                    <p className="text-indigo-700 font-semibold bg-indigo-50/50 p-3 rounded-lg border border-indigo-200">
+                      📈 <strong>Meta de Cohesión Uruguaya:</strong> Has consolidado el estándar fiscal distributivo de Uruguay, logrando revertir la brecha social estructural sin disparar devaluaciones inflacionarias [cite: 1.1.1].
+                    </p>
+                  ) : (
+                    <p className="text-emerald-700 font-semibold bg-emerald-50/50 p-3 rounded-lg border border-emerald-200">
+                      🌟 <strong>Estándar de Equidad Nórdico:</strong> ¡Éxito Absoluto! El Coeficiente de Gini rompe los mínimos históricos, logrando neutralizar la inercia inflacionaria mediante la sólida constitución del fondo de ahorro soberano contracíclico [cite: 4, 32].
+                    </p>
+                  )}
+                </div>
+              </div>
+
+            </div>
+
+            {/* Mapa de Destino del Presupuesto (Visualizador Esquemático de Consenso) */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700">📋 Mapa del Presupuesto Unificado (Justicia & Sostenibilidad)</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                {/* Caja Sostenibilidad */}
+                <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3">
+                  <span className="text-xs font-bold text-indigo-650 block uppercase">1. Sostenibilidad Fiscal (60% al Ahorro Soberano)</span>
+                  <ul className="text-xs text-slate-650 space-y-2 list-disc pl-4">
+                    <li><strong>USD {simUnificadoResult.ahorroFondoUsd}M</strong> destinados al Fondo Soberano de Desarrollo Federal (FSDF) para obras de infraestructura física en fases recesivas [cite: 4].</li>
+                    <li>Descompresión de las deudas del sector público para eximir al Banco Central de emitir dinero inorgánico.</li>
+                    <li>Constitución de reservas líquidas para mitigar shocks exógenos de precios agrícolas.</li>
+                  </ul>
+                </div>
+
+                {/* Caja Justicia */}
+                <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3">
+                  <span className="text-xs font-bold text-emerald-650 block uppercase">2. Justicia Distributiva (40% a Compensación Directa)</span>
+                  <ul className="text-xs text-slate-650 space-y-2 list-disc pl-4">
+                    <li><strong>USD {simUnificadoResult.bienestarUsd}M</strong> destinados íntegramente a financiar la devolución del IVA de alimentos básicos para los deciles 1 a 4.</li>
+                    <li>Transferencias compensatorias directas a provincias del norte profundo (NOA y NEA) para salud y redes edilicias escolares [cite: 4].</li>
+                    <li>Financiamiento estable de asignaciones familiares para neutralizar picos inflacionarios.</li>
+                  </ul>
+                </div>
+
+              </div>
+
+              {/* Nota de pie con Fórmula */}
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-650 space-y-2">
+                <p className="font-bold text-slate-700">📝 Ecuación Económica y Propuesta de Implementación:</p>
+                <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-2 text-slate-800 font-medium text-[12px]">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                    <span>1. Recaudación SIPEF (unifPatrimonio):</span>
+                    <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                      {unifPatrimonio}% × 1.9 = {(unifPatrimonio * 1.9).toFixed(3)}% del PIB (USD {Math.round(unifPatrimonio * 1.9 * 4500)}M)
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                    <span>2. Ahorro Soberano (unifFondoContraciclico):</span>
+                    <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                      Recaudación × ({unifFondoContraciclico}% / 100) = {(unifPatrimonio * 1.9 * (unifFondoContraciclico / 100)).toFixed(3)}% del PIB (USD {simUnificadoResult.ahorroFondoUsd}M)
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                    <span>3. Presupuesto Bienestar (B):</span>
+                    <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                      Recaudación - Ahorro Soberano = {(unifPatrimonio * 1.9 * (1 - unifFondoContraciclico / 100)).toFixed(3)}% del PIB (USD {simUnificadoResult.bienestarUsd}M)
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                    <span>4. Centralización Federal:</span>
+                    <span className="font-mono bg-slate-50 px-2 py-0.5 rounded text-indigo-700">
+                      B × ({unifCentralizacionFederal}% / 100) = {(unifPatrimonio * 1.9 * (1 - unifFondoContraciclico / 100) * (unifCentralizacionFederal / 100)).toFixed(3)}% del PIB
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between font-bold text-indigo-850 pt-1.5">
+                    <span>Gini Proyectado Final:</span>
+                    <span className="font-mono bg-indigo-50 px-2.5 py-1 rounded text-indigo-700 text-sm">
+                      42.3 - ((((B × ({unifCentralizacionFederal}/100)) × 2.8 + Ahorro × 0.6) × 10)) = {simUnificadoResult.gini.toFixed(1)}
+                    </span>
+                  </div>
+                </div>
+                <p className="leading-relaxed">
+                  <strong>Planteo:</strong> Se unifica la estructura patrimonial distributiva bajo el SIPEF, canalizando de forma blindada el 60% de los ingresos al fondo de reservas contracíclico (FSDF) para amortiguar shocks económicos nacionales y regionales. El remanente recaudado es coparticipado de forma centralizada y asimétrica hacia las provincias rezagadas para financiar infraestructura básica e igualar oportunidades.
+                </p>
               </div>
             </div>
 
-            {/* Columna Lateral - Fundamentos Teóricos Clave */}
-            <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm space-y-6">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-stone-850 flex items-center gap-2">
-                <span>📚</span> Fundamentos de Soporte Oral
-              </h3>
-
-              <div className="space-y-4 text-xs leading-relaxed text-stone-600">
-                <div className="bg-stone-50 p-4 rounded-lg border border-stone-200">
-                  <span className="block font-bold text-stone-900 mb-1">Capacidad de Intervención Pública</span>
-                  <span>&quot;La estabilidad del consumo del gobierno general de Noruega (un promedio del 21.5% del PIB) es financiada de forma legítima, cancelando la emisión desregulada.&quot;</span>
-                </div>
-
-                <div className="bg-stone-50 p-4 rounded-lg border border-stone-200">
-                  <span className="block font-bold text-stone-900 mb-1">Política Contracíclica Genuina</span>
-                  <span>&quot;Para que las políticas compensatorias sean efectivas en Argentina durante las recesiones, requerimos un fondo en divisas duras obtenido de retener riqueza en el auge del ciclo.&quot;</span>
-                </div>
-
-                <div className="bg-stone-50 p-4 rounded-lg border border-stone-200">
-                  <span className="block font-bold text-stone-900 mb-1">Neutralidad sobre Inversión</span>
-                  <span>&quot;La evidencia de WDI rebate empíricamente el argumento de la fuga de capitales por tributación: la tasa de formación de capital fijo de Noruega se expandió de la par de la riqueza social.&quot;</span>
-                </div>
-              </div>
-            </div>
-
           </div>
         )}
+
+            </div>
+          )}
 
       </main>
 
       {/* FOOTER */}
-      <footer className="border-t border-stone-200 bg-white py-6 text-center text-xs text-stone-500">
+      <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
         <p>© 2026 Universidad Nacional de Misiones • Facultad de Humanidades y Ciencias Sociales</p>
-        <p className="mt-1">Teoría y Análisis Económico 2 • Trabajo de Diagnóstico e Indicadores Comparados</p>
+        <p className="mt-1">Cátedra de Teoría y Análisis Económico II • Todos los derechos reservados</p>
       </footer>
 
     </div>
